@@ -2,8 +2,11 @@ package game;
 
 import entity.Board;
 import entity.Player;
+import entity.Tile;
 import enums.GameStatus;
+import enums.PlayerType;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -21,11 +24,10 @@ public class GameLogic {
     }
 
     public boolean makeMove() {
-        int[] move = getCurrentPlayerMove();
+        int[] move = getCurrentPlayerMove(players.get(currentPlayerId).isAI());
         int x = move[0];
         int y = move[1];
         board.setPiece(x, y, Integer.parseInt(currentPlayerId));
-        // нужно обработать ситуацию, что по какой-то причине фишка не добавилась.
         return true;
     }
 
@@ -37,20 +39,42 @@ public class GameLogic {
         }
     }
 
-    public int[] getCurrentPlayerMove() {
+    public int[] getCurrentPlayerMove(PlayerType isAI) {
+
+        if (isAI == PlayerType.BOT) {
+            getBotMove();
+        } else {
+            getUserMove();
+        }
 
         int[] move = getUserMove();
+
         // должно работать при правильном isValidMove.
 //        if (board.isValidMove(move[0], move[1], Integer.parseInt(currentPlayerId))) {
 //            return new int[]{move[0], move[1]};
 //        } else {
 //            throw new IllegalArgumentException("Movement obstructed");
 //        }
+
         return new int[]{move[0], move[1]};
 
     }
 
-    public static int[] getUserMove() {
+    // not work, dont check.
+    public int[] getBotMove() {
+        Map<Integer, Tile> tiles = new HashMap<>();
+
+        for (int y = 0; y < 8; y++) {
+            for (int x = 0; x < 8; x++) {
+                board.getBoardState(Integer.parseInt(currentPlayerId)).charAt(0);
+
+                return new int[]{0, 0};
+            }
+        }
+        return new int[]{0, 0};
+    }
+
+    public int[] getUserMove() {
         int[] move = new int[2];
 
         System.out.println("Введите ваш ход (например, 'e2' или 'f6'):");

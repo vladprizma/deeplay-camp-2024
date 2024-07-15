@@ -4,7 +4,7 @@ import entity.Board;
 import entity.Player;
 import enums.GameStatus;
 import enums.PlayerType;
-import listener.ReversiListener;
+import repository.ReversiListener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -135,7 +135,7 @@ public class Game implements ReversiListener {
     @Override
     public boolean playerJoin(long playerId) {
         addPlayer("1", "black", PlayerType.HUMAN);
-        addPlayer("2", "white", PlayerType.HUMAN);
+        addPlayer("2", "white", PlayerType.BOT);
         return false;
     }
 
