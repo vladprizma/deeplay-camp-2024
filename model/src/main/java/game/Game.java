@@ -40,9 +40,7 @@ public class Game implements ReversiListener {
     // основная работа игры
     public void playGame() {
         while (getGameState() == GameStatus.IN_PROGRESS) {
-            playerTurn();
             if (makeMove()) {
-
                 // логика конца игры, пока не готово.
 
 //                boolean isGameOver = gameLogic.checkForWin();
@@ -51,8 +49,10 @@ public class Game implements ReversiListener {
 //                    gameLogic.setGameState(GameStatus.FINISHED);
 //                    break;
 //                }
+
                 displayBoard();
             }
+            playerTurn();
         }
 
         // не реализовано.
@@ -102,6 +102,7 @@ public class Game implements ReversiListener {
         playerJoin(1); // должен быть примерно такой вызов. Но сама логика метода изменена.
         board = new Board(); // инициализируем доску
         this.gameLogic = new GameLogic(board, players); // запуск модуля игровой логики
+        gameLogic.setCurrentPlayer("1");
         setGameState();
         displayBoard();
         return GameStatus.IN_PROGRESS;

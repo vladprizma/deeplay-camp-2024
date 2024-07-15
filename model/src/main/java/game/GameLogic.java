@@ -72,7 +72,7 @@ public class GameLogic {
     }
 
     public void displayBoard() {
-        System.out.printf((board.getBoardState()).toString());
+        System.out.printf((board.getBoardState(Integer.parseInt(currentPlayerId))).toString());
     }
 
     public boolean checkForWin() {

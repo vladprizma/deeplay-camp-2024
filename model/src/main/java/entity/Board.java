@@ -230,7 +230,6 @@ public class Board {
                         int i = x - 1;
                         for(int j = y - 1; j > 0; j --){
                             if((blackChips & (1L << (i + 8 * j))) != 0){
-                                System.out.println("1st (" + i + "; " + j +")");
                                 addMove = 1L << (i - 1 + 8 * (j - 1));
                                 i--;
                             } else{
@@ -244,7 +243,6 @@ public class Board {
                         i = x - 1;
                         for(int j = y + 1; j < 7; j ++){
                             if((blackChips & (1L << (i + 8 * j))) != 0){
-                                System.out.println(x + " and " + y + " 2st (" + i + "; " + j +")");
                                 addMove = 1L << (i - 1 + 8 * (j + 1));
                                 i--;
                             } else{
@@ -258,7 +256,6 @@ public class Board {
                         i = x + 1;
                         for(int j = y - 1; j > 0; j --){
                             if((blackChips & (1L << (i + 8 * j))) != 0){
-                                System.out.println(x + " and " + y + " 3rd (" + i + "; " + j +")");
                                 addMove = 1L << (i + 1 + 8 * (j - 1));
                                 i++;
                             } else{
@@ -272,7 +269,6 @@ public class Board {
                         i = x + 1;
                         for(int j = y + 1; i < 7; j ++){
                             if((blackChips & (1L << (i + 8 * j))) != 0){
-                                System.out.println(x + " and " + y + " 4st (" + i + "; " + j + ")");
                                 addMove = 1L << (i + 1 + 8 * (j + 1));
                                 i++;
                             } else {
@@ -293,6 +289,7 @@ public class Board {
 
     // Вызов доски
     public StringBuilder getBoardState(int player) {
+        createValidMoves();
         StringBuilder state = new StringBuilder("");
         for (int y = 0; y < 8; y++) {
             for (int x = 0; x < 8; x++) {
