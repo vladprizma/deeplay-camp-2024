@@ -84,10 +84,7 @@ public class Board {
                             if((whiteChips & (1L << (i + 8 * y))) != 0){
                                 addMove = 1L << (i - 1 + 8 * y);
                             } else {
-                                if(addMove != 0){
-                                    blackValidMoves |= addMove;
-                                    addMove = 0;
-                                }
+                                addMoveMethod(addMove, 1);
                                 break;
                             }
                         }
@@ -95,10 +92,7 @@ public class Board {
                             if((whiteChips & (1L << (i + 8 * y))) != 0){
                                 addMove = 1L << (i + 1 + 8 * y);
                             } else {
-                                if(addMove != 0){
-                                    blackValidMoves |= addMove;
-                                    addMove = 0;
-                                }
+                                addMoveMethod(addMove, 1);
                                 break;
                             }
                         }
@@ -107,10 +101,7 @@ public class Board {
                             if((whiteChips & (1L << (x + 8 * i))) != 0){
                                 addMove = 1L << (x + 8 * (i - 1));
                             } else {
-                                if(addMove != 0){
-                                    blackValidMoves |= addMove;
-                                    addMove = 0;
-                                }
+                                addMoveMethod(addMove, 1);
                                 break;
                             }
                         }
@@ -118,10 +109,7 @@ public class Board {
                             if((whiteChips & (1L << (x + 8 * i))) != 0){
                                 addMove = 1L << (x + 8 * (i + 1));
                             } else {
-                                if(addMove != 0){
-                                    blackValidMoves |= addMove;
-                                    addMove = 0;
-                                }
+                                addMoveMethod(addMove, 1);
                                 break;
                             }
                         }
@@ -132,10 +120,7 @@ public class Board {
                                 addMove = 1L << (i - 1 + 8 * (j - 1));
                                 i --;
                             } else {
-                                if(addMove != 0){
-                                    blackValidMoves |= addMove;
-                                    addMove = 0;
-                                }
+                                addMoveMethod(addMove, 1);
                                 break;
                             }
                         }
@@ -145,10 +130,7 @@ public class Board {
                                 addMove = 1L << (i - 1 + 8 * (j + 1));
                                 i--;
                             } else {
-                                if(addMove != 0){
-                                    blackValidMoves |= addMove;
-                                    addMove = 0;
-                                }
+                                addMoveMethod(addMove, 1);
                                 break;
                             }
                         }
@@ -158,10 +140,7 @@ public class Board {
                                 addMove = 1L << (i + 1 + 8 * (j - 1));
                                 i++;
                             } else {
-                                if(addMove != 0){
-                                    blackValidMoves |= addMove;
-                                    addMove = 0;
-                                }
+                                addMoveMethod(addMove, 1);
                                 break;
                             }
                         }
@@ -171,10 +150,7 @@ public class Board {
                                 addMove = 1L << (i + 1 + 8 * (j + 1));
                                 i++;
                             } else {
-                                if(addMove != 0){
-                                    blackValidMoves |= addMove;
-                                    addMove = 0;
-                                }
+                                addMoveMethod(addMove, 1);
                                 break;
                             }
                         }
@@ -185,10 +161,7 @@ public class Board {
                             if((blackChips & (1L << (i + 8 * y))) != 0){
                                 addMove = 1L << (i - 1 + 8 * y);
                             } else {
-                                if(addMove != 0){
-                                    whiteValidMoves |= addMove;
-                                    addMove = 0;
-                                }
+                                addMoveMethod(addMove, 2);
                                 break;
                             }
                         }
@@ -196,10 +169,7 @@ public class Board {
                             if((blackChips & (1L << (i + 8 * y))) != 0){
                                 addMove = 1L << (i + 1 + 8 * y);
                             } else {
-                                if(addMove != 0){
-                                    whiteValidMoves |= addMove;
-                                    addMove = 0;
-                                }
+                                addMoveMethod(addMove, 2);
                                 break;
                             }
                         }
@@ -208,10 +178,7 @@ public class Board {
                             if((blackChips & (1L << (x + 8 * i))) != 0){
                                 addMove = 1L << (x + 8 * (i - 1));
                             } else {
-                                if(addMove != 0){
-                                    whiteValidMoves |= addMove;
-                                    addMove = 0;
-                                }
+                                addMoveMethod(addMove, 2);
                                 break;
                             }
                         }
@@ -219,10 +186,7 @@ public class Board {
                             if((blackChips & (1L << (x + 8 * i))) != 0){
                                 addMove = 1L << (x + 8 * (i + 1));
                             } else {
-                                if(addMove != 0){
-                                    whiteValidMoves |= addMove;
-                                    addMove = 0;
-                                }
+                                addMoveMethod(addMove, 2);
                                 break;
                             }
                         }
@@ -230,57 +194,40 @@ public class Board {
                         int i = x - 1;
                         for(int j = y - 1; j > 0; j --){
                             if((blackChips & (1L << (i + 8 * j))) != 0){
-                                System.out.println("1st (" + i + "; " + j +")");
                                 addMove = 1L << (i - 1 + 8 * (j - 1));
                                 i--;
                             } else{
-                                if(addMove != 0){
-                                    whiteValidMoves |= addMove;
-                                    addMove = 0;
-                                }
+                                addMoveMethod(addMove, 2);
                                 break;
                             }
                         }
                         i = x - 1;
                         for(int j = y + 1; j < 7; j ++){
                             if((blackChips & (1L << (i + 8 * j))) != 0){
-                                System.out.println(x + " and " + y + " 2st (" + i + "; " + j +")");
                                 addMove = 1L << (i - 1 + 8 * (j + 1));
                                 i--;
                             } else{
-                                if(addMove != 0){
-                                    whiteValidMoves |= addMove;
-                                    addMove = 0;
-                                }
+                                addMoveMethod(addMove, 2);
                                 break;
                             }
                         }
                         i = x + 1;
                         for(int j = y - 1; j > 0; j --){
                             if((blackChips & (1L << (i + 8 * j))) != 0){
-                                System.out.println(x + " and " + y + " 3rd (" + i + "; " + j +")");
                                 addMove = 1L << (i + 1 + 8 * (j - 1));
                                 i++;
                             } else{
-                                if(addMove != 0){
-                                    whiteValidMoves |= addMove;
-                                    addMove = 0;
-                                }
+                                addMoveMethod(addMove, 2);
                                 break;
                             }
                         }
                         i = x + 1;
                         for(int j = y + 1; i < 7; j ++){
                             if((blackChips & (1L << (i + 8 * j))) != 0){
-                                System.out.println(x + " and " + y + " 4st (" + i + "; " + j + ")");
                                 addMove = 1L << (i + 1 + 8 * (j + 1));
                                 i++;
                             } else {
-                                if(addMove != 0){
-                                    whiteValidMoves |= addMove;
-                                    addMove = 0;
-                                }
-                                break;
+                                addMoveMethod(addMove, 2);
                             }
                         }
                     }
@@ -289,6 +236,18 @@ public class Board {
         }
         blackValidMoves = blackValidMoves & ~allChips;
         whiteValidMoves = whiteValidMoves & ~allChips;
+    }
+
+    public void addMoveMethod(long addMove, int chipsType){
+        if(addMove != 0){
+            if(chipsType == 1){
+                blackValidMoves |= addMove;
+                addMove = 0;
+            }else{
+                whiteValidMoves |= addMove;
+                addMove = 0;
+            }
+        }
     }
 
     // Вызов доски
