@@ -6,6 +6,9 @@ public class ValidateServerProperties {
     public static boolean validateIpAddress(String ipAddress) {
         boolean b1 = false;
         StringTokenizer t = new StringTokenizer(ipAddress, ".");
+        
+        if (t.countTokens() < 4) return b1;
+        
         int a = Integer.parseInt(t.nextToken());
         int b = Integer.parseInt(t.nextToken());
         int c = Integer.parseInt(t.nextToken());

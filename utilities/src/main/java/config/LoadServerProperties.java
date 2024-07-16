@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class LoadConfig {
+public class LoadServerProperties {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
     private static boolean badInputConfig = false;
     
@@ -18,7 +18,7 @@ public class LoadConfig {
         try (InputStream input = new FileInputStream("server.properties")) {
             properties.load(input);
         } catch (IOException ex) {
-            logger.error("Ошибка в загрузке конфига сервера. Пожалуйста, проверьте правильность настройки пути и файла.");
+            logger.error("Ошибка в загрузке конфига сервера. Пожалуйста, проверьте правильность настройки пути к файлу.");
         }
 
         var ip = properties.getProperty("server.ip");
