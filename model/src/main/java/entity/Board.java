@@ -15,13 +15,182 @@ public class Board {
     //!! Установка фишки на доску
     public void setPiece(int x, int y, int player) {
         long piece = 1L << (x + 8 * y);
-        if(hasPiece(x, y)){
-            removePiece(x, y);
-        }
-        if (player == 1) {
-            blackChips |= piece;
-        } else if (player == 2) {
-            whiteChips |= piece;
+        long tempChips = 0;
+        if(isValidMove(x, y, player)){
+            if (player == 1) {
+                blackChips |= piece;
+                // Горизонтали
+                tempChips = 0;
+                for (int i = x - 1; i > 0; i--) {
+                    if ((whiteChips & (1L << (i + 8 * y))) != 0) {
+                        tempChips |= (1L << (i + 8 * y));
+                    } else if((blackChips & (1L << (i + 8 * y))) != 0){
+                        whiteChips &= ~tempChips;
+                        blackChips |= tempChips;
+                    } else break;
+                }
+                tempChips = 0;
+                for (int i = x + 1; i < 7; i++) {
+                    if ((whiteChips & (1L << (i + 8 * y))) != 0) {
+                        tempChips |= (1L << (i + 8 * y));
+                    } else if((blackChips & (1L << (i + 8 * y))) != 0){
+                        whiteChips &= ~tempChips;
+                        blackChips |= tempChips;
+                    } else break;
+                }
+                // Вертикали
+                tempChips = 0;
+                for (int i = y - 1; i > 0; i--) {
+                    if ((whiteChips & (1L << (x + 8 * i))) != 0) {
+                        tempChips |= (1L << (x + 8 * i));
+                    } else if((blackChips & (1L << (x + 8 * i))) != 0){
+                        whiteChips &= ~tempChips;
+                        blackChips |= tempChips;
+                    } else break;
+                }
+                tempChips = 0;
+                for (int i = y + 1; i < 7; i++) {
+                    if ((whiteChips & (1L << (x + 8 * i))) != 0) {
+                        tempChips |= (1L << (x + 8 * i));
+                    } else if((blackChips & (1L << (x + 8 * i))) != 0){
+                        whiteChips &= ~tempChips;
+                        blackChips |= tempChips;
+                    } else break;
+                }
+                // Диагонали
+                tempChips = 0;
+                int i = x - 1;
+                for (int j = y - 1; j > 0; j--) {
+                    if ((whiteChips & (1L << (i + 8 * j))) != 0) {
+                        tempChips |= (1L << (i + 8 * j));
+                        i--;
+                    } else if((blackChips & (1L << (i + 8 * j))) != 0){
+                        whiteChips &= ~tempChips;
+                        blackChips |= tempChips;
+                    } else break;
+                }
+                tempChips = 0;
+                i = x - 1;
+                for (int j = y + 1; j < 7; j++) {
+                    if ((whiteChips & (1L << (i + 8 * j))) != 0) {
+                        tempChips |= (1L << (i + 8 * j));
+                        i--;
+                    } else if((blackChips & (1L << (i + 8 * j))) != 0){
+                        whiteChips &= ~tempChips;
+                        blackChips |= tempChips;
+                    } else break;
+                }
+                tempChips = 0;
+                i = x + 1;
+                for (int j = y - 1; j > 0; j--) {
+                    if ((whiteChips & (1L << (i + 8 * j))) != 0) {
+                        tempChips |= (1L << (i + 8 * j));
+                        i++;
+                    } else if((blackChips & (1L << (i + 8 * j))) != 0){
+                        whiteChips &= ~tempChips;
+                        blackChips |= tempChips;
+                    } else break;
+                }
+                tempChips = 0;
+                i = x + 1;
+                for (int j = y + 1; i < 7; j++) {
+                    if ((whiteChips & (1L << (i + 8 * j))) != 0) {
+                        tempChips |= (1L << (i + 8 * j));
+                        i++;
+                    } else if((blackChips & (1L << (i + 8 * j))) != 0){
+                        whiteChips &= ~tempChips;
+                        blackChips |= tempChips;
+                    } else break;
+                }
+            } else if (player == 2) {
+                whiteChips |= piece;
+                // Горизонтали
+                tempChips = 0;
+                for (int i = x - 1; i > 0; i--) {
+                    if ((blackChips & (1L << (i + 8 * y))) != 0) {
+                        tempChips |= (1L << (i + 8 * y));
+                    } else if((whiteChips & (1L << (i + 8 * y))) != 0){
+                        blackChips &= ~tempChips;
+                        whiteChips |= tempChips;
+                    } else break;
+                }
+                tempChips = 0;
+                for (int i = x + 1; i < 7; i++) {
+                    if ((blackChips & (1L << (i + 8 * y))) != 0) {
+                        tempChips |= (1L << (i + 8 * y));
+                    } else if((whiteChips & (1L << (i + 8 * y))) != 0){
+                        blackChips &= ~tempChips;
+                        whiteChips |= tempChips;
+                    } else break;
+                }
+                // Вертикали
+                tempChips = 0;
+                for (int i = y - 1; i > 0; i--) {
+                    if ((blackChips & (1L << (x + 8 * i))) != 0) {
+                        tempChips |= (1L << (x + 8 * i));
+                    } else if((whiteChips & (1L << (x + 8 * i))) != 0){
+                        blackChips &= ~tempChips;
+                        whiteChips |= tempChips;
+                    } else break;
+                }
+                tempChips = 0;
+                for (int i = y + 1; i < 7; i++) {
+                    if ((blackChips & (1L << (x + 8 * i))) != 0) {
+                        tempChips |= (1L << (x + 8 * i));
+                    } else if((whiteChips & (1L << (x + 8 * i))) != 0){
+                        blackChips &= ~tempChips;
+                        whiteChips |= tempChips;
+                    } else break;
+                }
+                // Диагонали
+                tempChips = 0;
+                int i = x - 1;
+                for (int j = y - 1; j > 0; j--) {
+                    if ((blackChips & (1L << (i + 8 * j))) != 0) {
+                        tempChips |= (1L << (i + 8 * j));
+                        i--;
+                    } else if((whiteChips & (1L << (i + 8 * j))) != 0){
+                        blackChips &= ~tempChips;
+                        whiteChips |= tempChips;
+                    } else break;
+                }
+                tempChips = 0;
+                i = x - 1;
+                for (int j = y + 1; j < 7; j++) {
+                    if ((blackChips & (1L << (i + 8 * j))) != 0) {
+                        tempChips |= (1L << (i + 8 * j));
+                        i--;
+                    } else if((whiteChips & (1L << (i + 8 * j))) != 0){
+                        blackChips &= ~tempChips;
+                        whiteChips |= tempChips;
+                    } else break;
+                }
+                tempChips = 0;
+                i = x + 1;
+                for (int j = y - 1; j > 0; j--) {
+                    if ((blackChips & (1L << (i + 8 * j))) != 0) {
+                        tempChips |= (1L << (i + 8 * j));
+                        i++;
+                    } else if((whiteChips & (1L << (i + 8 * j))) != 0){
+                        blackChips &= ~tempChips;
+                        whiteChips |= tempChips;
+                    } else break;
+                }
+                tempChips = 0;
+                i = x + 1;
+                for (int j = y + 1; i < 7; j++) {
+                    if ((blackChips & (1L << (i + 8 * j))) != 0) {
+                        tempChips |= (1L << (i + 8 * j));
+                        i++;
+                    } else if((whiteChips & (1L << (i + 8 * j))) != 0){
+                        blackChips &= ~tempChips;
+                        whiteChips |= tempChips;
+                    } else break;
+                }
+                whiteChips |= piece;
+            }
+        } else {
+            System.out.println("Unexpected move");
         }
     }
 
@@ -38,17 +207,27 @@ public class Board {
         return ((blackChips & mask) != 0) || ((whiteChips & mask) != 0);
     }
 
-    // Получение возможных вариантов
+    // Проверка на возможность хода
+    public boolean isValidMove(int x, int y, int player) {
+        if (player == 1) {
+            if ((blackValidMoves & (1L << (x + 8 * y))) != 0) {
+                return true;
+            } else return false;
+        } else if (player == 2) {
+            if ((whiteValidMoves & (1L << (x + 8 * y))) != 0) {
+                return true;
+            } else return false;
+        } else return false;
+    }
 
+    // Получение возможных вариантов
     public long getValidMoves(int player) {
         long validMoves = 0x0000000000000000L;
-
         if (player == 1) {
             validMoves |= blackValidMoves;
         } else if (player == 2) {
             validMoves |= whiteValidMoves;
         }
-
         return validMoves;
     }
 
@@ -66,7 +245,6 @@ public class Board {
                 }
             }
         }
-
         return score;
     }
 
@@ -80,216 +258,152 @@ public class Board {
                     if ((blackChips & (1L << (x + 8 * y))) != 0) {
                         // Для черных
                         // Горизонтали
-                        for(int i = x - 1; i > 0; i --){
-                            if((whiteChips & (1L << (i + 8 * y))) != 0){
-                                addMove = 1L << (i - 1 + 8 * y);
-                            } else {
-                                if(addMove != 0){
-                                    blackValidMoves |= addMove;
-                                    addMove = 0;
+                        for (int i = x - 1; i > 0; i--) {
+                            if ((whiteChips & (1L << (i + 8 * y))) != 0) {
+                                if (!hasPiece(i - 1, y)) {
+                                    blackValidMoves |= (1L << (i - 1 + 8 * y));
                                 }
-                                break;
-                            }
+                            } else break;
                         }
-                        for(int i = x + 1; i < 7; i ++){
-                            if((whiteChips & (1L << (i + 8 * y))) != 0){
-                                addMove = 1L << (i + 1 + 8 * y);
-                            } else {
-                                if(addMove != 0){
-                                    blackValidMoves |= addMove;
-                                    addMove = 0;
+                        for (int i = x + 1; i < 7; i++) {
+                            if ((whiteChips & (1L << (i + 8 * y))) != 0) {
+                                if (!hasPiece(i + 1, y)) {
+                                    blackValidMoves |= (1L << (i + 1 + 8 * y));
                                 }
-                                break;
-                            }
+                            } else break;
                         }
                         // Вертикали
-                        for(int i = y - 1; i > 0; i --){
-                            if((whiteChips & (1L << (x + 8 * i))) != 0){
-                                addMove = 1L << (x + 8 * (i - 1));
-                            } else {
-                                if(addMove != 0){
-                                    blackValidMoves |= addMove;
-                                    addMove = 0;
+                        for (int i = y - 1; i > 0; i--) {
+                            if ((whiteChips & (1L << (x + 8 * i))) != 0) {
+                                if (!hasPiece(x, i - 1)) {
+                                    blackValidMoves |= (1L << (x + 8 * (i - 1)));
                                 }
-                                break;
-                            }
+                            } else break;
                         }
-                        for(int i = y + 1; i < 7; i ++){
-                            if((whiteChips & (1L << (x + 8 * i))) != 0){
-                                addMove = 1L << (x + 8 * (i + 1));
-                            } else {
-                                if(addMove != 0){
-                                    blackValidMoves |= addMove;
-                                    addMove = 0;
+                        for (int i = y + 1; i < 7; i++) {
+                            if ((whiteChips & (1L << (x + 8 * i))) != 0) {
+                                if (!hasPiece(x, i + 1)) {
+                                    blackValidMoves |= (1L << (x + 8 * (i + 1)));
                                 }
-                                break;
-                            }
+                            } else break;
                         }
                         // Диагонали
                         int i = x - 1;
-                        for(int j = y - 1; j > 0; j --){
-                            if((whiteChips & (1L << (i + 8 * j))) != 0){
-                                addMove = 1L << (i - 1 + 8 * (j - 1));
-                                i --;
-                            } else {
-                                if(addMove != 0){
-                                    blackValidMoves |= addMove;
-                                    addMove = 0;
+                        for (int j = y - 1; j > 0; j--) {
+                            if ((whiteChips & (1L << (i + 8 * j))) != 0) {
+                                if (!hasPiece(i - 1, j - 1)) {
+                                    blackValidMoves |= (1L << (i - 1 + 8 * (j - 1)));
                                 }
-                                break;
-                            }
+                                i--;
+                            } else break;
                         }
                         i = x - 1;
-                        for(int j = y + 1; j < 7; j ++){
-                            if((whiteChips & (1L << (i + 8 * j))) != 0){
-                                addMove = 1L << (i - 1 + 8 * (j + 1));
+                        for (int j = y + 1; j < 7; j++) {
+                            if ((whiteChips & (1L << (i + 8 * j))) != 0) {
+                                if (!hasPiece(i - 1, j - 1)) {
+                                    blackValidMoves |= (1L << (i - 1 + 8 * (j - 1)));
+                                }
                                 i--;
-                            } else {
-                                if(addMove != 0){
-                                    blackValidMoves |= addMove;
-                                    addMove = 0;
-                                }
-                                break;
-                            }
+                            } else break;
                         }
                         i = x + 1;
-                        for(int j = y - 1; j > 0; j --){
-                            if((whiteChips & (1L << (i + 8 * j))) != 0){
-                                addMove = 1L << (i + 1 + 8 * (j - 1));
-                                i++;
-                            } else {
-                                if(addMove != 0){
-                                    blackValidMoves |= addMove;
-                                    addMove = 0;
+                        for (int j = y - 1; j > 0; j--) {
+                            if ((whiteChips & (1L << (i + 8 * j))) != 0) {
+                                if (!hasPiece(i + 1, j - 1)) {
+                                    blackValidMoves |= (1L << (i + 1 + 8 * (j - 1)));
                                 }
-                                break;
-                            }
+                                i++;
+                            } else break;
                         }
                         i = x + 1;
-                        for(int j = y + 1; i < 7; j ++){
-                            if((whiteChips & (1L << (i + 8 * j))) != 0){
-                                addMove = 1L << (i + 1 + 8 * (j + 1));
-                                i++;
-                            } else {
-                                if(addMove != 0){
-                                    blackValidMoves |= addMove;
-                                    addMove = 0;
+                        for (int j = y + 1; i < 7; j++) {
+                            if ((whiteChips & (1L << (i + 8 * j))) != 0) {
+                                if (!hasPiece(i + 1, j + 1)) {
+                                    blackValidMoves |= (1L << (i + 1 + 8 * (j + 1)));
                                 }
-                                break;
-                            }
+                                i++;
+                            } else break;
                         }
                     } else {
                         // Для белых
                         // Горизонтали
-                        for(int i = x - 1; i > 0; i --){
-                            if((blackChips & (1L << (i + 8 * y))) != 0){
-                                addMove = 1L << (i - 1 + 8 * y);
-                            } else {
-                                if(addMove != 0){
-                                    whiteValidMoves |= addMove;
-                                    addMove = 0;
+                        for (int i = x - 1; i > 0; i--) {
+                            if ((blackChips & (1L << (i + 8 * y))) != 0) {
+                                if (!hasPiece(i - 1, y)) {
+                                    whiteValidMoves |= (1L << (i - 1 + 8 * y));
                                 }
-                                break;
-                            }
+                            } else break;
                         }
-                        for(int i = x + 1; i < 7; i ++){
-                            if((blackChips & (1L << (i + 8 * y))) != 0){
-                                addMove = 1L << (i + 1 + 8 * y);
-                            } else {
-                                if(addMove != 0){
-                                    whiteValidMoves |= addMove;
-                                    addMove = 0;
+                        for (int i = x + 1; i < 7; i++) {
+                            if ((blackChips & (1L << (i + 8 * y))) != 0) {
+                                if (!hasPiece(i + 1, y)) {
+                                    whiteValidMoves |= (1L << (i + 1 + 8 * y));
                                 }
-                                break;
-                            }
+                            } else break;
                         }
                         // Вертикали
-                        for(int i = y - 1; i > 0; i --){
-                            if((blackChips & (1L << (x + 8 * i))) != 0){
-                                addMove = 1L << (x + 8 * (i - 1));
-                            } else {
-                                if(addMove != 0){
-                                    whiteValidMoves |= addMove;
-                                    addMove = 0;
+                        for (int i = y - 1; i > 0; i--) {
+                            if ((blackChips & (1L << (x + 8 * i))) != 0) {
+                                if (!hasPiece(x, i - 1)) {
+                                    whiteValidMoves |= (1L << (x + 8 * (i - 1)));
                                 }
-                                break;
-                            }
+                            } else break;
                         }
-                        for(int i = y + 1; i < 7; i ++){
-                            if((blackChips & (1L << (x + 8 * i))) != 0){
-                                addMove = 1L << (x + 8 * (i + 1));
-                            } else {
-                                if(addMove != 0){
-                                    whiteValidMoves |= addMove;
-                                    addMove = 0;
+                        for (int i = y + 1; i < 7; i++) {
+                            if ((blackChips & (1L << (x + 8 * i))) != 0) {
+                                if (!hasPiece(x, i + 1)) {
+                                    whiteValidMoves |= (1L << (x + 8 * (i + 1)));
                                 }
-                                break;
-                            }
+                            } else break;
                         }
                         // Диагонали
                         int i = x - 1;
-                        for(int j = y - 1; j > 0; j --){
-                            if((blackChips & (1L << (i + 8 * j))) != 0){
-                                addMove = 1L << (i - 1 + 8 * (j - 1));
-                                i--;
-                            } else{
-                                if(addMove != 0){
-                                    whiteValidMoves |= addMove;
-                                    addMove = 0;
+                        for (int j = y - 1; j > 0; j--) {
+                            if ((blackChips & (1L << (i + 8 * j))) != 0) {
+                                if (!hasPiece(i - 1, j - 1)) {
+                                    whiteValidMoves |= (1L << (i - 1 + 8 * (j - 1)));
                                 }
-                                break;
-                            }
+                                i--;
+                            } else break;
                         }
                         i = x - 1;
-                        for(int j = y + 1; j < 7; j ++){
-                            if((blackChips & (1L << (i + 8 * j))) != 0){
-                                addMove = 1L << (i - 1 + 8 * (j + 1));
+                        for (int j = y + 1; j < 7; j++) {
+                            if ((blackChips & (1L << (i + 8 * j))) != 0) {
+                                if (!hasPiece(i - 1, j + 1)) {
+                                    whiteValidMoves |= (1L << (i - 1 + 8 * (j + 1)));
+                                }
                                 i--;
-                            } else{
-                                if(addMove != 0){
-                                    whiteValidMoves |= addMove;
-                                    addMove = 0;
-                                }
-                                break;
-                            }
+                            } else break;
                         }
                         i = x + 1;
-                        for(int j = y - 1; j > 0; j --){
-                            if((blackChips & (1L << (i + 8 * j))) != 0){
-                                addMove = 1L << (i + 1 + 8 * (j - 1));
-                                i++;
-                            } else{
-                                if(addMove != 0){
-                                    whiteValidMoves |= addMove;
-                                    addMove = 0;
+                        for (int j = y - 1; j > 0; j--) {
+                            if ((blackChips & (1L << (i + 8 * j))) != 0) {
+                                if (!hasPiece(i + 1, j - 1)) {
+                                    whiteValidMoves |= (1L << (i + 1 + 8 * (j - 1)));
                                 }
-                                break;
-                            }
+                                i++;
+                            } else break;
                         }
                         i = x + 1;
-                        for(int j = y + 1; i < 7; j ++){
-                            if((blackChips & (1L << (i + 8 * j))) != 0){
-                                addMove = 1L << (i + 1 + 8 * (j + 1));
-                                i++;
-                            } else {
-                                if(addMove != 0){
-                                    whiteValidMoves |= addMove;
-                                    addMove = 0;
+                        for (int j = y + 1; i < 7; j++) {
+                            if ((blackChips & (1L << (i + 8 * j))) != 0) {
+                                if (!hasPiece(i + 1, j + 1)) {
+                                    whiteValidMoves |= (1L << (i + 1 + 8 * (j + 1)));
                                 }
-                                break;
-                            }
+                                i++;
+                            } else break;
                         }
                     }
                 }
             }
         }
+
         blackValidMoves = blackValidMoves & ~allChips;
         whiteValidMoves = whiteValidMoves & ~allChips;
     }
 
     // Вызов доски
     public StringBuilder getBoardState(int player) {
-        createValidMoves();
         StringBuilder state = new StringBuilder("");
         for (int y = 0; y < 8; y++) {
             for (int x = 0; x < 8; x++) {
