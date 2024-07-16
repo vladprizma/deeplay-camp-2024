@@ -19,7 +19,6 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
     errorprone("com.google.errorprone:error_prone_core:2.28.0")
     implementation("ch.qos.logback:logback-classic:1.4.12")
-    
 }
 
 tasks.test {
