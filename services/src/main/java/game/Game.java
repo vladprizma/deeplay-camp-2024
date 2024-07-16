@@ -2,6 +2,7 @@ package game;
 
 import entity.Board;
 import entity.Player;
+import enums.Color;
 import enums.GameStatus;
 import enums.PlayerType;
 import repository.ReversiListener;
@@ -24,7 +25,7 @@ public class Game implements ReversiListener {
     }
 
     // Метод для добавления игрока в игру
-    public void addPlayer(String id, String color, PlayerType isAI) {
+    public void addPlayer(String id, Color color, PlayerType isAI) {
         if (!players.containsKey(id)) {
             Player player = new Player(id, color, isAI);
             players.put(id, player);
@@ -41,30 +42,36 @@ public class Game implements ReversiListener {
     public void playGame() {
         while (getGameState() == GameStatus.IN_PROGRESS) {
             if (makeMove()) {
-                // логика конца игры, пока не готово.
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                boolean isGameOver = gameLogic.checkForWin();
+                if (isGameOver) {
+                    display();
+                    displayEndGame();
+                    gameLogic.setGameState(GameStatus.FINISHED);
+                    break;
+                }
 
-//                boolean isGameOver = gameLogic.checkForWin();
-//                if (isGameOver) {
-//                    // Завершаем игру и выводим результаты
-//                    gameLogic.setGameState(GameStatus.FINISHED);
-//                    break;
-//                }
-
-                displayBoard();
             }
             playerTurn();
+            display();
         }
-
-        // не реализовано.
-        gameLogic.updateScores();
     }
 
     public boolean makeMove() {
         return gameLogic.makeMove();
     }
 
-    public void displayBoard() {
+    public void display() {
         gameLogic.displayBoard();
+        gameLogic.displayScore();
+    }
+
+    public void displayEndGame() {
+        gameLogic.displayEndGame();
     }
 
     public GameStatus getGameState() {
@@ -104,7 +111,7 @@ public class Game implements ReversiListener {
         this.gameLogic = new GameLogic(board, players); // запуск модуля игровой логики
         gameLogic.setCurrentPlayer("1");
         setGameState();
-        displayBoard();
+        display();
         return GameStatus.IN_PROGRESS;
     }
 
@@ -122,7 +129,6 @@ public class Game implements ReversiListener {
 
     @Override
     public boolean scoreUpdated() {
-
         return false;
     }
 
@@ -134,8 +140,8 @@ public class Game implements ReversiListener {
 
     @Override
     public boolean playerJoin(long playerId) {
-        addPlayer("1", "black", PlayerType.HUMAN);
-        addPlayer("2", "white", PlayerType.BOT);
+        addPlayer("1", Color.BLACK, PlayerType.BOT);
+        addPlayer("2", Color.WHITE, PlayerType.BOT);
         return false;
     }
 

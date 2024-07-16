@@ -6,7 +6,6 @@ import entity.Tile;
 import enums.GameStatus;
 import enums.PlayerType;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -40,38 +39,43 @@ public class GameLogic {
     }
 
     public int[] getCurrentPlayerMove(PlayerType isAI) {
-
+        int[] move;
         if (isAI == PlayerType.BOT) {
-            getBotMove();
+            move = getBotMove();
         } else {
-            getUserMove();
+            move = getUserMove();
         }
 
-        int[] move = getUserMove();
-
-        // должно работать при правильном isValidMove.
-//        if (board.isValidMove(move[0], move[1], Integer.parseInt(currentPlayerId))) {
-//            return new int[]{move[0], move[1]};
-//        } else {
-//            throw new IllegalArgumentException("Movement obstructed");
-//        }
-
+        if (board.isValidMove(move[0], move[1], Integer.parseInt(currentPlayerId))) {
+            return new int[]{move[0], move[1]};
+        } else {
+            System.out.println("Данных ход невозможен, попробуйте еще раз.");
+            getCurrentPlayerMove(isAI);
+        }
         return new int[]{move[0], move[1]};
-
     }
 
     // not work, dont check.
     public int[] getBotMove() {
-        Map<Integer, Tile> tiles = new HashMap<>();
+        Tile[] tiles = new Tile[64];
+        short tileCount = 0;
+        long blackValidMoves = board.getBlackValidMoves();
+        long whiteValidMoves = board.getWhiteValidMoves();
 
         for (int y = 0; y < 8; y++) {
             for (int x = 0; x < 8; x++) {
-                board.getBoardState(Integer.parseInt(currentPlayerId)).charAt(0);
-
-                return new int[]{0, 0};
+                long validMoves = (Integer.parseInt(currentPlayerId) == 1) ? blackValidMoves : whiteValidMoves;
+                long mask = 1L << (x + 8 * y);
+                if ((validMoves & mask) != 0) {
+                    tiles[tileCount] = new Tile(players.get(currentPlayerId).getColor(), x, y);
+                    tileCount++;
+                }
             }
         }
-        return new int[]{0, 0};
+
+        Tile selectedTile = tiles[(int) (Math.random() * tileCount)];
+
+        return new int[]{selectedTile.getX(), selectedTile.getY()};
     }
 
     public int[] getUserMove() {
@@ -99,11 +103,53 @@ public class GameLogic {
         System.out.printf((board.getBoardState(Integer.parseInt(currentPlayerId))).toString());
     }
 
-    public boolean checkForWin() {
-        return false;
+    public void displayScore() {
+        int[] score = board.score();
+        String scoreText = " Score: " + score[0] + " : " + score[1] + " ";
+        int textLength = scoreText.length();
+        printTopBorder(textLength);
+        System.out.println("│" + scoreText + "│");
+        printBottomBorder(textLength);
     }
 
-    public void updateScores() {
+    private static void printTopBorder(int length) {
+        System.out.print("┌");
+        for (int i = 0; i < length; i++) {
+            System.out.print("─");
+        }
+        System.out.println("┐");
+    }
+
+    private static void printBottomBorder(int length) {
+        System.out.print("[");
+        for (int i = 0; i < length; i++) {
+            System.out.print("─");
+        }
+        System.out.println("]");
+    }
+
+    public void displayEndGame() {
+        int[] score = board.score();
+        String scoreText;
+
+        if (score[0] > score [1]) {
+            scoreText = " Black wins! ";
+        } else if (score[0] < score [1]) {
+            scoreText = " White wins! ";
+        } else {
+            scoreText = " draw ";
+        }
+
+        int textLength = scoreText.length();
+        printTopBorder(textLength);
+        System.out.println("│" + scoreText + "│");
+        printBottomBorder(textLength);
+    }
+
+    public boolean checkForWin() {
+        int[] score = board.score();
+        boolean endGame =  (score[0] + score[1] == 64) ? true : false;
+        return endGame;
     }
 
     public void playerTurn() {

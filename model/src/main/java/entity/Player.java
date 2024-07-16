@@ -1,14 +1,15 @@
 package entity;
 
+import enums.Color;
 import enums.PlayerType;
 
 public class Player {
     private String id;
-    private String color;
+    private Color color;
     private PlayerType isAI;
 
     // Конструктор для создания игрока
-    public Player(String id, String color, PlayerType isAI) {
+    public Player(String id, Color color, PlayerType isAI) {
         this.id = id;
         this.color = color;
         this.isAI = isAI;
@@ -18,7 +19,7 @@ public class Player {
         return id;
     }
 
-    public String getColor() {
+    public Color getColor() {
         return color;
     }
 

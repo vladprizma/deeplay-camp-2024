@@ -222,6 +222,7 @@ public class Board {
 
     // Получение возможных вариантов
     public long getValidMoves(int player) {
+        createValidMoves();
         long validMoves = 0x0000000000000000L;
         if (player == 1) {
             validMoves |= blackValidMoves;
@@ -402,10 +403,23 @@ public class Board {
         whiteValidMoves = whiteValidMoves & ~allChips;
     }
 
+    public long getBlackValidMoves() {
+        createValidMoves();
+        return blackValidMoves;
+    }
+
+    public long getWhiteValidMoves() {
+        createValidMoves();
+        return whiteValidMoves;
+    }
+
     // Вызов доски
     public StringBuilder getBoardState(int player) {
+        createValidMoves();
         StringBuilder state = new StringBuilder("");
+        state.append("\n\n");
         for (int y = 0; y < 8; y++) {
+            state.append((8 - y) + " ");
             for (int x = 0; x < 8; x++) {
                 if (hasPiece(x, y)) {
                     if ((blackChips & (1L << (x + 8 * y))) != 0) {
@@ -425,6 +439,11 @@ public class Board {
             }
             state.append("\n");
         }
+        state.append(" ");
+        for (char i = 'a'; i <='h'; i++)
+            state.append(" " + i);
+
+        state.append("\n\n");
         return state;
     }
 }
