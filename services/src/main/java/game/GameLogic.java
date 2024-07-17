@@ -1,6 +1,7 @@
 package game;
 
 import entity.Board;
+import board.BoardLogic;
 import entity.Player;
 import entity.Tile;
 import enums.GameStatus;
@@ -13,12 +14,13 @@ import java.util.Scanner;
 public class GameLogic {
 
     private Board board;
+    private BoardLogic boardLogic;
     private Map<String, Player> players;
     private String currentPlayerId;
     private GameStatus gameState;
 
     public GameLogic(Board board, Map<String, Player> players) {
-        this.board = board;
+        this.boardLogic = new BoardLogic(board);
         this.players = players;
         this.gameState = GameStatus.NOT_STARTED;
     }
@@ -27,7 +29,7 @@ public class GameLogic {
         int[] move = getCurrentPlayerMove(players.get(currentPlayerId).isAI());
         int x = move[0];
         int y = move[1];
-        board.setPiece(x, y, Integer.parseInt(currentPlayerId));
+        boardLogic.setPiece(x, y, Integer.parseInt(currentPlayerId));
         return true;
     }
 
@@ -66,7 +68,7 @@ public class GameLogic {
 
         for (int y = 0; y < 8; y++) {
             for (int x = 0; x < 8; x++) {
-                board.getBoardState(Integer.parseInt(currentPlayerId)).charAt(0);
+                boardLogic.getBoardState(Integer.parseInt(currentPlayerId)).charAt(0);
 
                 return new int[]{0, 0};
             }
@@ -96,7 +98,7 @@ public class GameLogic {
     }
 
     public void displayBoard() {
-        System.out.printf((board.getBoardState(Integer.parseInt(currentPlayerId))).toString());
+        System.out.printf((boardLogic.getBoardState(Integer.parseInt(currentPlayerId))).toString());
     }
 
     public boolean checkForWin() {
