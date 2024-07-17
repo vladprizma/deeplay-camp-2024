@@ -14,8 +14,7 @@
                 DEBUG=cyan,
                 INFO=green,
                 WARN=orange,
-                ERROR=red,
-                FATAL=boldRed
+                ERROR=red
                 }
             </pattern>
         </encoder>
