@@ -1,170 +1,116 @@
 package game;
 
+import bot.BotServices;
+import display.DisplayServices;
 import entity.Board;
+import entity.Bot;
 import entity.Player;
-import entity.Tile;
+import enums.Color;
 import enums.GameStatus;
-import enums.PlayerType;
+import player.PlayerService;
+import repository.ReversiListener;
 
 import java.util.Map;
-import java.util.Scanner;
 
-public class GameLogic {
+public class GameLogic implements ReversiListener {
 
-    private Board board;
-    private Map<String, Player> players;
-    private String currentPlayerId;
-    private GameStatus gameState;
+    private BotServices botServices = new BotServices();
+    private PlayerService playerService = new PlayerService();
+    private DisplayServices displayServices = new DisplayServices();
 
-    public GameLogic(Board board, Map<String, Player> players) {
-        this.board = board;
-        this.players = players;
-        this.gameState = GameStatus.NOT_STARTED;
-    }
 
-    public boolean makeMove() {
-        int[] move = getCurrentPlayerMove(players.get(currentPlayerId).isAI());
-        int x = move[0];
-        int y = move[1];
-        board.setPiece(x, y, Integer.parseInt(currentPlayerId));
-        return true;
-    }
-
-    public void setCurrentPlayer(String playerId) {
+    public String setCurrentPlayer(String playerId, Map<String, Player> players) {
         if (players.containsKey(playerId)) {
-            currentPlayerId = playerId;
+            return playerId;
         } else {
             throw new IllegalArgumentException("Player with ID " + playerId + " does not exist.");
         }
     }
 
-    public int[] getCurrentPlayerMove(PlayerType isAI) {
-        int[] move;
-        if (isAI == PlayerType.BOT) {
-            move = getBotMove();
-        } else {
-            move = getUserMove();
-        }
-
-        if (board.isValidMove(move[0], move[1], Integer.parseInt(currentPlayerId))) {
-            return new int[]{move[0], move[1]};
-        } else {
-            System.out.println("Данных ход невозможен, попробуйте еще раз.");
-            getCurrentPlayerMove(isAI);
-        }
-        return new int[]{move[0], move[1]};
-    }
-
-    // not work, dont check.
-    public int[] getBotMove() {
-        Tile[] tiles = new Tile[64];
-        short tileCount = 0;
-        long blackValidMoves = board.getBlackValidMoves();
-        long whiteValidMoves = board.getWhiteValidMoves();
-
-        for (int y = 0; y < 8; y++) {
-            for (int x = 0; x < 8; x++) {
-                long validMoves = (Integer.parseInt(currentPlayerId) == 1) ? blackValidMoves : whiteValidMoves;
-                long mask = 1L << (x + 8 * y);
-                if ((validMoves & mask) != 0) {
-                    tiles[tileCount] = new Tile(players.get(currentPlayerId).getColor(), x, y);
-                    tileCount++;
-                }
-            }
-        }
-
-        Tile selectedTile = tiles[(int) (Math.random() * tileCount)];
-
-        return new int[]{selectedTile.getX(), selectedTile.getY()};
-    }
-
-    public int[] getUserMove() {
-        int[] move = new int[2];
-
-        System.out.println("Введите ваш ход (например, 'e2' или 'f6'):");
-        Scanner scanner = new Scanner(System.in);
-        String userInput = scanner.nextLine();
-
-        if (userInput.length() == 2 &&
-                userInput.charAt(0) >= 'a' && userInput.charAt(0) <= 'h' &&
-                userInput.charAt(1) >= '1' && userInput.charAt(1) <= '8') {
-
-            // координаты в индексы массива
-            move[0] = userInput.charAt(0) - 'a';
-            move[1] = Math.abs(userInput.charAt(1) - '8');
-        } else {
-            System.out.println("Неверный ход. Попробуйте ещё раз.");
-            move = getUserMove(); // Рекурсивно запрашиваем ход заново
-        }
-        return move;
-    }
-
-    public void displayBoard() {
-        System.out.printf((board.getBoardState(Integer.parseInt(currentPlayerId))).toString());
-    }
-
-    public void displayScore() {
-        int[] score = board.score();
-        String scoreText = " Score: " + score[0] + " : " + score[1] + " ";
-        int textLength = scoreText.length();
-        printTopBorder(textLength);
-        System.out.println("│" + scoreText + "│");
-        printBottomBorder(textLength);
-    }
-
-    private static void printTopBorder(int length) {
-        System.out.print("┌");
-        for (int i = 0; i < length; i++) {
-            System.out.print("─");
-        }
-        System.out.println("┐");
-    }
-
-    private static void printBottomBorder(int length) {
-        System.out.print("[");
-        for (int i = 0; i < length; i++) {
-            System.out.print("─");
-        }
-        System.out.println("]");
-    }
-
-    public void displayEndGame() {
-        int[] score = board.score();
-        String scoreText;
-
-        if (score[0] > score [1]) {
-            scoreText = " Black wins! ";
-        } else if (score[0] < score [1]) {
-            scoreText = " White wins! ";
-        } else {
-            scoreText = " draw ";
-        }
-
-        int textLength = scoreText.length();
-        printTopBorder(textLength);
-        System.out.println("│" + scoreText + "│");
-        printBottomBorder(textLength);
-    }
-
-    public boolean checkForWin() {
+    public boolean checkForWin(Board board) {
         int[] score = board.score();
         boolean endGame =  (score[0] + score[1] == 64) ? true : false;
         return endGame;
     }
 
-    public void playerTurn() {
-        if (currentPlayerId == "1") {
-            setCurrentPlayer("2");
+    public void display(Board board, String currentPlayerId) {
+        displayServices.display(board, currentPlayerId);
+    }
+
+    public void displayEndGame(Board board) {
+        displayServices.displayEndGame(board);
+    }
+
+    @Override
+    public boolean moveMade(Board board, Map<String, Player> players, String currentPlayerId) {
+        if (players.get(currentPlayerId) instanceof Bot) {
+            return botServices.makeMove(board, currentPlayerId);
         } else {
-            setCurrentPlayer("1");
+            return playerService.makeMove(board, currentPlayerId);
         }
     }
 
-    public GameStatus getGameState() {
-        return gameState;
+    @Override
+    public boolean moveSkipped(long playerId) {
+
+        return false;
     }
 
-    public void setGameState(GameStatus gameState) {
-        this.gameState = gameState;
+    @Override
+    public GameStatus gameFinished() {
+        return GameStatus.FINISHED;
+    }
+
+    @Override
+    public GameStatus gameStarted() {
+        return GameStatus.IN_PROGRESS;
+    }
+
+    @Override
+    public GameStatus gameStopped() {
+        return GameStatus.PAUSED;
+    }
+
+    @Override
+    public GameStatus gameResumed() {
+        return GameStatus.IN_PROGRESS;
+    }
+
+    @Override
+    public boolean scoreUpdated() {
+        return false;
+    }
+
+    @Override
+    public String playerTurn(String currentPlayerId, Map<String, Player> players) {
+        if (currentPlayerId == "1") {
+            return setCurrentPlayer("2", players);
+        } else {
+            return setCurrentPlayer("1", players);
+        }
+    }
+
+    @Override
+    public boolean playerJoin(Map<String, Player> players, String id, Color color) {
+        playerService.addPlayer(players, id, Color.BLACK);
+        return false;
+    }
+
+    @Override
+    public boolean botJoin(Map<String, Player> players, String id, Color color) {
+        botServices.addBot(players, id, Color.WHITE);
+        return false;
+    }
+
+    @Override
+    public boolean playerLeave(long playerId) {
+
+        return false;
+    }
+
+    @Override
+    public boolean playerDisconnect(long playerId) {
+
+        return false;
     }
 }

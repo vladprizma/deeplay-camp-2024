@@ -13,10 +13,6 @@ public class Chip {
         this.position = destination;
     }
 
-    public Color getColor() {
-        return position.getColor();
-    }
-
     public Tile getPosition() {
         return position;
     }

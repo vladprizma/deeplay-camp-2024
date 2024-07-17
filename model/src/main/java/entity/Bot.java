@@ -2,13 +2,12 @@ package entity;
 
 import enums.Color;
 
-public class Player {
+public class Bot extends Player {
     private String id;
     private Color color;
 
-    public Player(String id, Color color) {
-        this.id = id;
-        this.color = color;
+    public Bot(String id, Color color) {
+        super(id, color);
     }
 
     public String getId() {
@@ -18,4 +17,5 @@ public class Player {
     public Color getColor() {
         return color;
     }
+
 }
