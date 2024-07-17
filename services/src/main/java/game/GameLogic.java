@@ -1,5 +1,6 @@
 package game;
 
+import board.BoardLogic;
 import bot.BotServices;
 import display.DisplayServices;
 import entity.Board;
@@ -18,6 +19,11 @@ public class GameLogic implements ReversiListener {
     private PlayerService playerService = new PlayerService();
     private DisplayServices displayServices = new DisplayServices();
 
+    private BoardLogic boardLogic;
+
+    public GameLogic(BoardLogic boardLogic) {
+        this.boardLogic = boardLogic;
+    }
 
     public String setCurrentPlayer(String playerId, Map<String, Player> players) {
         if (players.containsKey(playerId)) {
@@ -28,30 +34,30 @@ public class GameLogic implements ReversiListener {
     }
 
     public boolean checkForWin(Board board) {
-        int[] score = board.score();
+        int[] score = boardLogic.score();
         boolean endGame =  (score[0] + score[1] == 64) ? true : false;
         return endGame;
     }
 
-    public void display(Board board, String currentPlayerId) {
-        displayServices.display(board, currentPlayerId);
+    public void display(Board board, String currentPlayerId, BoardLogic boardLogic) {
+        displayServices.display(board, currentPlayerId, boardLogic);
     }
 
-    public void displayEndGame(Board board) {
-        displayServices.displayEndGame(board);
+    public void displayEndGame(Board board, BoardLogic boardLogic) {
+        displayServices.displayEndGame(board, boardLogic);
     }
 
     @Override
-    public boolean moveMade(Board board, Map<String, Player> players, String currentPlayerId) {
+    public boolean moveMade(Board board, Map<String, Player> players, String currentPlayerId, BoardLogic boardLogic) {
         if (players.get(currentPlayerId) instanceof Bot) {
-            return botServices.makeMove(board, currentPlayerId);
+            return botServices.makeMove(board, currentPlayerId, boardLogic);
         } else {
-            return playerService.makeMove(board, currentPlayerId);
+            return playerService.makeMove(board, currentPlayerId, boardLogic);
         }
     }
 
     @Override
-    public boolean moveSkipped(long playerId) {
+    public boolean moveSkipped(String playerId) {
 
         return false;
     }

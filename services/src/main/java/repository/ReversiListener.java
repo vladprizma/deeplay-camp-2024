@@ -1,5 +1,6 @@
 package repository;
 
+import board.BoardLogic;
 import entity.Board;
 import entity.Player;
 import enums.Color;
@@ -8,8 +9,8 @@ import enums.GameStatus;
 import java.util.Map;
 
 public interface ReversiListener {
-    boolean moveMade(Board board, Map<String, Player> players, String currentPlayerId);
-    boolean moveSkipped(long playerId);
+    boolean moveMade(Board board, Map<String, Player> players, String currentPlayerId, BoardLogic boardLogic);
+    boolean moveSkipped(String playerId);
 
     GameStatus gameFinished();
     GameStatus gameStarted();

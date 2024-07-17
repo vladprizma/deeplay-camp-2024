@@ -1,20 +1,21 @@
 package display;
 
+import board.BoardLogic;
 import entity.Board;
 
 public class DisplayServices {
 
-    public void display(Board board, String currentPlayerId) {
-        displayBoard(board, currentPlayerId);
-        displayScore(board);
+    public void display(Board board, String currentPlayerId, BoardLogic boardLogic) {
+        displayBoard(board, currentPlayerId, boardLogic);
+        displayScore(board, boardLogic);
     }
 
-    public void displayBoard(Board board, String currentPlayerId) {
-        System.out.printf((board.getBoardState(Integer.parseInt(currentPlayerId))).toString());
+    public void displayBoard(Board board, String currentPlayerId, BoardLogic boardLogic) {
+        System.out.printf((boardLogic.getBoardState(Integer.parseInt(currentPlayerId))).toString());
     }
 
-    public void displayScore(Board board) {
-        int[] score = board.score();
+    public void displayScore(Board board, BoardLogic boardLogic) {
+        int[] score = boardLogic.score();
         String scoreText = " Score: " + score[0] + " : " + score[1] + " ";
         int textLength = scoreText.length();
         printTopBorder(textLength);
@@ -38,8 +39,8 @@ public class DisplayServices {
         System.out.println("]");
     }
 
-    public void displayEndGame(Board board) {
-        int[] score = board.score();
+    public void displayEndGame(Board board, BoardLogic boardLogic) {
+        int[] score = boardLogic.score();
         String scoreText;
 
         if (score[0] > score [1]) {

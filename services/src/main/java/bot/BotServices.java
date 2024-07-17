@@ -1,5 +1,6 @@
 package bot;
 
+import board.BoardLogic;
 import entity.Board;
 import entity.Bot;
 import entity.Player;
@@ -18,32 +19,40 @@ public class BotServices {
         }
     }
 
-    public boolean makeMove(Board board, String currentPlayerId) {
-        int[] move = getCurrentPlayerMove(board, currentPlayerId);
-        int x = move[0];
-        int y = move[1];
-        board.setPiece(x, y, Integer.parseInt(currentPlayerId));
-        return true;
+    public boolean makeMove(Board board, String currentPlayerId, BoardLogic boardLogic) {
+        int[] move = getCurrentPlayerMove(board, currentPlayerId, boardLogic);
+        if (move != null) {
+            int x = move[0];
+            int y = move[1];
+            boardLogic.setPiece(x, y, Integer.parseInt(currentPlayerId));
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    public int[] getCurrentPlayerMove(Board board, String currentPlayerId) {
+    public int[] getCurrentPlayerMove(Board board, String currentPlayerId, BoardLogic boardLogic) {
         int[] move;
-        move = getBotMove(board, currentPlayerId);
+        move = getBotMove(currentPlayerId, boardLogic);
 
-        if (board.isValidMove(move[0], move[1], Integer.parseInt(currentPlayerId))) {
+        if (move != null) {
+            if (boardLogic.isValidMove(move[0], move[1], Integer.parseInt(currentPlayerId))) {
+                return new int[]{move[0], move[1]};
+            } else {
+                System.out.println("Данных ход невозможен, попробуйте еще раз.");
+                getCurrentPlayerMove(board, currentPlayerId, boardLogic);
+            }
             return new int[]{move[0], move[1]};
         } else {
-            System.out.println("Данных ход невозможен, попробуйте еще раз.");
-            getCurrentPlayerMove(board, currentPlayerId);
+            return null;
         }
-        return new int[]{move[0], move[1]};
     }
 
-    public int[] getBotMove(Board board, String currentPlayerId) {
+    public int[] getBotMove(String currentPlayerId, BoardLogic boardLogic) {
         Tile[] tiles = new Tile[64];
         short tileCount = 0;
-        long blackValidMoves = board.getBlackValidMoves();
-        long whiteValidMoves = board.getWhiteValidMoves();
+        long blackValidMoves = boardLogic.getBlackValidMoves();
+        long whiteValidMoves = boardLogic.getWhiteValidMoves();
 
         for (int y = 0; y < 8; y++) {
             for (int x = 0; x < 8; x++) {
@@ -57,7 +66,10 @@ public class BotServices {
         }
 
         Tile selectedTile = tiles[(int) (Math.random() * tileCount)];
-
-        return new int[]{selectedTile.getX(), selectedTile.getY()};
+        if (selectedTile != null) {
+            return new int[]{selectedTile.getX(), selectedTile.getY()};
+        } else {
+            return null;
+        }
     }
 }

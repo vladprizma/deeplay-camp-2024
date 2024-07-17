@@ -1,9 +1,9 @@
 package player;
 
+import board.BoardLogic;
 import entity.Board;
 import entity.Player;
 import enums.Color;
-import enums.PlayerType;
 
 import java.util.Map;
 import java.util.Scanner;
@@ -17,22 +17,22 @@ public class PlayerService {
         }
     }
 
-    public boolean makeMove(Board board, String currentPlayerId) {
-        int[] move = getCurrentPlayerMove(board, currentPlayerId);
+    public boolean makeMove(Board board, String currentPlayerId, BoardLogic boardLogic) {
+        int[] move = getCurrentPlayerMove(board, currentPlayerId, boardLogic);
         int x = move[0];
         int y = move[1];
-        board.setPiece(x, y, Integer.parseInt(currentPlayerId));
+        boardLogic.setPiece(x, y, Integer.parseInt(currentPlayerId));
         return true;
     }
 
-    public int[] getCurrentPlayerMove(Board board, String currentPlayerId) {
+    public int[] getCurrentPlayerMove(Board board, String currentPlayerId, BoardLogic boardLogic) {
         int[] move;
             move = getUserMove();
-        if (board.isValidMove(move[0], move[1], Integer.parseInt(currentPlayerId))) {
+        if (boardLogic.isValidMove(move[0], move[1], Integer.parseInt(currentPlayerId))) {
             return new int[]{move[0], move[1]};
         } else {
             System.out.println("Данных ход невозможен, попробуйте еще раз.");
-            getCurrentPlayerMove(board, currentPlayerId);
+            getCurrentPlayerMove(board, currentPlayerId, boardLogic);
         }
         return new int[]{move[0], move[1]};
     }
