@@ -1,126 +1,122 @@
 package game;
 
-import entity.Board;
 import board.BoardLogic;
+import bot.BotServices;
+import display.DisplayServices;
+import entity.Board;
+import entity.Bot;
 import entity.Player;
-import entity.Tile;
+import enums.Color;
 import enums.GameStatus;
-import enums.PlayerType;
+import player.PlayerService;
+import repository.ReversiListener;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
-public class GameLogic {
+public class GameLogic implements ReversiListener {
 
-    private Board board;
+    private BotServices botServices = new BotServices();
+    private PlayerService playerService = new PlayerService();
+    private DisplayServices displayServices = new DisplayServices();
+
     private BoardLogic boardLogic;
-    private Map<String, Player> players;
-    private String currentPlayerId;
-    private GameStatus gameState;
 
-    public GameLogic(Board board, Map<String, Player> players) {
-        this.boardLogic = new BoardLogic(board);
-        this.players = players;
-        this.gameState = GameStatus.NOT_STARTED;
+    public GameLogic(BoardLogic boardLogic) {
+        this.boardLogic = boardLogic;
     }
 
-    public boolean makeMove() {
-        int[] move = getCurrentPlayerMove(players.get(currentPlayerId).isAI());
-        int x = move[0];
-        int y = move[1];
-        boardLogic.setPiece(x, y, Integer.parseInt(currentPlayerId));
-        return true;
-    }
-
-    public void setCurrentPlayer(String playerId) {
+    public String setCurrentPlayer(String playerId, Map<String, Player> players) {
         if (players.containsKey(playerId)) {
-            currentPlayerId = playerId;
+            return playerId;
         } else {
             throw new IllegalArgumentException("Player with ID " + playerId + " does not exist.");
         }
     }
 
-    public int[] getCurrentPlayerMove(PlayerType isAI) {
+    public boolean checkForWin(Board board) {
+        int[] score = boardLogic.score();
+        boolean endGame =  (score[0] + score[1] == 64) ? true : false;
+        return endGame;
+    }
 
-        if (isAI == PlayerType.BOT) {
-            getBotMove();
+    public void display(Board board, String currentPlayerId, BoardLogic boardLogic) {
+        displayServices.display(board, currentPlayerId, boardLogic);
+    }
+
+    public void displayEndGame(Board board, BoardLogic boardLogic) {
+        displayServices.displayEndGame(board, boardLogic);
+    }
+
+    @Override
+    public boolean moveMade(Board board, Map<String, Player> players, String currentPlayerId, BoardLogic boardLogic) {
+        if (players.get(currentPlayerId) instanceof Bot) {
+            return botServices.makeMove(board, currentPlayerId, boardLogic);
         } else {
-            getUserMove();
+            return playerService.makeMove(board, currentPlayerId, boardLogic);
         }
-
-        int[] move = getUserMove();
-
-        // должно работать при правильном isValidMove.
-//        if (board.isValidMove(move[0], move[1], Integer.parseInt(currentPlayerId))) {
-//            return new int[]{move[0], move[1]};
-//        } else {
-//            throw new IllegalArgumentException("Movement obstructed");
-//        }
-
-        return new int[]{move[0], move[1]};
-
     }
 
-    // not work, dont check.
-    public int[] getBotMove() {
-        Map<Integer, Tile> tiles = new HashMap<>();
+    @Override
+    public boolean moveSkipped(String playerId) {
 
-        for (int y = 0; y < 8; y++) {
-            for (int x = 0; x < 8; x++) {
-                boardLogic.getBoardState(Integer.parseInt(currentPlayerId)).charAt(0);
-
-                return new int[]{0, 0};
-            }
-        }
-        return new int[]{0, 0};
-    }
-
-    public int[] getUserMove() {
-        int[] move = new int[2];
-
-        System.out.println("Введите ваш ход (например, 'e2' или 'f6'):");
-        Scanner scanner = new Scanner(System.in);
-        String userInput = scanner.nextLine();
-
-        if (userInput.length() == 2 &&
-                userInput.charAt(0) >= 'a' && userInput.charAt(0) <= 'h' &&
-                userInput.charAt(1) >= '1' && userInput.charAt(1) <= '8') {
-
-            // координаты в индексы массива
-            move[0] = userInput.charAt(0) - 'a';
-            move[1] = Math.abs(userInput.charAt(1) - '8');
-        } else {
-            System.out.println("Неверный ход. Попробуйте ещё раз.");
-            move = getUserMove(); // Рекурсивно запрашиваем ход заново
-        }
-        return move;
-    }
-
-    public void displayBoard() {
-        System.out.printf((boardLogic.getBoardState(Integer.parseInt(currentPlayerId))).toString());
-    }
-
-    public boolean checkForWin() {
         return false;
     }
 
-    public void updateScores() {
+    @Override
+    public GameStatus gameFinished() {
+        return GameStatus.FINISHED;
     }
 
-    public void playerTurn() {
+    @Override
+    public GameStatus gameStarted() {
+        return GameStatus.IN_PROGRESS;
+    }
+
+    @Override
+    public GameStatus gameStopped() {
+        return GameStatus.PAUSED;
+    }
+
+    @Override
+    public GameStatus gameResumed() {
+        return GameStatus.IN_PROGRESS;
+    }
+
+    @Override
+    public boolean scoreUpdated() {
+        return false;
+    }
+
+    @Override
+    public String playerTurn(String currentPlayerId, Map<String, Player> players) {
         if (currentPlayerId == "1") {
-            setCurrentPlayer("2");
+            return setCurrentPlayer("2", players);
         } else {
-            setCurrentPlayer("1");
+            return setCurrentPlayer("1", players);
         }
     }
 
-    public GameStatus getGameState() {
-        return gameState;
+    @Override
+    public boolean playerJoin(Map<String, Player> players, String id, Color color) {
+        playerService.addPlayer(players, id, Color.BLACK);
+        return false;
     }
 
-    public void setGameState(GameStatus gameState) {
-        this.gameState = gameState;
+    @Override
+    public boolean botJoin(Map<String, Player> players, String id, Color color) {
+        botServices.addBot(players, id, Color.WHITE);
+        return false;
+    }
+
+    @Override
+    public boolean playerLeave(long playerId) {
+
+        return false;
+    }
+
+    @Override
+    public boolean playerDisconnect(long playerId) {
+
+        return false;
     }
 }
