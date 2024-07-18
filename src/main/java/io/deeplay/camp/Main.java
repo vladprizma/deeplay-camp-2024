@@ -1,11 +1,14 @@
 package io.deeplay.camp;
 
 import config.LoadServerProperties;
+import handlers.ClientHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 
 // Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
@@ -15,6 +18,7 @@ public class Main {
     private static String serverIp;
     private static int serverPort;
     private static int maxLengthQueue = 50;
+    private static final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
     
     public static void main(String[] args) throws IOException {
         var properties = LoadServerProperties.loadConfig();
@@ -27,7 +31,7 @@ public class Main {
             
             while (true) {
                 Socket clientSocket = serverSocket.accept();
-                new Thread().start();
+                executor.execute(new ClientHandler(clientSocket));
             }
         } 
     }
