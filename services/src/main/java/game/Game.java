@@ -11,13 +11,13 @@ import java.util.Map;
 
 public class Game {
 
-    private GameLogic gameLogic;
-    private BoardLogic boardLogic;
+    public GameLogic gameLogic;
+    public BoardLogic boardLogic;
 
-    private String currentPlayerId;
-    private Board board;
-    private Map<String, Player> players = new HashMap();
-    private GameStatus gameState;
+    public String currentPlayerId;
+    public Board board;
+    public Map<String, Player> players = new HashMap();
+    public GameStatus gameState;
 
     public Game() {
         board = new Board();
@@ -33,23 +33,28 @@ public class Game {
     public void playGame() {
         while (gameState == GameStatus.IN_PROGRESS) {
             gameLogic.display(board, currentPlayerId, boardLogic);
-            if (gameLogic.moveMade(board, players, currentPlayerId, boardLogic)) {
+            if (gameLogic.moveMade(players, currentPlayerId, boardLogic)) {
                 try {
                     Thread.sleep(20);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
-                boolean isGameOver = gameLogic.checkForWin(board);
-                if (isGameOver) {
-                    gameLogic.display(board, currentPlayerId, boardLogic);
-                    gameLogic.displayEndGame(board, boardLogic);
-                    gameLogic.gameFinished();
-                    break;
-                }
             } else {
                 gameLogic.moveSkipped(currentPlayerId);
             }
+            boolean isGameOver = gameLogic.checkForWin(board);
+            if (isGameOver) {
+                gameLogic.display(board, currentPlayerId, boardLogic);
+                gameLogic.displayEndGame(boardLogic);
+                gameLogic.gameFinished();
+                gameState = GameStatus.FINISHED;
+                break;
+            }
             currentPlayerId = gameLogic.playerTurn(currentPlayerId, players);
         }
+    }
+
+    public GameStatus getGameState() {
+        return gameState;
     }
 }

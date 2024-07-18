@@ -6,7 +6,6 @@ import entity.Bot;
 import entity.Player;
 import entity.Tile;
 import enums.Color;
-import enums.PlayerType;
 
 import java.util.Map;
 
@@ -19,8 +18,8 @@ public class BotServices {
         }
     }
 
-    public boolean makeMove(Board board, String currentPlayerId, BoardLogic boardLogic) {
-        int[] move = getCurrentPlayerMove(board, currentPlayerId, boardLogic);
+    public boolean makeMove(String currentPlayerId, BoardLogic boardLogic) {
+        int[] move = getCurrentPlayerMove(currentPlayerId, boardLogic);
         if (move != null) {
             int x = move[0];
             int y = move[1];
@@ -31,7 +30,7 @@ public class BotServices {
         }
     }
 
-    public int[] getCurrentPlayerMove(Board board, String currentPlayerId, BoardLogic boardLogic) {
+    public int[] getCurrentPlayerMove(String currentPlayerId, BoardLogic boardLogic) {
         int[] move;
         move = getBotMove(currentPlayerId, boardLogic);
 
@@ -40,7 +39,7 @@ public class BotServices {
                 return new int[]{move[0], move[1]};
             } else {
                 System.out.println("Данных ход невозможен, попробуйте еще раз.");
-                getCurrentPlayerMove(board, currentPlayerId, boardLogic);
+                getCurrentPlayerMove(currentPlayerId, boardLogic);
             }
             return new int[]{move[0], move[1]};
         } else {
