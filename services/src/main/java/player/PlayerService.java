@@ -1,7 +1,6 @@
 package player;
 
 import board.BoardLogic;
-import entity.Board;
 import entity.Player;
 import enums.Color;
 
@@ -9,7 +8,6 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class PlayerService {
-
     public void addPlayer(Map<String, Player> players, String id, Color color) {
         if (!players.containsKey(id)) {
             Player player = new Player(id, color);
@@ -17,33 +15,34 @@ public class PlayerService {
         }
     }
 
-    public boolean makeMove(Board board, String currentPlayerId, BoardLogic boardLogic) {
-        int[] move = getCurrentPlayerMove(board, currentPlayerId, boardLogic);
+    public boolean makeUserMove(String currentPlayerId, BoardLogic boardLogic) {
+        System.out.println("Введите ваш ход (например, 'e2' или 'f6'):");
+        Scanner scanner = new Scanner(System.in);
+        return makeMove(scanner.nextLine(), currentPlayerId, boardLogic);
+    }
+
+    public boolean makeMove(String userInput, String currentPlayerId, BoardLogic boardLogic) {
+        int[] move = getCurrentPlayerMove(userInput, currentPlayerId, boardLogic);
         int x = move[0];
         int y = move[1];
         boardLogic.setPiece(x, y, Integer.parseInt(currentPlayerId));
         return true;
     }
 
-    public int[] getCurrentPlayerMove(Board board, String currentPlayerId, BoardLogic boardLogic) {
+    public int[] getCurrentPlayerMove(String userInput, String currentPlayerId, BoardLogic boardLogic) {
         int[] move;
-            move = getUserMove();
+        move = getUserMove(userInput);
         if (boardLogic.isValidMove(move[0], move[1], Integer.parseInt(currentPlayerId))) {
             return new int[]{move[0], move[1]};
         } else {
             System.out.println("Данных ход невозможен, попробуйте еще раз.");
-            getCurrentPlayerMove(board, currentPlayerId, boardLogic);
+            getCurrentPlayerMove(userInput, currentPlayerId, boardLogic);
         }
         return new int[]{move[0], move[1]};
     }
 
-
-    public int[] getUserMove() {
+    public int[] getUserMove(String userInput) {
         int[] move = new int[2];
-
-        System.out.println("Введите ваш ход (например, 'e2' или 'f6'):");
-        Scanner scanner = new Scanner(System.in);
-        String userInput = scanner.nextLine();
 
         if (userInput.length() == 2 &&
                 userInput.charAt(0) >= 'a' && userInput.charAt(0) <= 'h' &&
@@ -51,9 +50,6 @@ public class PlayerService {
 
             move[0] = userInput.charAt(0) - 'a';
             move[1] = Math.abs(userInput.charAt(1) - '8');
-        } else {
-            System.out.println("Неверный ход. Попробуйте ещё раз.");
-            move = getUserMove();
         }
         return move;
     }
