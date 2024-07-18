@@ -249,16 +249,6 @@ public class BoardLogic {
         whiteValidMoves &= ~allChips;
     }
 
-    public long getBlackValidMoves() {
-        createValidMoves();
-        return blackValidMoves;
-    }
-
-    public long getWhiteValidMoves() {
-        createValidMoves();
-        return whiteValidMoves;
-    }
-
     // Вызов доски
     public StringBuilder getBoardState(int player) {
         createValidMoves();
@@ -291,5 +281,39 @@ public class BoardLogic {
 
         state.append("\n\n");
         return state;
+    }
+
+    public long getBlackValidMoves() {
+        createValidMoves();
+        return blackValidMoves;
+    }
+
+    public long getWhiteValidMoves() {
+        createValidMoves();
+        return whiteValidMoves;
+    }
+
+    public void setBlackValidMoves(long blackValidMoves) {
+        this.blackValidMoves = blackValidMoves;
+    }
+
+    public void setWhiteValidMoves(long whiteValidMoves) {
+        this.whiteValidMoves = whiteValidMoves;
+    }
+
+    public long getBlackChips() {
+        return blackChips;
+    }
+
+    public void setBlackChips(long blackChips) {
+        this.blackChips = blackChips;
+    }
+
+    public long getWhiteChips() {
+        return whiteChips;
+    }
+
+    public void setWhiteChips(long whiteChips) {
+        this.whiteChips = whiteChips;
     }
 }
