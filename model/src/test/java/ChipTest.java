@@ -1,9 +1,7 @@
-import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import entity.Chip;
-import enums.Color;
 import entity.Tile;
 
 public class ChipTest {
