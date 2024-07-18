@@ -14,16 +14,16 @@ public class ChipTest {
 
     @Test
     public void testGetPosition() {
-        startingPosition = new Tile(Color.WHITE, 1, 1);
+        startingPosition = new Tile(1, 1);
         chip = new Chip(startingPosition);
         assertEquals(startingPosition, chip.getPosition());
     }
 
     @Test
     public void testMoveTo() {
-        startingPosition = new Tile(Color.WHITE, 1, 1);
+        startingPosition = new Tile(1, 1);
         chip = new Chip(startingPosition);
-        destination = new Tile(Color.WHITE, 2, 2);
+        destination = new Tile(2, 2);
         chip.moveTo(destination);
         assertEquals(destination, chip.getPosition());
     }
