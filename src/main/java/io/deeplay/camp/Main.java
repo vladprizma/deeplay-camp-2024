@@ -29,7 +29,6 @@ public class Main {
                 Socket clientSocket = serverSocket.accept();
                 new Thread().start();
             }
-        }
-        else logger.error("Не удалось запустить сервер. Проверьте логи, чтобы найти причину.");
+        } 
     }
 }
