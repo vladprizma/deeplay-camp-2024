@@ -9,7 +9,7 @@ import enums.GameStatus;
 import java.util.Map;
 
 public interface ReversiListener {
-    boolean moveMade(Board board, Map<String, Player> players, String currentPlayerId, BoardLogic boardLogic);
+    boolean moveMade(Map<String, Player> players, String currentPlayerId, BoardLogic boardLogic);
     boolean moveSkipped(String playerId);
 
     GameStatus gameFinished();
