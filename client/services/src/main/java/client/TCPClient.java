@@ -1,5 +1,8 @@
 package client;
 
+import io.deeplay.camp.Main;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import request.Request;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -9,6 +12,8 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 public class TCPClient implements Client {
+
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
     private String serverIp;
     private int serverPort;
     private Socket socket;
@@ -35,9 +40,9 @@ public class TCPClient implements Client {
 
         String response = reader.readLine();
         if (response != null) {
-            System.out.println("Сервер ответил: " + response);
+            logger.info("Сервер ответил: " + response);
         } else {
-            System.out.println("Сервер не ответил на запрос.");
+            logger.info("Сервер не ответил на запрос.");
         }
     }
 }

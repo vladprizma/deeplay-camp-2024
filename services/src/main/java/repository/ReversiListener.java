@@ -23,7 +23,4 @@ public interface ReversiListener {
 
     boolean playerJoin(Map<String, Player> players, String id, Color color);
     boolean botJoin(Map<String, Player> players, String id, Color color);
-    boolean playerLeave(long playerId);
-    boolean playerDisconnect(long playerId);
-
 }

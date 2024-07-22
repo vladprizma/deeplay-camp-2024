@@ -90,14 +90,4 @@ public class GameLogicTest {
         assertEquals("2", gameLogic.playerTurn("1", players));
         assertEquals("1", gameLogic.playerTurn("2", players));
     }
-
-    @Test
-    void playerLeave_ShouldAlwaysReturnFalse() {
-        assertFalse(gameLogic.playerLeave(123L));
-    }
-
-    @Test
-    void playerDisconnect_ShouldAlwaysReturnFalse() {
-        assertFalse(gameLogic.playerDisconnect(123L));
-    }
 }

@@ -107,16 +107,4 @@ public class GameLogic implements ReversiListener {
         botServices.addBot(players, id, Color.WHITE);
         return false;
     }
-
-    @Override
-    public boolean playerLeave(long playerId) {
-
-        return false;
-    }
-
-    @Override
-    public boolean playerDisconnect(long playerId) {
-
-        return false;
-    }
 }
