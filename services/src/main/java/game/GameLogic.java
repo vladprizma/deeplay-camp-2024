@@ -47,7 +47,7 @@ public class GameLogic implements ReversiListener {
         displayServices.displayEndGame(boardLogic);
     }
 
-    @Override
+    @Override 
     public boolean moveMade(Map<String, Player> players, String currentPlayerId, BoardLogic boardLogic) {
         if (players.get(currentPlayerId) instanceof Bot) {
             return botServices.makeMove(currentPlayerId, boardLogic);

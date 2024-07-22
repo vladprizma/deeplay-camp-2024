@@ -1,11 +1,12 @@
 package handlers;
 
 import entity.GameSession;
+import entity.Player;
 import enums.GameStatus;
 import io.deeplay.camp.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import session.SessionManager;
+import managers.SessionManager;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,31 +20,47 @@ public class ClientHandler implements Runnable {
     private PrintWriter out;
     private BufferedReader in;
     private GameSession session;
-
+    private Player player;
+    
     public ClientHandler(Socket socket) {
         this.socket = socket;
+
+        try {
+            this.out = new PrintWriter(socket.getOutputStream(), true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     
     @Override
     public void run() {
         try {
-            out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            SessionManager.getInstance().addHandler(this);
             
             logger.info("Ожидание сессии.");
+            sendMessageToClient("Ожидание сессии.");
 
-            session = SessionManager.getInstance().findOrCreateSession(this);
+            var result = SessionManager.getInstance().findOrCreateSession(this);
             
-            while (session.gameState == GameStatus.NOT_STARTED) Thread.sleep(1000);
+            session = result.gameSession;
+            player = result.player;
+            
+            while (session.gameState == GameStatus.NOT_STARTED) {
+                Thread.sleep(1000);
+            }
             
             logger.info("Противник нашёлся. Игра начинается...");
+            sendMessageToClient("Противник нашёлся. Игра начинается...");
             
             String message;
-            
             //обработка запросов пользователя
             while ((message = in.readLine()) != null) {
                 logger.info(message);
-                if (message.equals("bb")) closeConnection();
+                if (message.equals("disconnect")) closeConnection();
+                else if (message.equals("pause")) SessionManager.getInstance().sendMessageToOpponent(this, session, player.getId() + " start pause");
+                else logger.info("Empty request");
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
@@ -51,10 +68,28 @@ public class ClientHandler implements Runnable {
             closeConnection();
         }
     }
-
+    
+    public void sendMessageToClient(String msg) {
+        out.println(msg);
+    }
+    
+    public Player getHandlerPlayer() {
+        return player;
+    }
+    
+    public GameSession getHandlerSession() {
+        return session;
+    }
+    
+    public Socket getHandlerSocket() {
+        return socket;
+    }
+    
+    //удаление сессий
     private void closeConnection() {
         try {
             logger.info("Игрок отключился.");
+            SessionManager.getInstance().deleteHandler(this);
             
             if (socket != null) socket.close();
             if (out != null) out.close();
