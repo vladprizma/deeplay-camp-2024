@@ -1,7 +1,5 @@
 package entity;
 
-import enums.Color;
-
 public class Chip {
     private Tile position;
 
