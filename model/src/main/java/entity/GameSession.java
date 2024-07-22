@@ -8,9 +8,20 @@ import java.util.Map;
 public class GameSession {
     public String currentPlayerId;
     public Board board;
-    public Map<String, Player> players = new HashMap();
+    public Player player1;
+    public Player player2;
     public GameStatus gameState = GameStatus.NOT_STARTED;
-
+    public String sessionId;
+    
+    public int getPlayersCount() {
+        var count = 0;
+        
+        if (player1 != null) count += 1;
+        if (player2 != null) count += 1;
+        
+        return count;
+    }
+    
 //    public Game() {
 //        board = new Board();
 //        boardLogic = new BoardLogic(board);
