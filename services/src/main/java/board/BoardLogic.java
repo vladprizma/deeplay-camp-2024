@@ -136,6 +136,7 @@ public class BoardLogic {
 
     // Проверка на возможность хода
     public boolean isValidMove(int x, int y, int player) {
+        createValidMoves();
         if (player == 1) {
             return (blackValidMoves & (1L << (x + 8 * y))) != 0;
         } else if (player == 2) {
