@@ -118,7 +118,7 @@ public class BoardLogic {
                 whiteChips = currentChips;
                 blackChips = invertedChips;
             }
-        } else System.out.println("Unexpected move");
+        }
     }
 
     //!! Убрать фишку
@@ -136,12 +136,13 @@ public class BoardLogic {
 
     // Проверка на возможность хода
     public boolean isValidMove(int x, int y, int player) {
-        createValidMoves();
         if (player == 1) {
             return (blackValidMoves & (1L << (x + 8 * y))) != 0;
         } else if (player == 2) {
             return (whiteValidMoves & (1L << (x + 8 * y))) != 0;
-        } else return false;
+        } else {
+            return false;
+        }
     }
 
     // Получение возможных вариантов

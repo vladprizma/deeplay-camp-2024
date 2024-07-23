@@ -11,6 +11,7 @@ repositories {
 
 dependencies {
     implementation(project(":model"))
+    implementation(project(":utilities"))
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.junit.jupiter:junit-jupiter")
