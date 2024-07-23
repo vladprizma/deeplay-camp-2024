@@ -4,11 +4,19 @@ import entity.GameSession;
 import entity.Player;
 
 public class SessionResult {
-    public GameSession gameSession;
-    public Player player;
+    private GameSession gameSession;
+    private Player player;
 
     public SessionResult(GameSession session, Player player) {
         gameSession = session;
         this.player = player;
+    }
+    
+    public GameSession getGameSession() {
+        return gameSession;
+    }
+    
+    public Player getPlayer() {
+        return player;
     }
 }
