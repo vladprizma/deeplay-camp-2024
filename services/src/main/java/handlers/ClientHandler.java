@@ -7,6 +7,7 @@ import io.deeplay.camp.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import managers.SessionManager;
+import token.JwtService;
 import token.RefreshTokenService;
 import user.UserService;
 
@@ -30,6 +31,7 @@ public class ClientHandler implements Runnable {
     private User user;
     private RefreshTokenService refreshTokenService = new RefreshTokenService();
     private UserService userService = new UserService();
+    private JwtService jwtService = new JwtService();
 
     /**
      * Constructor for ClientHandler.
@@ -66,6 +68,8 @@ public class ClientHandler implements Runnable {
                     handleLogin(message);
                 } else if (message.startsWith("register")) {
                     handleRegister(message);
+                } else if (message.startsWith("session-start")) {
+                    handleSessionStart(message);
                 } else if (message.startsWith("start")) {
                     var result = SessionManager.getInstance().findOrCreateSession(this);
                     session = result.getGameSession();
@@ -141,6 +145,31 @@ public class ClientHandler implements Runnable {
         } catch (SQLException e) {
             logger.error("Error during registration: ", e);
             sendMessageToClient("Registration failed due to server error.");
+        }
+    }
+
+    private void handleSessionStart(String message) {
+        try {
+            // Parse the JWT token from the message
+            String[] parts = message.split(" ");
+            String jwtToken = parts[1];
+            String username = jwtService.extractUsername(jwtToken);
+            Optional<User> optionalUser = userService.getUserByUsername(username);
+
+            if (jwtService.isTokenValid(jwtToken, optionalUser.get())) {
+                if (optionalUser.isPresent()) {
+                    this.user = optionalUser.get();
+                    sendMessageToClient("Session started successfully. Welcome back, " + username);
+                    sendMessageToClient(user.getUsername() + "::" + user.getUserPhoto() + "::" + user.getMatches() + "::" + user.getRating());
+                } else {
+                    sendMessageToClient("User not found.");
+                }
+            } else {
+                sendMessageToClient("Invalid or expired JWT token. Please login again.");
+            }
+        } catch (SQLException e) {
+            logger.error("Error during session start: ", e);
+            sendMessageToClient("Session start failed due to server error.");
         }
     }
     
