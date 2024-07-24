@@ -32,7 +32,7 @@ CREATE TABLE "chat_messages" (
 
 CREATE TABLE "tokens" (
     "id" SERIAL PRIMARY KEY,
-    "user_id" INT,
+    "user_id" INT UNIQUE,
     "refresh_token" VARCHAR(255) UNIQUE NOT NULL,
     "update_token" VARCHAR(255) UNIQUE NOT NULL
 );

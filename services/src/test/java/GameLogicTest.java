@@ -1,6 +1,6 @@
 import board.BoardLogic;
 import entity.Board;
-import entity.Player;
+import entity.User;
 import enums.Color;
 import enums.GameStatus;
 import game.GameLogic;
@@ -28,8 +28,8 @@ public class GameLogicTest {
     @Test
     void setCurrentPlayer_ShouldReturnPlayerId_WhenPlayerExists() {
         int playerId = 12;
-        Map<String, Player> players = new HashMap<>();
-        players.put(Integer.toString(playerId), new Player(playerId, Color.BLACK, "", ""));
+        Map<String, User> players = new HashMap<>();
+        players.put(Integer.toString(playerId), new User(playerId, "", "", 1, 1, ""));
 
         String result = gameLogic.setCurrentPlayer(Integer.toString(playerId), players);
 
@@ -39,7 +39,7 @@ public class GameLogicTest {
     @Test
     void setCurrentPlayer_ShouldThrowException_WhenPlayerDoesNotExist() {
         String playerId = "nonExistingPlayer";
-        Map<String, Player> players = new HashMap<>();
+        Map<String, User> players = new HashMap<>();
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             gameLogic.setCurrentPlayer(playerId, players);
@@ -83,9 +83,9 @@ public class GameLogicTest {
 
     @Test
     void playerTurn_ShouldTogglePlayers() {
-        Map<String, Player> players = new HashMap<>();
-        players.put("1", new Player(1, Color.BLACK, "", ""));
-        players.put("2", new Player(2, Color.WHITE, "", ""));
+        Map<String, User> players = new HashMap<>();
+        players.put("1", new User(1,  "", "", 1, 1, ""));
+        players.put("2", new User(2, "", "", 1, 1, ""));
 
         assertEquals("2", gameLogic.playerTurn("1", players));
         assertEquals("1", gameLogic.playerTurn("2", players));

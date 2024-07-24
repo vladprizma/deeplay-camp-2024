@@ -1,12 +1,12 @@
 import board.BoardLogic;
 import entity.Board;
 import entity.Bot;
-import entity.Player;
+import entity.User;
 import enums.Color;
 import game.GameLogic;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import player.PlayerService;
+import user.UserService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,15 +16,15 @@ import static org.junit.jupiter.api.Assertions.*;
 public class PlayerServicesTest {
 
     private Board board;
-    private PlayerService playerServices;
-    private Map<Integer, Player> players;
+    private UserService playerServices;
+    private Map<Integer, User> players;
     private BoardLogic boardLogic;
     private GameLogic gameLogic;
 
     @BeforeEach
     public void setUp() {
         board = new Board();
-        playerServices = new PlayerService();
+        playerServices = new UserService();
         boardLogic = new BoardLogic(board);
         players = new HashMap<>();
         gameLogic = new GameLogic(boardLogic);
@@ -41,7 +41,7 @@ public class PlayerServicesTest {
         playerServices.addPlayer(players, Integer.parseInt(id), color, "", "");
 
         assertTrue(players.containsKey(id));
-        assertTrue(players.get(id) instanceof Player);
+        assertTrue(players.get(id) instanceof User);
     }
 
     @Test

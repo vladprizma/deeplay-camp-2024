@@ -1,4 +1,4 @@
-import entity.Player;
+import entity.User;
 import enums.Color;
 import org.junit.jupiter.api.Test;
 
@@ -10,10 +10,9 @@ public class PlayerTest {
         String expectedId = "1";
         Color expectedColor = Color.BLACK;
 
-        Player player = new Player(Integer.parseInt(expectedId), expectedColor, "", "");
+        User player = new User(Integer.parseInt(expectedId), "", "", 1, 1, "");
 
         assertEquals(expectedId, player.getId());
-        assertEquals(expectedColor, player.getColor());
     }
 
     @Test
@@ -22,8 +21,8 @@ public class PlayerTest {
         String expectedId2 = "2";
         Color expectedColor = Color.WHITE;
 
-        Player player1 = new Player(Integer.parseInt(expectedId1), expectedColor, "", "");
-        Player player2 = new Player(Integer.parseInt(expectedId2), expectedColor, "", "");
+        User player1 = new User(Integer.parseInt(expectedId1), "", "", 1, 1, "");
+        User player2 = new User(Integer.parseInt(expectedId2), "", "", 1, 1, "");
 
         assertEquals(expectedId1, player1.getId());
         assertEquals(expectedId2, player2.getId());
@@ -35,10 +34,7 @@ public class PlayerTest {
         Color expectedColor1 = Color.WHITE;
         Color expectedColor2 = Color.BLACK;
 
-        Player player1 = new Player(Integer.parseInt(expectedId), expectedColor1, "", "");
-        Player player2 = new Player(Integer.parseInt(expectedId), expectedColor2, "", "");
-
-        assertEquals(expectedColor1, player1.getColor());
-        assertEquals(expectedColor2, player2.getColor());
+        User player1 = new User(Integer.parseInt(expectedId), "", "", 1, 1, "");
+        User player2 = new User(Integer.parseInt(expectedId), "", "", 1, 1, "");
     }
 }

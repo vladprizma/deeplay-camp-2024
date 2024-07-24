@@ -1,9 +1,8 @@
 package bot;
 
 import board.BoardLogic;
-import entity.Board;
 import entity.Bot;
-import entity.Player;
+import entity.User;
 import entity.Tile;
 import enums.Color;
 
@@ -11,9 +10,9 @@ import java.util.Map;
 
 public class BotServices {
 
-    public void addBot(Map<String, Player> players, String id, Color color) {
+    public void addBot(Map<String, User> players, String id, Color color) {
         if (!players.containsKey(id)) {
-            Player player = new Bot(id, color);
+            User player = new Bot(id, color);
             players.put(id, player);
         }
     }

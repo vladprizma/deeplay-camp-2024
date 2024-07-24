@@ -1,6 +1,6 @@
 package token;
 
-import entity.Player;
+import entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -21,11 +21,11 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public String generateToken(Player user) {
+    public String generateToken(User user) {
         return generateToken(new HashMap<>(), user);
     }
 
-    public String generateToken(Map<String, Object> extraClaims, Player user) {
+    public String generateToken(Map<String, Object> extraClaims, User user) {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
@@ -36,7 +36,7 @@ public class JwtService {
                 .compact();
     }
 
-    public boolean isTokenValid(String token, Player userDetails) {
+    public boolean isTokenValid(String token, User userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }

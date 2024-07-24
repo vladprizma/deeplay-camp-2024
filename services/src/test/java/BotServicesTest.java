@@ -2,7 +2,7 @@ import board.BoardLogic;
 import bot.BotServices;
 import entity.Board;
 import entity.Bot;
-import entity.Player;
+import entity.User;
 import enums.Color;
 import game.GameLogic;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +16,7 @@ public class BotServicesTest {
 
     private Board board;
     private BotServices botServices;
-    private Map<String, Player> players;
+    private Map<String, User> players;
     private BoardLogic boardLogic;
     private GameLogic gameLogic;
 
