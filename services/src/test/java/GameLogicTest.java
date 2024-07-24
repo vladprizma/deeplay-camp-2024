@@ -27,11 +27,11 @@ public class GameLogicTest {
 
     @Test
     void setCurrentPlayer_ShouldReturnPlayerId_WhenPlayerExists() {
-        String playerId = "existingPlayer";
+        int playerId = 12;
         Map<String, Player> players = new HashMap<>();
-        players.put(playerId, new Player(playerId, Color.BLACK));
+        players.put(Integer.toString(playerId), new Player(playerId, Color.BLACK, "", ""));
 
-        String result = gameLogic.setCurrentPlayer(playerId, players);
+        String result = gameLogic.setCurrentPlayer(Integer.toString(playerId), players);
 
         assertEquals(playerId, result);
     }
@@ -84,8 +84,8 @@ public class GameLogicTest {
     @Test
     void playerTurn_ShouldTogglePlayers() {
         Map<String, Player> players = new HashMap<>();
-        players.put("1", new Player("1", Color.BLACK));
-        players.put("2", new Player("2", Color.WHITE));
+        players.put("1", new Player(1, Color.BLACK, "", ""));
+        players.put("2", new Player(2, Color.WHITE, "", ""));
 
         assertEquals("2", gameLogic.playerTurn("1", players));
         assertEquals("1", gameLogic.playerTurn("2", players));

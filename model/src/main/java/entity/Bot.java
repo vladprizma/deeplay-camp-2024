@@ -6,6 +6,6 @@ import javax.swing.*;
 
 public class Bot extends Player {
     public Bot(String id, Color color) {
-        super(id, color, "", "");
+        super(Integer.parseInt(id), color, "", "");
     }
 }

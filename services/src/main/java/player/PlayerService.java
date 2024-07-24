@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class PlayerService {
-    public void addPlayer(Map<String, Player> players, String id, Color color, String username, String password) {
+    public void addPlayer(Map<Integer, Player> players, int id, Color color, String username, String password) {
         if (!players.containsKey(id)) {
             Player player = new Player(id, color, username, password);
             players.put(id, player);

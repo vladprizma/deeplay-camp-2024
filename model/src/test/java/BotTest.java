@@ -9,7 +9,7 @@ public class BotTest {
     public void testGetId_ShouldReturnCorrectId() {
         String expectedId = "1";
         Bot bot = new Bot(expectedId, Color.BLACK);
-        String actualId = bot.getId();
+        int actualId = bot.getId();
         assertEquals(expectedId, actualId);
     }
 

@@ -17,7 +17,7 @@ public class PlayerServicesTest {
 
     private Board board;
     private PlayerService playerServices;
-    private Map<String, Player> players;
+    private Map<Integer, Player> players;
     private BoardLogic boardLogic;
     private GameLogic gameLogic;
 
@@ -28,8 +28,8 @@ public class PlayerServicesTest {
         boardLogic = new BoardLogic(board);
         players = new HashMap<>();
         gameLogic = new GameLogic(boardLogic);
-        playerServices.addPlayer(players, "1", Color.BLACK);
-        playerServices.addPlayer(players, "2", Color.WHITE);
+        playerServices.addPlayer(players, 1, Color.BLACK, "", "");
+        playerServices.addPlayer(players, 2, Color.WHITE, "", "");
     }
 
     @Test
@@ -38,7 +38,7 @@ public class PlayerServicesTest {
         Color color = Color.BLACK;
         assertFalse(players.containsKey(id));
 
-        playerServices.addPlayer(players, id, color);
+        playerServices.addPlayer(players, Integer.parseInt(id), color, "", "");
 
         assertTrue(players.containsKey(id));
         assertTrue(players.get(id) instanceof Player);
@@ -48,8 +48,8 @@ public class PlayerServicesTest {
     public void testAddBotDoesNotAtddBoWhenAlreadyPresent() {
         String id = "123";
         Color color = Color.BLACK;
-        players.put(id, new Bot(id, color));
-        playerServices.addPlayer(players, id, color);
+        players.put(Integer.parseInt(id), new Bot(id, color));
+        playerServices.addPlayer(players, Integer.parseInt(id), color, "", "");
         assertEquals(3, players.size());
     }
 

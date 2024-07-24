@@ -8,7 +8,7 @@ public class GameSession {
     private Player player1;
     private Player player2;
     private GameStatus gameState = GameStatus.NOT_STARTED;
-    private String sessionId;
+    private int sessionId;
 
     public int getPlayersCount() {
         int count = 0;
@@ -57,11 +57,11 @@ public class GameSession {
         this.player2 = player2;
     }
 
-    public String getSessionId() {
+    public int getSessionId() {
         return sessionId;
     }
 
-    public void setSessionId(String sessionId) {
+    public void setSessionId(int sessionId) {
         this.sessionId = sessionId;
     }
 }

@@ -15,16 +15,16 @@ import java.util.function.Function;
 
 public class JwtService {
     private static final String SECRET_KEY = "e6620c7252a94eb85d59399f3a07cc66c10f700365532dacf5dc234b1edf3c7c";
-    private final Integer HALF_AN_HOUR = 1000 * 60 * 60 * 500;
+    private final Integer HALF_AN_HOUR = 1000 * 60 * 30;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
-    
+
     public String generateToken(Player user) {
         return generateToken(new HashMap<>(), user);
     }
-    
+
     public String generateToken(Map<String, Object> extraClaims, Player user) {
         return Jwts
                 .builder()
@@ -62,7 +62,7 @@ public class JwtService {
                 .parseClaimsJws(token)
                 .getBody();
     }
-    
+
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);

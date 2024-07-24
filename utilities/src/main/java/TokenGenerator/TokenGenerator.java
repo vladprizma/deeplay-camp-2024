@@ -1,19 +1,12 @@
 package TokenGenerator;
 
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class TokenGenerator {
+    private static final AtomicInteger counter = new AtomicInteger(0);
 
-    public static String generateID() {
-        UUID uuid = UUID.randomUUID();
-        return uuid.toString().replace("-", "");
-    }
-
-    public static void main(String[] args) {
-        String player1Token = generateID();
-        String player2Token = generateID();
-
-        System.out.println("Player 1 token: " + player1Token);
-        System.out.println("Player 2 token: " + player2Token);
+    public static int generateID() {
+        return counter.incrementAndGet();
     }
 }
