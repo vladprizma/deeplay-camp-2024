@@ -1,6 +1,6 @@
 package token;
 
-import entity.Player;
+import entity.User;
 import io.deeplay.camp.dao.TokenDAO;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -14,32 +14,32 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 public class RefreshTokenService {
-    private static final String SECRET_KEY = "e6620c7252a94eb85d59399f3a07cc66c10f700365532dacf5dc234b1edf3c7c";
+    private static final String SECRET_KEY = "e6620c7252a94eb85d59399f3a07cc66c10f700365532dacf5dc234";
     private final Integer ONE_DAY = 1000 * 60 * 60 * 24;
     private final TokenDAO tokenDAO = new TokenDAO();
 
-    public String generateRefreshToken(Player user) throws SQLException {
+    public TokensRequest generateRefreshToken(User user) throws SQLException {
         String refreshToken = generateToken(new HashMap<>(), user);
-        String updateToken = generateToken(new HashMap<>(), user);
+        String updateToken = generateAccessToken(user);
+        var tokensRequest = new TokensRequest(refreshToken, updateToken);
         tokenDAO.saveToken(user.getId(), refreshToken, updateToken);
-        return refreshToken;
+        return tokensRequest;
     }
 
-    public boolean validateRefreshToken(String token, Player user) throws SQLException {
+    public boolean validateRefreshToken(String token, User user) throws SQLException {
         final Optional<String> storedToken = tokenDAO.getRefreshToken(user.getId());
         return storedToken.isPresent() && storedToken.get().equals(token) && !isTokenExpired(token);
     }
 
-    public String generateAccessToken(Player user) {
+    public String generateAccessToken(User user) {
         JwtService jwtService = new JwtService();
         return jwtService.generateToken(user);
     }
 
-    private String generateToken(Map<String, Object> extraClaims, Player user) {
+    private String generateToken(Map<String, Object> extraClaims, User user) {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)

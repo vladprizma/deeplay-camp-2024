@@ -1,13 +1,13 @@
 package managers;
 
 import entity.GameSession;
-import entity.Player;
+import entity.User;
 
 public class SessionResult {
     private GameSession gameSession;
-    private Player player;
+    private User player;
 
-    public SessionResult(GameSession session, Player player) {
+    public SessionResult(GameSession session, User player) {
         gameSession = session;
         this.player = player;
     }
@@ -16,7 +16,7 @@ public class SessionResult {
         return gameSession;
     }
     
-    public Player getPlayer() {
+    public User getPlayer() {
         return player;
     }
 }

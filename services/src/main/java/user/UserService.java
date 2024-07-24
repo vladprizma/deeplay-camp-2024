@@ -1,18 +1,40 @@
-package player;
+package user;
 
 import board.BoardLogic;
-import entity.Player;
+import entity.User;
 import enums.Color;
+import io.deeplay.camp.dao.UserDAO;
+import password.PasswordService;
 
+import java.sql.SQLException;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Scanner;
 
-public class PlayerService {
-    public void addPlayer(Map<Integer, Player> players, int id, Color color, String username, String password) {
+public class UserService {
+    private final UserDAO userDAO;
+
+    public UserService() {
+        this.userDAO = new UserDAO();
+    }
+    
+    public void addPlayer(Map<Integer, User> players, int id, Color color, String username, String password) {
         if (!players.containsKey(id)) {
-            Player player = new Player(id, color, username, password);
+            User player = new User(id, username, password, 1, 1, "");
             players.put(id, player);
         }
+    }
+
+    public int addUser(User user) throws SQLException {
+        return userDAO.addUser(user);
+    }
+    
+    public Optional<User> getUserByUsername(String username) throws SQLException {
+        return userDAO.getUserByUsername(username);
+    }
+    
+    public boolean verifyPassword(String password, String userPassword) {
+        return PasswordService.checkPassword(password, userPassword);
     }
 
     public boolean makeUserMove(String currentPlayerId, BoardLogic boardLogic) {
