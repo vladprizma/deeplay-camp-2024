@@ -46,14 +46,14 @@ public class SessionManager {
     public synchronized SessionResult findOrCreateSession(ClientHandler clientHandler) {
         for (GameSession session : sessions) {
             if (session.getPlayersCount() < 2 && session.getGameState() == GameStatus.NOT_STARTED) {
-                Player player2 = new Player(TokenGenerator.generateID(), Color.BLACK);
+                Player player2 = new Player(TokenGenerator.generateID(), Color.BLACK, "asd", "asd");
                 session.setPlayer2(player2);
                 session.setGameState(GameStatus.IN_PROGRESS);
                 return new SessionResult(session, player2);
             }
         }
         GameSession newSession = new GameSession();
-        Player player1 = new Player(TokenGenerator.generateID(), Color.WHITE);
+        Player player1 = new Player(TokenGenerator.generateID(), Color.WHITE, "asd", "asd");
         newSession.setPlayer1(player1);
         newSession.setSessionId(TokenGenerator.generateID());
         sessions.add(newSession);
