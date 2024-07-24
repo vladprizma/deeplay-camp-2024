@@ -3,9 +3,12 @@ package utils;
 import javafx.animation.Interpolator;
 import javafx.animation.Timeline;
 import javafx.animation.Transition;
+import javafx.beans.property.BooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Arc;
+import javafx.scene.shape.ArcType;
 import javafx.util.Duration;
 import viewmodel.MainMenuViewModel;
 
@@ -50,23 +53,18 @@ public class MainMenuController {
         return gradientAnimation;
     }
 
-    @FXML
-    private void initialize() {
-        playButton.disableProperty().bind(viewModel.playButtonEnabledProperty().not());
-        playButton.setOnAction(event -> viewModel.onPlayButtonClicked());
+    private void setupButton(Button button, Runnable actionOnClick, BooleanProperty enabledProperty) {
+        button.disableProperty().bind(enabledProperty.not());
+        button.setOnAction(event -> actionOnClick.run());
 
-        Transition gradientAnimation = createGradientAnimation(playButton);
-        playButton.setOnMouseEntered(event -> gradientAnimation.play());
-        playButton.setOnMouseExited(event -> gradientAnimation.stop());
+        Transition gradientAnimation = createGradientAnimation(button);
+        button.setOnMouseEntered(event -> gradientAnimation.play());
+        button.setOnMouseExited(event -> gradientAnimation.stop());
     }
 
     @FXML
-    private void settingsButtonClick() {
-        settingsButton.disableProperty().bind(viewModel.settingsButtonEnabledProperty().not());
-        settingsButton.setOnAction(event -> viewModel.onSettingsButtonClicked());
-
-        Transition gradientAnimation = createGradientAnimation(settingsButton);
-        settingsButton.setOnMouseEntered(event -> gradientAnimation.play());
-        settingsButton.setOnMouseExited(event -> gradientAnimation.stop());
+    private void initialize() {
+        setupButton(playButton, viewModel::onPlayButtonClicked, viewModel.playButtonEnabledProperty());
+        setupButton(settingsButton, viewModel::onSettingsButtonClicked, viewModel.settingsButtonEnabledProperty());
     }
 }

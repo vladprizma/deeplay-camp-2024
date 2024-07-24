@@ -20,7 +20,6 @@ javafx {
 
 dependencies {
     implementation(project(":client:view"))
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:2.0.20-Beta2")
     implementation("org.controlsfx:controlsfx:11.1.2")
     implementation("org.controlsfx:controlsfx:11.1.2") {
         exclude(group = "org.openjfx")

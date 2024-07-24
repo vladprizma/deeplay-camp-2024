@@ -1,36 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<AnchorPane prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utils.MainMenuController" stylesheets="@style/style.css">
+<AnchorPane id="mainWindow" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utils.MainMenuController" stylesheets="@style/style.css">
     <children>
         <ImageView fitHeight="1020.0" fitWidth="1860.0" layoutX="30.0" layoutY="30.0" pickOnBounds="true" preserveRatio="false">
             <image>
-                <Image url="@resources/trava.jpg" />
+                <Image url="https://sun9-7.userapi.com/impg/SpjG4-bdzTvr4-naJSVNm4ZzVrzYza5WuZKciw/EfDhIS3Bi0M.jpg?size=2322x1273&amp;quality=95&amp;sign=b1c949deaccf75f819f167b771b2b0a0&amp;type=album" />
             </image>
             <clip>
                 <Rectangle arcHeight="100.0" arcWidth="100.0" height="1020.0" width="1860.0"/>
             </clip>
         </ImageView>
-        <!-- Надпись REVERSE -->
-        <Label layoutX="506.0" layoutY="106.0" prefHeight="195.0" prefWidth="907.0" text="REVERSE" />
 
         <!-- Кнопка PLAY -->
         <Button fx:id="playButton" layoutX="710.0" layoutY="465.0" prefHeight="150.0" prefWidth="500.0" text="PLAY"/>
 
         <!-- Кнопка Settings -->
-        <Button fx:id="settingsButton" layoutX="710.0" layoutY="715.0" prefHeight="150.0" prefWidth="500.0" text="Settings"/>
+        <Button fx:id="settingsButton" layoutX="710.0" layoutY="715.0" prefHeight="150.0" prefWidth="500.0" text="SETTINGS"/>
 
         <!-- Кнопка Chat -->
-        <Button layoutX="53.0" layoutY="971.0" prefHeight="59.0" prefWidth="174.0" text="Chat" />
+        <Button fx:id="chatButton" layoutX="53.0" layoutY="971.0" prefHeight="59.0" prefWidth="174.0" text="CHAT" />
 
-        <!-- Кнопка с неопределенным названием -->
-        <Button layoutX="1734.0" layoutY="-12.0" prefHeight="202.0" prefWidth="136.0" />
+        <!-- тройная кнопка-кртинка -->
+        <Button id="roundGreenButton" layoutX="1730.0" layoutY="70.0" />
+        <ImageView fitHeight="200.0" fitWidth="185.0" layoutX="1720.0" layoutY="30.0" pickOnBounds="true" preserveRatio="false">
+            <image>
+                <Image url="@resources/pererb_1.png" />
+            </image>
+            <clip>
+                <Rectangle arcHeight="100.0" arcWidth="100.0" height="1020.0" width="1860.0"/>
+            </clip>
+        </ImageView>
+        <ImageView fitHeight="83.0" fitWidth="137.0" layoutX="1730.0" layoutY="130.0" pickOnBounds="true" preserveRatio="false" scaleX="-1">
+            <image>
+                <Image url="@resources/duga.png" />
+            </image>
+            <clip>
+                <Rectangle arcHeight="100.0" arcWidth="100.0" height="1020.0" width="1860.0"/>
+            </clip>
+        </ImageView>
 
         <!-- Кнопка Exit -->
         <Button layoutX="1706.0" layoutY="866.0" prefHeight="184.0" prefWidth="184.0" text="Exit" />
