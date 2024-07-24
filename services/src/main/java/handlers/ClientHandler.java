@@ -32,6 +32,7 @@ public class ClientHandler implements Runnable {
     private RefreshTokenService refreshTokenService = new RefreshTokenService();
     private UserService userService = new UserService();
     private JwtService jwtService = new JwtService();
+    private static String splitRegex = "::";
 
     /**
      * Constructor for ClientHandler.
@@ -97,7 +98,7 @@ public class ClientHandler implements Runnable {
     private void handleLogin(String message) {
         try {
             // Parse login information from the message
-            String[] parts = message.split(" ");
+            String[] parts = message.split(splitRegex);
             String username = parts[1];
             String password = parts[2];
 
@@ -126,7 +127,7 @@ public class ClientHandler implements Runnable {
     private void handleRegister(String message) {
         try {
             // Parse registration information from the message
-            String[] parts = message.split(" ");
+            String[] parts = message.split(splitRegex);
             String username = parts[1];
             String password = parts[2];
             String userPhoto = parts[3];
@@ -151,7 +152,7 @@ public class ClientHandler implements Runnable {
     private void handleSessionStart(String message) {
         try {
             // Parse the JWT token from the message
-            String[] parts = message.split(" ");
+            String[] parts = message.split(splitRegex);
             String jwtToken = parts[1];
             String username = jwtService.extractUsername(jwtToken);
             Optional<User> optionalUser = userService.getUserByUsername(username);
