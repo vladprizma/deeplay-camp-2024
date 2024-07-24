@@ -3,21 +3,21 @@ package entity;
 import enums.Color;
 
 public class Player {
-    private String id;
+    private int id;
     private Color color;
     private String username;
     private String password;
     private int rating;
     private int matches;
 
-    public Player(String id, Color color, String username, String password) {
+    public Player(int id, Color color, String username, String password) {
         this.id = id;
         this.color = color;
         this.username = username;
         this.password = password;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
