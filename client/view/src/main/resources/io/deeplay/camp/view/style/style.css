@@ -1,13 +1,13 @@
 #playButton, #settingsButton {
     -fx-background-color: linear-gradient(to right, #801db7, #48b15e);
     -fx-background-radius: 70;
-    -fx-border-color: black; /* Цвет рамки */
-    -fx-border-width: 5; /* Ширина рамки в пикселях */
-    -fx-border-radius: 60; /* Скругление рамки должно соответствовать скруглению фона */
+    -fx-border-color: black;
+    -fx-border-width: 5;
+    -fx-border-radius: 60;
     -fx-padding: 10px;
-    -fx-font-family: 'Just Me Again Down Here'; /* Название шрифта */
-    -fx-text-fill: rgb(44, 17, 63); /* Цвет текста */
-    -fx-font-size: 96px; /* Размер шрифта */
+    -fx-font-family: 'Just Me Again Down Here';
+    -fx-text-fill: rgb(44, 17, 63);
+    -fx-font-size: 96px;
     -fx-line-spacing: 47px;
 }
 
@@ -15,9 +15,9 @@
     -fx-background-color: rgba(217, 217, 217, 0.5);
     -fx-background-radius: 70;
     -fx-padding: 10px;
-    -fx-font-family: 'Julee'; /* Название шрифта */
-    -fx-text-fill: white; /* Цвет текста */
-    -fx-font-size: 36px; /* Размер шрифта */
+    -fx-font-family: 'Julee';
+    -fx-text-fill: white;
+    -fx-font-size: 36px;
 }
 
 #mainWindow {
@@ -32,12 +32,12 @@
 
 #roundGreenButton {
     -fx-background-color: linear-gradient(to bottom, #18800E, #000000);
-    -fx-background-radius: 100; /* Делаем края круглыми, значение радиуса должно быть достаточно большим */
+    -fx-background-radius: 100;
     -fx-border-color: black;
     -fx-border-width: 13px;
-    -fx-border-radius: 100px; /* Скругление рамки должно соответствовать скруглению фона */
-    -fx-min-width: 136px; /* prefWidth из вашего примера */
-    -fx-min-height: 136px; /* должно быть равно prefWidth для круглой формы */
+    -fx-border-radius: 100px;
+    -fx-min-width: 136px;
+    -fx-min-height: 136px;
     -fx-max-width: 136px;
     -fx-max-height: 136px;
 }
