@@ -11,7 +11,7 @@
     <children>
         <ImageView fitHeight="1020.0" fitWidth="1860.0" layoutX="30.0" layoutY="30.0" pickOnBounds="true" preserveRatio="false">
             <image>
-                <Image url="@resources/trava.jpg" />
+                <Image url="https://sun9-7.userapi.com/impg/SpjG4-bdzTvr4-naJSVNm4ZzVrzYza5WuZKciw/EfDhIS3Bi0M.jpg?size=2322x1273&amp;quality=95&amp;sign=b1c949deaccf75f819f167b771b2b0a0&amp;type=album" />
             </image>
             <clip>
                 <Rectangle arcHeight="100.0" arcWidth="100.0" height="1020.0" width="1860.0"/>
