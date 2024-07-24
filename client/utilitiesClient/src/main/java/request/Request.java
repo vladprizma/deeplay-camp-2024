@@ -15,6 +15,10 @@ public class Request {
 
     @Override
     public String toString() {
-        return sessionToken + ";" + String.join(";", parameters) + ";" + method;
+
+        String result = (parameters == null) ? sessionToken + ";" + method :
+                sessionToken + ";" + String.join(";", parameters) + ";" + method;
+
+        return result;
     }
 }

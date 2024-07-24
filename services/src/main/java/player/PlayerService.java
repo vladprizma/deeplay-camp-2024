@@ -3,11 +3,16 @@ package player;
 import board.BoardLogic;
 import entity.Player;
 import enums.Color;
+import io.deeplay.camp.Main;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.Scanner;
 
 public class PlayerService {
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
+
     public void addPlayer(Map<String, Player> players, String id, Color color) {
         if (!players.containsKey(id)) {
             Player player = new Player(id, color);
@@ -16,7 +21,7 @@ public class PlayerService {
     }
 
     public boolean makeUserMove(String currentPlayerId, BoardLogic boardLogic) {
-        System.out.println("Введите ваш ход (например, 'e2' или 'f6'):");
+        logger.info("Введите ваш ход (например, 'e2' или 'f6'):");
         Scanner scanner = new Scanner(System.in);
         return makeMove(scanner.nextLine(), currentPlayerId, boardLogic);
     }
@@ -35,7 +40,7 @@ public class PlayerService {
         if (boardLogic.isValidMove(move[0], move[1], Integer.parseInt(currentPlayerId))) {
             return new int[]{move[0], move[1]};
         } else {
-            System.out.println("Данных ход невозможен, попробуйте еще раз.");
+            logger.info("Данных ход невозможен, попробуйте еще раз.");
             getCurrentPlayerMove(userInput, currentPlayerId, boardLogic);
         }
         return new int[]{move[0], move[1]};

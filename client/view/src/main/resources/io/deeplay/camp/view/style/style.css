@@ -1,0 +1,15 @@
+#playButton, #settingsButton {
+    -fx-effect: dropshadow(gaussian, hsla(100%, 100%, 100%, 10.5), 200, 10.3, 200, 200);
+    -fx-background-color: linear-gradient(to right, #801db7, #48b15e);
+    -fx-background-radius: 70;
+    -fx-border-color: black; /* Цвет рамки */
+    -fx-border-width: 5; /* Ширина рамки в пикселях */
+    -fx-border-radius: 60; /* Скругление рамки должно соответствовать скруглению фона */
+    -fx-padding: 10px;
+    -fx-font-family: 'Just Me Again Down Here'; /* Название шрифта */
+    -fx-font-size: 96px; /* Размер шрифта */
+    -fx-font-weight: 400; /* Насыщенность шрифта */
+    -fx-line-spacing: 47px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 20, 0, 20, 20);
+ }
+

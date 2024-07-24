@@ -11,10 +11,9 @@ public class PlayerTurnCommand implements Command {
     private final Client client;
     private final Request request;
 
-    public PlayerTurnCommand(Client client, String sessionToken, int id) {
+    public PlayerTurnCommand(Client client, String sessionToken) {
         this.client = client;
-        List<String> parameters = Arrays.asList(String.valueOf(id));
-        this.request = new Request(sessionToken, "pause", parameters);
+        this.request = new Request(sessionToken, "turn", null);
     }
 
     @Override

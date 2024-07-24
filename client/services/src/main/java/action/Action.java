@@ -7,60 +7,60 @@ import commands.*;
 import java.io.IOException;
 
 public class Action {
-    public void handleMoveAction(int id, int x, int y) {
+    private Client client;
+
+    public Action() throws IOException {
+        client = ClientManager.getClient();
+    }
+
+    public void handleMoveAction(int x, int y) {
         try {
-            Client client = ClientManager.getClient();
-            Command moveCommand = new MoveCommand(client, "sessionToken123", id, x, y);
+            Command moveCommand = new MoveCommand(client, "sessionToken123", x, y);
             moveCommand.execute();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void handleStartAction(int id) {
+    public void handleStartAction() {
         try {
-            Client client = ClientManager.getClient();
-            Command startCommand = new StartCommand(client, "sessionToken123", id);
+            Command startCommand = new StartCommand(client, "sessionToken123");
             startCommand.execute();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void handlePauseAction(int id) {
+    public void handlePauseAction() {
         try {
-            Client client = ClientManager.getClient();
-            Command pauseCommand = new PauseCommand(client, "sessionToken123", id);
+            Command pauseCommand = new PauseCommand(client, "sessionToken123");
             pauseCommand.execute();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void handleResumeAction(int id) {
+    public void handleResumeAction() {
         try {
-            Client client = ClientManager.getClient();
-            Command resumeCommand = new ResumeCommand(client, "sessionToken123", id);
+            Command resumeCommand = new ResumeCommand(client, "sessionToken123");
             resumeCommand.execute();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void handleSkipAction(int id) {
+    public void handleSkipAction() {
         try {
-            Client client = ClientManager.getClient();
-            Command skipCommand = new SkipCommand(client, "sessionToken123", id);
+            Command skipCommand = new SkipCommand(client, "sessionToken123");
             skipCommand.execute();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void handlePlayerTurnAction(int id) {
+    public void handlePlayerTurnAction() {
         try {
-            Client client = ClientManager.getClient();
-            Command playerTurnCommand = new PlayerTurnCommand(client, "sessionToken123", id);
+            Command playerTurnCommand = new PlayerTurnCommand(client, "sessionToken123");
             playerTurnCommand.execute();
         } catch (IOException e) {
             e.printStackTrace();

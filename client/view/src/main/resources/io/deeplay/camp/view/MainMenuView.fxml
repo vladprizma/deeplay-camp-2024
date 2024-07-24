@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<AnchorPane prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utils.MainMenuController" stylesheets="@style/style.css">
+    <children>
+        <ImageView fitHeight="1020.0" fitWidth="1860.0" layoutX="30.0" layoutY="30.0" pickOnBounds="true" preserveRatio="false">
+            <image>
+                <Image url="@resources/trava.jpg" />
+            </image>
+            <clip>
+                <Rectangle arcHeight="100.0" arcWidth="100.0" height="1020.0" width="1860.0"/>
+            </clip>
+        </ImageView>
+        <!-- Надпись REVERSE -->
+        <Label layoutX="506.0" layoutY="106.0" prefHeight="195.0" prefWidth="907.0" text="REVERSE" />
+
+        <!-- Кнопка PLAY -->
+        <Button fx:id="playButton" layoutX="710.0" layoutY="465.0" prefHeight="150.0" prefWidth="500.0" text="PLAY"/>
+
+        <!-- Кнопка Settings -->
+        <Button fx:id="settingsButton" layoutX="710.0" layoutY="715.0" prefHeight="150.0" prefWidth="500.0" text="Settings"/>
+
+        <!-- Кнопка Chat -->
+        <Button layoutX="53.0" layoutY="971.0" prefHeight="59.0" prefWidth="174.0" text="Chat" />
+
+        <!-- Кнопка с неопределенным названием -->
+        <Button layoutX="1734.0" layoutY="-12.0" prefHeight="202.0" prefWidth="136.0" />
+
+        <!-- Кнопка Exit -->
+        <Button layoutX="1706.0" layoutY="866.0" prefHeight="184.0" prefWidth="184.0" text="Exit" />
+    </children>
+</AnchorPane>

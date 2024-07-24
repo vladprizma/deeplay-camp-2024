@@ -11,9 +11,9 @@ public class MoveCommand implements Command {
     private final Client client;
     private final Request request;
 
-    public MoveCommand(Client client, String sessionToken, int x, int y, int z) {
+    public MoveCommand(Client client, String sessionToken, int x, int y) {
         this.client = client;
-        List<String> parameters = Arrays.asList(String.valueOf(x), String.valueOf(y), String.valueOf(z));
+        List<String> parameters = Arrays.asList(String.valueOf(x), String.valueOf(y));
         this.request = new Request(sessionToken, "move", parameters);
     }
 

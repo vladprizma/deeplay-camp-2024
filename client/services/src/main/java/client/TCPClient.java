@@ -10,9 +10,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class TCPClient implements Client {
 
+    private final ExecutorService executor = Executors.newCachedThreadPool();
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
     private String serverIp;
     private int serverPort;
@@ -24,6 +27,7 @@ public class TCPClient implements Client {
         this.serverIp = serverIp;
         this.serverPort = serverPort;
         initializeResources();
+        getResponse();
     }
 
     private void initializeResources() throws IOException {
@@ -33,16 +37,28 @@ public class TCPClient implements Client {
     }
 
     @Override
-    public void sendRequest(Request request) throws IOException {
-        writer.write(request.toString());
-        writer.newLine();
-        writer.flush();
+    public void sendRequest(Request request) {
+        executor.submit(() -> {
+            try {
+                writer.write(request.toString());
+                writer.newLine();
+                writer.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
 
-        String response = reader.readLine();
-        if (response != null) {
-            logger.info("Сервер ответил: " + response);
-        } else {
-            logger.info("Сервер не ответил на запрос.");
-        }
+    public void getResponse() {
+        executor.submit(() -> {
+            String serverResponse;
+            try {
+                while ((serverResponse = reader.readLine()) != null) {
+                    System.out.println("Server response: " + serverResponse);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

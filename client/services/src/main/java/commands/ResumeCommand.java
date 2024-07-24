@@ -11,10 +11,9 @@ public class ResumeCommand implements Command {
     private final Client client;
     private final Request request;
 
-    public ResumeCommand(Client client, String sessionToken, int id) {
+    public ResumeCommand(Client client, String sessionToken) {
         this.client = client;
-        List<String> parameters = Arrays.asList(String.valueOf(id));
-        this.request = new Request(sessionToken, "resume", parameters);
+        this.request = new Request(sessionToken, "resume", null);
     }
 
     @Override

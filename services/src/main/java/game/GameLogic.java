@@ -95,16 +95,4 @@ public class GameLogic implements ReversiListener {
             return setCurrentPlayer("1", players);
         }
     }
-
-    @Override
-    public boolean playerJoin(Map<String, Player> players, String id, Color color) {
-        playerService.addPlayer(players, id, Color.BLACK);
-        return false;
-    }
-
-    @Override
-    public boolean botJoin(Map<String, Player> players, String id, Color color) {
-        botServices.addBot(players, id, Color.WHITE);
-        return false;
-    }
 }

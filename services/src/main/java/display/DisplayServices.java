@@ -1,8 +1,12 @@
 package display;
 
 import board.BoardLogic;
+import io.deeplay.camp.Main;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DisplayServices {
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
     public void display(String currentPlayerId, BoardLogic boardLogic) {
         displayBoard(currentPlayerId, boardLogic);
@@ -10,7 +14,7 @@ public class DisplayServices {
     }
 
     public void displayBoard(String currentPlayerId, BoardLogic boardLogic) {
-        System.out.printf((boardLogic.getBoardState(Integer.parseInt(currentPlayerId))).toString());
+        logger.info((boardLogic.getBoardState(Integer.parseInt(currentPlayerId))).toString());
     }
 
     public void displayScore(BoardLogic boardLogic) {
@@ -18,24 +22,24 @@ public class DisplayServices {
         String scoreText = " Score: " + score[0] + " : " + score[1] + " ";
         int textLength = scoreText.length();
         printTopBorder(textLength);
-        System.out.println("│" + scoreText + "│");
+        logger.info("│" + scoreText + "│");
         printBottomBorder(textLength);
     }
 
     private static void printTopBorder(int length) {
-        System.out.print("┌");
+        logger.info("┌");
         for (int i = 0; i < length; i++) {
-            System.out.print("─");
+            logger.info("─");
         }
-        System.out.println("┐");
+        logger.info("┐");
     }
 
     private static void printBottomBorder(int length) {
-        System.out.print("[");
+        logger.info("[");
         for (int i = 0; i < length; i++) {
-            System.out.print("─");
+            logger.info("─");
         }
-        System.out.println("]");
+        logger.info("]");
     }
 
     public void displayEndGame(BoardLogic boardLogic) {
@@ -52,7 +56,7 @@ public class DisplayServices {
 
         int textLength = scoreText.length();
         printTopBorder(textLength);
-        System.out.println("│" + scoreText + "│");
+        logger.info("│" + scoreText + "│");
         printBottomBorder(textLength);
     }
 }

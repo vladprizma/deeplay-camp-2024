@@ -1,9 +1,13 @@
 package io.deeplay.camp;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 import java.net.*;
 
 public class Main {
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
     private static final String SERVER_ADDRESS = "localhost";
     private static final int SERVER_PORT = 8080;
 
@@ -13,16 +17,16 @@ public class Main {
              PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
              BufferedReader consoleInput = new BufferedReader(new InputStreamReader(System.in))) {
 
-            System.out.println("Connected to the server. Enter session ID to join:");
+            logger.info("Connected to the server. Enter session ID to join:");
 
             String sessionId = consoleInput.readLine();
-            out.println("join:" + sessionId);
+            logger.info("join:" + sessionId);
 
             Thread listenerThread = new Thread(() -> {
                 String serverResponse;
                 try {
                     while ((serverResponse = in.readLine()) != null) {
-                        System.out.println("Server response: " + serverResponse);
+                        logger.info("Server response: " + serverResponse);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();

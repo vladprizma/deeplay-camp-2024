@@ -1,7 +1,6 @@
 package bot;
 
 import board.BoardLogic;
-import entity.Board;
 import entity.Bot;
 import entity.Player;
 import entity.Tile;
@@ -35,12 +34,6 @@ public class BotServices {
         move = getBotMove(currentPlayerId, boardLogic);
 
         if (move != null) {
-            if (boardLogic.isValidMove(move[0], move[1], Integer.parseInt(currentPlayerId))) {
-                return new int[]{move[0], move[1]};
-            } else {
-                System.out.println("Данных ход невозможен, попробуйте еще раз.");
-                getCurrentPlayerMove(currentPlayerId, boardLogic);
-            }
             return new int[]{move[0], move[1]};
         } else {
             return null;
