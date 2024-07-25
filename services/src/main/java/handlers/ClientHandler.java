@@ -7,6 +7,7 @@ import io.deeplay.camp.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import managers.SessionManager;
+import password.PasswordService;
 import token.JwtService;
 import token.RefreshTokenService;
 import user.UserService;
@@ -132,7 +133,7 @@ public class ClientHandler implements Runnable {
             String password = parts[2];
             String userPhoto = parts[3];
 
-            User user = new User(0, username, password, 0, 0, userPhoto);
+            User user = new User(0, username, PasswordService.hashPassword(password), 0, 0, userPhoto);
             int userId = userService.addUser(user);
             user.setId(userId);
             this.user = user;
