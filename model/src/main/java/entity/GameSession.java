@@ -5,10 +5,23 @@ import enums.GameStatus;
 public class GameSession {
     private String currentPlayerId;
     private Board board;
-    private Player player1;
-    private Player player2;
+    private User player1;
+    private User player2;
     private GameStatus gameState = GameStatus.NOT_STARTED;
-    private String sessionId;
+    private int sessionId;
+    private String result;
+    private String log;
+    
+    public GameSession() {
+        
+    }
+
+    public GameSession(int id, User player1, String result, User player2, String log) {
+        this.sessionId = id;
+        this.result = result;
+        this.player1 = player1;
+        this.player2 = player2;
+    }
 
     public int getPlayersCount() {
         int count = 0;
@@ -16,7 +29,11 @@ public class GameSession {
         if (player2 != null) count++;
         return count;
     }
-
+    
+    public String getLog() { return log; }
+    
+    public void setLog(String log) { this.log = log; }
+    
     public GameStatus getGameState() {
         return gameState;
     }
@@ -32,6 +49,10 @@ public class GameSession {
     public void setCurrentPlayerId(String currentPlayerId) {
         this.currentPlayerId = currentPlayerId;
     }
+    
+    public void setResult(String result) { this.result = result; }
+    
+    public String getResult() { return result; }
 
     public Board getBoard() {
         return board;
@@ -41,27 +62,27 @@ public class GameSession {
         this.board = board;
     }
 
-    public Player getPlayer1() {
+    public User getPlayer1() {
         return player1;
     }
 
-    public void setPlayer1(Player player1) {
+    public void setPlayer1(User player1) {
         this.player1 = player1;
     }
 
-    public Player getPlayer2() {
+    public User getPlayer2() {
         return player2;
     }
 
-    public void setPlayer2(Player player2) {
+    public void setPlayer2(User player2) {
         this.player2 = player2;
     }
 
-    public String getSessionId() {
+    public int getSessionId() {
         return sessionId;
     }
 
-    public void setSessionId(String sessionId) {
+    public void setSessionId(int sessionId) {
         this.sessionId = sessionId;
     }
 }

@@ -2,7 +2,7 @@ package managers;
 
 import TokenGenerator.TokenGenerator;
 import entity.GameSession;
-import entity.Player;
+import entity.User;
 import enums.Color;
 import enums.GameStatus;
 import handlers.ClientHandler;
@@ -41,19 +41,19 @@ public class SessionManager {
      * Finds an existing game session or creates a new one for the provided client handler.
      *
      * @param clientHandler the client handler requesting a session
-     * @return the session result containing the game session and player
+     * @return the session result containing the game session and user
      */
     public synchronized SessionResult findOrCreateSession(ClientHandler clientHandler) {
         for (GameSession session : sessions) {
             if (session.getPlayersCount() < 2 && session.getGameState() == GameStatus.NOT_STARTED) {
-                Player player2 = new Player(TokenGenerator.generateID(), Color.BLACK);
+                User player2 = new User(TokenGenerator.generateID(), "asd", "asd", 1, 1, "");
                 session.setPlayer2(player2);
                 session.setGameState(GameStatus.IN_PROGRESS);
                 return new SessionResult(session, player2);
             }
         }
         GameSession newSession = new GameSession();
-        Player player1 = new Player(TokenGenerator.generateID(), Color.WHITE);
+        User player1 = new User(TokenGenerator.generateID(), "asd", "asd", 1, 1, "");
         newSession.setPlayer1(player1);
         newSession.setSessionId(TokenGenerator.generateID());
         sessions.add(newSession);

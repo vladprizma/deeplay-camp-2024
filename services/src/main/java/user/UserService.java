@@ -1,27 +1,44 @@
-package player;
+package user;
 
 import board.BoardLogic;
-import entity.Player;
+import entity.User;
 import enums.Color;
-import io.deeplay.camp.Main;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.deeplay.camp.dao.UserDAO;
+import password.PasswordService;
 
+import java.sql.SQLException;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Scanner;
 
-public class PlayerService {
-    private static final Logger logger = LoggerFactory.getLogger(Main.class);
+public class UserService {
+    private final UserDAO userDAO;
 
-    public void addPlayer(Map<String, Player> players, String id, Color color) {
+    public UserService() {
+        this.userDAO = new UserDAO();
+    }
+    
+    public void addPlayer(Map<Integer, User> players, int id, Color color, String username, String password) {
         if (!players.containsKey(id)) {
-            Player player = new Player(id, color);
+            User player = new User(id, username, password, 1, 1, "");
             players.put(id, player);
         }
     }
 
+    public int addUser(User user) throws SQLException {
+        return userDAO.addUser(user);
+    }
+    
+    public Optional<User> getUserByUsername(String username) throws SQLException {
+        return userDAO.getUserByUsername(username);
+    }
+    
+    public boolean verifyPassword(String password, String userPassword) {
+        return PasswordService.checkPassword(password, userPassword);
+    }
+
     public boolean makeUserMove(String currentPlayerId, BoardLogic boardLogic) {
-        logger.info("Введите ваш ход (например, 'e2' или 'f6'):");
+        System.out.println("Введите ваш ход (например, 'e2' или 'f6'):");
         Scanner scanner = new Scanner(System.in);
         return makeMove(scanner.nextLine(), currentPlayerId, boardLogic);
     }
@@ -40,7 +57,7 @@ public class PlayerService {
         if (boardLogic.isValidMove(move[0], move[1], Integer.parseInt(currentPlayerId))) {
             return new int[]{move[0], move[1]};
         } else {
-            logger.info("Данных ход невозможен, попробуйте еще раз.");
+            System.out.println("Данных ход невозможен, попробуйте еще раз.");
             getCurrentPlayerMove(userInput, currentPlayerId, boardLogic);
         }
         return new int[]{move[0], move[1]};
