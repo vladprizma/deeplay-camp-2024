@@ -9,18 +9,10 @@ CREATE TABLE "users" (
 
 CREATE TABLE "gamesessions" (
     "id" SERIAL PRIMARY KEY,
-    "session_id" VARCHAR(50) UNIQUE NOT NULL,
-    "current_player_id" VARCHAR(50),
-    "game_state" VARCHAR(50),
     "player1_id" INT,
-    "player2_id" INT
-);
-
-CREATE TABLE "replays" (
-    "id" SERIAL PRIMARY KEY,
     "result" VARCHAR(30) NOT NULL,
-    "game_session_id" INT,
-    "log" TEXT
+    "log" TEXT,
+    "player2_id" INT
 );
 
 CREATE TABLE "chat_messages" (
@@ -40,8 +32,6 @@ CREATE TABLE "tokens" (
 ALTER TABLE "gamesessions" ADD FOREIGN KEY ("player1_id") REFERENCES "users" ("id");
 
 ALTER TABLE "gamesessions" ADD FOREIGN KEY ("player2_id") REFERENCES "users" ("id");
-
-ALTER TABLE "replays" ADD FOREIGN KEY ("game_session_id") REFERENCES "gamesessions" ("id");
 
 ALTER TABLE "chat_messages" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
 
