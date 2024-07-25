@@ -81,14 +81,7 @@ public class ClientHandler implements Runnable {
                 } else if (message.startsWith("get-messages")) {
                     handleGetMessages();
                 } else if (message.startsWith("start")) {
-                    var result = SessionManager.getInstance().findOrCreateSession(this);
-                    session = result.getGameSession();
-                    while (session.getGameState() == GameStatus.NOT_STARTED) {
-                        Thread.sleep(1000);
-                    }
-
-                    logger.info(user.getId() + ": The enemy was found. The game begins...");
-                    sendMessageToClient(user.getId() + ": The enemy was found. The game begins...");
+                    handleStart();
                 }  else if (message.equals("disconnect")) {
                     closeConnection();
                 } else if (message.equals("pause")) {
@@ -97,7 +90,7 @@ public class ClientHandler implements Runnable {
                     logger.info("Empty request or bad request");
                 }
             }
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         } finally {
             closeConnection();
@@ -158,6 +151,22 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    private void handleStart() {
+        try {
+            var result = SessionManager.getInstance().findOrCreateSession(this);
+            session = result.getGameSession();
+            while (session.getGameState() == GameStatus.NOT_STARTED) {
+                Thread.sleep(1000);
+            }
+
+            logger.info(user.getId() + ": The enemy was found. The game begins...");
+            sendMessageToClient(user.getId() + ": The enemy was found. The game begins...");
+        } catch (InterruptedException e) {
+            logger.error("Error during game start: ", e);
+            sendMessageToClient("Game start failed due to server error.");
+        }
+    }
+    
     private void handleSessionStart(String message) {
         try {
             // Parse the JWT token from the message
