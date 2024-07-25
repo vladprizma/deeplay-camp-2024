@@ -76,6 +76,10 @@ public class ClientHandler implements Runnable {
                     handleRegister(message);
                 } else if (message.startsWith("session-start")) {
                     handleSessionStart(message);
+                } else if (message.startsWith("send-message")) {
+                    handleSendMessage(message);
+                } else if (message.startsWith("get-messages")) {
+                    handleGetMessages();
                 } else if (message.startsWith("start")) {
                     var result = SessionManager.getInstance().findOrCreateSession(this);
                     session = result.getGameSession();
@@ -85,7 +89,7 @@ public class ClientHandler implements Runnable {
 
                     logger.info(user.getId() + ": The enemy was found. The game begins...");
                     sendMessageToClient(user.getId() + ": The enemy was found. The game begins...");
-                } else if (message.equals("disconnect")) {
+                }  else if (message.equals("disconnect")) {
                     closeConnection();
                 } else if (message.equals("pause")) {
                     SessionManager.getInstance().sendMessageToOpponent(this, session, user.getId() + " start pause");
