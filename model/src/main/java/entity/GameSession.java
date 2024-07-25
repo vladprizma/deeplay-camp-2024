@@ -9,6 +9,19 @@ public class GameSession {
     private User player2;
     private GameStatus gameState = GameStatus.NOT_STARTED;
     private int sessionId;
+    private String result;
+    private String log;
+    
+    public GameSession() {
+        
+    }
+
+    public GameSession(int id, User player1, String result, User player2, String log) {
+        this.sessionId = id;
+        this.result = result;
+        this.player1 = player1;
+        this.player2 = player2;
+    }
 
     public int getPlayersCount() {
         int count = 0;
@@ -16,7 +29,11 @@ public class GameSession {
         if (player2 != null) count++;
         return count;
     }
-
+    
+    public String getLog() { return log; }
+    
+    public void setLog(String log) { this.log = log; }
+    
     public GameStatus getGameState() {
         return gameState;
     }
@@ -32,6 +49,10 @@ public class GameSession {
     public void setCurrentPlayerId(String currentPlayerId) {
         this.currentPlayerId = currentPlayerId;
     }
+    
+    public void setResult(String result) { this.result = result; }
+    
+    public String getResult() { return result; }
 
     public Board getBoard() {
         return board;
