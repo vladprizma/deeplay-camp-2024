@@ -33,11 +33,14 @@ public class ClientHandler implements Runnable {
     private BufferedReader in;
     private GameSession session;
     private User user;
+    private static String splitRegex = "::";
+    private boolean isLogin = false;
+    
     private RefreshTokenService refreshTokenService = new RefreshTokenService();
     private UserService userService = new UserService();
     private JwtService jwtService = new JwtService();
     private ChatService chatService = new ChatService();
-    private static String splitRegex = "::";
+    
 
     /**
      * Constructor for ClientHandler.
@@ -77,14 +80,16 @@ public class ClientHandler implements Runnable {
                 } else if (message.startsWith("session-start")) {
                     handleSessionStart(message);
                 } else if (message.startsWith("send-message")) {
-                    handleSendMessage(message);
+                    if (isLogin) handleSendMessage(message);
+                    else sendMessageToClient("Please login or register.");
                 } else if (message.startsWith("get-messages")) {
                     handleGetMessages();
                 } else if (message.startsWith("start")) {
-                    handleStart();
+                    if (isLogin) handleStart();
+                    else sendMessageToClient("Please login or register.");
                 }  else if (message.equals("disconnect")) {
                     closeConnection();
-                } else if (message.equals("pause")) {
+                } else if (message.equals("pause") && session.getGameState() == GameStatus.IN_PROGRESS) {
                     SessionManager.getInstance().sendMessageToOpponent(this, session, user.getId() + " start pause");
                 } else {
                     logger.info("Empty request or bad request");
@@ -180,6 +185,7 @@ public class ClientHandler implements Runnable {
                     this.user = optionalUser.get();
                     sendMessageToClient("Session started successfully. Welcome back, " + username);
                     sendMessageToClient(user.getUsername() + "::" + user.getUserPhoto() + "::" + user.getMatches() + "::" + user.getRating());
+                    isLogin = true;
                 } else {
                     sendMessageToClient("User not found.");
                 }
