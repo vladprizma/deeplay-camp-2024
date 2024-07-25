@@ -8,13 +8,13 @@ import org.slf4j.LoggerFactory;
 public class DisplayServices {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
-    public void display(String currentPlayerId, BoardLogic boardLogic) {
+    public void display(int currentPlayerId, BoardLogic boardLogic) {
         displayBoard(currentPlayerId, boardLogic);
         displayScore(boardLogic);
     }
 
-    public void displayBoard(String currentPlayerId, BoardLogic boardLogic) {
-        logger.info((boardLogic.getBoardState(Integer.parseInt(currentPlayerId))).toString());
+    public void displayBoard(int currentPlayerId, BoardLogic boardLogic) {
+        logger.info((boardLogic.getBoardState(currentPlayerId)).toString());
     }
 
     public void displayScore(BoardLogic boardLogic) {

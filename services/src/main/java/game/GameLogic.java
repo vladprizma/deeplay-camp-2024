@@ -6,15 +6,19 @@ import display.DisplayServices;
 import entity.Board;
 import entity.Bot;
 import entity.User;
-import enums.Color;
 import enums.GameStatus;
+import io.deeplay.camp.Main;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import user.UserService;
 import repository.ReversiListener;
 
 import java.util.Map;
+import java.util.Scanner;
 
 public class GameLogic implements ReversiListener {
 
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
     private BotServices botServices = new BotServices();
     private UserService playerService = new UserService();
     private DisplayServices displayServices = new DisplayServices();
@@ -25,21 +29,13 @@ public class GameLogic implements ReversiListener {
         this.boardLogic = boardLogic;
     }
 
-    public String setCurrentPlayer(String playerId, Map<String, User> players) {
-        if (players.containsKey(playerId)) {
-            return playerId;
-        } else {
-            throw new IllegalArgumentException("Player with ID " + playerId + " does not exist.");
-        }
-    }
-
-    public boolean checkForWin(Board board) {
+    public boolean checkForWin() {
         int[] score = boardLogic.score();
         boolean endGame =  (score[0] + score[1] == 64) ? true : false;
         return endGame;
     }
 
-    public void display(Board board, String currentPlayerId, BoardLogic boardLogic) {
+    public void display(int currentPlayerId, BoardLogic boardLogic) {
         displayServices.display(currentPlayerId, boardLogic);
     }
 
@@ -48,18 +44,51 @@ public class GameLogic implements ReversiListener {
     }
 
     @Override 
-    public boolean moveMade(Map<String, User> players, String currentPlayerId, BoardLogic boardLogic) {
-        if (players.get(currentPlayerId) instanceof Bot) {
+    public boolean moveMade(User user, int currentPlayerId, BoardLogic boardLogic) {
+        if (user instanceof Bot) {
             return botServices.makeMove(currentPlayerId, boardLogic);
         } else {
-            return playerService.makeUserMove(currentPlayerId, boardLogic);
+            return makeUserMove(currentPlayerId, boardLogic);
         }
     }
 
-    @Override
-    public boolean moveSkipped(String playerId) {
+    private boolean makeUserMove(int currentPlayerId, BoardLogic boardLogic) {
+        logger.info("Введите ваш ход (например, 'e2' или 'f6'):");
+        Scanner scanner = new Scanner(System.in);
+        return makeMove(scanner.nextLine(), currentPlayerId, boardLogic);
+    }
 
-        return false;
+    private boolean makeMove(String userInput, int currentPlayerId, BoardLogic boardLogic) {
+        int[] move = getCurrentPlayerMove(userInput, currentPlayerId, boardLogic);
+        int x = move[0];
+        int y = move[1];
+        boardLogic.setPiece(x, y, currentPlayerId);
+        return true;
+    }
+
+    private int[] getCurrentPlayerMove(String userInput, int currentPlayerId, BoardLogic boardLogic) {
+        int[] move;
+        move = getUserMove(userInput);
+        if (boardLogic.isValidMove(move[0], move[1], currentPlayerId)) {
+            return new int[]{move[0], move[1]};
+        } else {
+            logger.info("Данных ход невозможен, попробуйте еще раз.");
+            getCurrentPlayerMove(userInput, currentPlayerId, boardLogic);
+        }
+        return new int[]{move[0], move[1]};
+    }
+
+    private int[] getUserMove(String userInput) {
+        int[] move = new int[2];
+
+        if (userInput.length() == 2 &&
+                userInput.charAt(0) >= 'a' && userInput.charAt(0) <= 'h' &&
+                userInput.charAt(1) >= '1' && userInput.charAt(1) <= '8') {
+
+            move[0] = userInput.charAt(0) - 'a';
+            move[1] = Math.abs(userInput.charAt(1) - '8');
+        }
+        return move;
     }
 
     @Override
@@ -83,40 +112,7 @@ public class GameLogic implements ReversiListener {
     }
 
     @Override
-    public boolean scoreUpdated() {
-        return false;
-    }
-
-    @Override
-    public String playerTurn(String currentPlayerId, Map<String, User> players) {
-        if (currentPlayerId == "1") {
-            return setCurrentPlayer("2", players);
-        } else {
-            return setCurrentPlayer("1", players);
-        }
-    }
-
-    @Override
-    public boolean playerJoin(Map<Integer, User> players, String id, Color color) {
-        playerService.addPlayer(players, Integer.parseInt(id), Color.BLACK, "", "");
-        return false;
-    }
-
-    @Override
-    public boolean botJoin(Map<String, User> players, String id, Color color) {
-        botServices.addBot(players, id, Color.WHITE);
-        return false;
-    }
-
-    @Override
-    public boolean playerLeave(long playerId) {
-
-        return false;
-    }
-
-    @Override
-    public boolean playerDisconnect(long playerId) {
-
-        return false;
+    public int[] scoreUpdated() {
+        return boardLogic.score();
     }
 }

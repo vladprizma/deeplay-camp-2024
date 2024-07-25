@@ -1,7 +1,6 @@
 import board.BoardLogic;
 import bot.BotServices;
 import entity.Board;
-import entity.Player;
 import enums.Color;
 import enums.GameStatus;
 import game.GameLogic;

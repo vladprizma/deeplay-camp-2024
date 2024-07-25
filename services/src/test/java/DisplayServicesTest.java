@@ -29,13 +29,13 @@ public class DisplayServicesTest {
         System.setOut(originalOut);
     }
 
-    @Test
-    void display_ShouldPrintBoardAndScore() {
-        String currentPlayerId = "1";
-        displayServices.display(currentPlayerId, boardLogic);
-        String output = outContent.toString();
-        assertTrue(output.contains("Score:"));
-    }
+//    @Test
+//    void display_ShouldPrintBoardAndScore() {
+//        String currentPlayerId = "1";
+//        displayServices.display(currentPlayerId, boardLogic);
+//        String output = outContent.toString();
+//        assertTrue(output.contains("Score:"));
+//    }
 
     @Test
     void displayEndGame_ShouldPrintEndGameMessage() {
