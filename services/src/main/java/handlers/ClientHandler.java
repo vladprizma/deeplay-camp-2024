@@ -33,7 +33,7 @@ public class ClientHandler implements Runnable {
     private BufferedReader in;
     private GameSession session;
     private User user;
-    private static String splitRegex = "::";
+    private static String splitRegex = " ";
     private boolean isLogin = false;
     
     private RefreshTokenService refreshTokenService = new RefreshTokenService();
