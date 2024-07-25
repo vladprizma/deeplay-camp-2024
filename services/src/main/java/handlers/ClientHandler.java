@@ -1,5 +1,7 @@
 package handlers;
 
+import chat.ChatService;
+import entity.ChatMessage;
 import entity.GameSession;
 import entity.User;
 import enums.GameStatus;
@@ -18,6 +20,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -33,6 +36,7 @@ public class ClientHandler implements Runnable {
     private RefreshTokenService refreshTokenService = new RefreshTokenService();
     private UserService userService = new UserService();
     private JwtService jwtService = new JwtService();
+    private ChatService chatService = new ChatService();
     private static String splitRegex = "::";
 
     /**
@@ -172,6 +176,36 @@ public class ClientHandler implements Runnable {
         } catch (SQLException e) {
             logger.error("Error during session start: ", e);
             sendMessageToClient("Session start failed due to server error.");
+        }
+    }
+
+    private void handleSendMessage(String message) {
+        try {
+            // Parse message information from the message
+            String[] parts = message.split(splitRegex, 2);
+            String chatMessage = parts[1];
+
+            chatService.addMessage(user.getId(), chatMessage);
+            sendMessageToClient("Message sent successfully.");
+        } catch (SQLException e) {
+            logger.error("Error sending message: ", e);
+            sendMessageToClient("Sending message failed due to server error.");
+        }
+    }
+
+    private void handleGetMessages() {
+        try {
+            List<ChatMessage> messages = chatService.getAllMessages();
+            StringBuilder response = new StringBuilder("Chat messages:");
+            for (ChatMessage chatMessage : messages) {
+                response.append("\n").append(chatMessage.getTimestamp())
+                        .append(" - ").append(chatMessage.getUserId())
+                        .append(": ").append(chatMessage.getMessage());
+            }
+            sendMessageToClient(response.toString());
+        } catch (SQLException e) {
+            logger.error("Error getting messages: ", e);
+            sendMessageToClient("Getting messages failed due to server error.");
         }
     }
     
