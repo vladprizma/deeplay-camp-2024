@@ -7,7 +7,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 
-public class ViewNavigator {
+public class ScreenSwitcher {
     private static Stage mainStage;
 
     public static void setMainStage(Stage stage) {
