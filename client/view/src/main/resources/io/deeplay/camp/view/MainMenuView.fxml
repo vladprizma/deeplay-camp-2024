@@ -6,7 +6,8 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<AnchorPane id="mainWindow" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utils.MainMenuController" stylesheets="@style/style.css">
+<?import javafx.scene.layout.Pane?>
+<AnchorPane id="mainWindow" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mainmenu.MainMenuView" stylesheets="@style/style.css">
     <children>
         <ImageView fitHeight="1020.0" fitWidth="1860.0" layoutX="30.0" layoutY="30.0" pickOnBounds="true" preserveRatio="false">
             <image>
@@ -25,6 +26,10 @@
 
         <!-- Кнопка Chat -->
         <Button fx:id="chatButton" layoutX="53.0" layoutY="971.0" prefHeight="59.0" prefWidth="174.0" text="CHAT" />
+
+        <Pane fx:id="chatPanel" visible="false">
+
+        </Pane>
 
         <!-- тройная кнопка-кртинка -->
         <Button id="roundGreenButton" layoutX="1730.0" layoutY="70.0" />
@@ -46,6 +51,12 @@
         </ImageView>
 
         <!-- Кнопка Exit -->
-        <Button layoutX="1706.0" layoutY="866.0" prefHeight="184.0" prefWidth="184.0" text="Exit" />
+        <Button fx:id="exitButton" layoutX="1685.0" layoutY="860.0">
+            <graphic>
+                <ImageView fitHeight="170.0" fitWidth="200.0">
+                    <Image url="@resources/EXIT.png" />
+                </ImageView>
+            </graphic>
+        </Button>
     </children>
 </AnchorPane>
