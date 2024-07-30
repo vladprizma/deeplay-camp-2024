@@ -4,7 +4,7 @@ import TokenGenerator.TokenGenerator;
 import entity.GameSession;
 import entity.User;
 import enums.GameStatus;
-import io.deeplay.camp.handlers.ClientHandler;
+import io.deeplay.camp.handlers.MainHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.Objects;
 public class SessionManager {
     private static SessionManager instance;
     private final List<GameSession> sessions;
-    private final List<ClientHandler> handlers;
+    private final List<MainHandler> handlers;
 
     /**
      * Private constructor to prevent instantiation from other classes.
@@ -42,7 +42,7 @@ public class SessionManager {
      * @param clientHandler the client handler requesting a session
      * @return the session result containing the game session and user
      */
-    public synchronized SessionResult findOrCreateSession(ClientHandler clientHandler) {
+    public synchronized SessionResult findOrCreateSession(MainHandler clientHandler) {
         for (GameSession session : sessions) {
             if (session.getPlayersCount() < 2 && session.getGameState() == GameStatus.NOT_STARTED) {
                 User player2 = new User(TokenGenerator.generateID(), "asd", "asd", 1, 1, "");
@@ -66,7 +66,7 @@ public class SessionManager {
      * @param session the game session
      * @param msg     the message to send
      */
-    public void sendMessageToOpponent(ClientHandler handler, GameSession session, String msg) {
+    public void sendMessageToOpponent(MainHandler handler, GameSession session, String msg) {
         for (var playerHandler : handlers) {
             if (Objects.equals(playerHandler.getHandlerSession().getSessionId(), session.getSessionId())
                     && !Objects.equals(playerHandler.getHandlerPlayer().getId(), handler.getHandlerPlayer().getId())) {
@@ -80,7 +80,7 @@ public class SessionManager {
      *
      * @param clientHandler the client handler to add
      */
-    public synchronized void addHandler(ClientHandler clientHandler) {
+    public synchronized void addHandler(MainHandler clientHandler) {
         handlers.add(clientHandler);
     }
 
@@ -89,7 +89,7 @@ public class SessionManager {
      *
      * @param clientHandler the client handler to remove
      */
-    public synchronized void deleteHandler(ClientHandler clientHandler) {
+    public synchronized void deleteHandler(MainHandler clientHandler) {
         handlers.remove(clientHandler);
     }
 
@@ -98,7 +98,7 @@ public class SessionManager {
      *
      * @return the list of client handlers
      */
-    public List<ClientHandler> getHandlers() {
+    public List<MainHandler> getHandlers() {
         return handlers;
     }
 }

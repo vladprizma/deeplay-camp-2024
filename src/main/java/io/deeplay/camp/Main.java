@@ -1,7 +1,7 @@
 package io.deeplay.camp;
 
 import config.LoadServerProperties;
-import io.deeplay.camp.handlers.ClientHandler;
+import io.deeplay.camp.handlers.MainHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +44,7 @@ public class Main {
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 logger.info("New client connected: " + clientSocket.getRemoteSocketAddress());
-                executor.execute(new ClientHandler(clientSocket));
+                executor.execute(new MainHandler(clientSocket));
             }
         } else {
             logger.error("Server IP or port is not configured correctly.");
