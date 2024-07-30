@@ -1,6 +1,8 @@
 package io.deeplay.camp.managers;
 
 import TokenGenerator.TokenGenerator;
+import dto.Player;
+import entity.Board;
 import entity.GameSession;
 import entity.User;
 import enums.GameStatus;
@@ -42,21 +44,20 @@ public class SessionManager {
      * @param clientHandler the client handler requesting a session
      * @return the session result containing the game session and user
      */
-    public synchronized SessionResult findOrCreateSession(MainHandler clientHandler) {
+    public synchronized SessionResult findOrCreateSession(MainHandler clientHandler, User user) {
         for (GameSession session : sessions) {
             if (session.getPlayersCount() < 2 && session.getGameState() == GameStatus.NOT_STARTED) {
-                User player2 = new User(TokenGenerator.generateID(), "asd", "asd", 1, 1, "");
-                session.setPlayer2(player2);
+                session.setPlayer2(user);
                 session.setGameState(GameStatus.IN_PROGRESS);
-                return new SessionResult(session, player2);
+                return new SessionResult(session, user);
             }
         }
         GameSession newSession = new GameSession();
-        User player1 = new User(TokenGenerator.generateID(), "asd", "asd", 1, 1, "");
-        newSession.setPlayer1(player1);
+        newSession.setBoard(new Board());
+        newSession.setPlayer1(user);
         newSession.setSessionId(TokenGenerator.generateID());
         sessions.add(newSession);
-        return new SessionResult(newSession, player1);
+        return new SessionResult(newSession, user);
     }
 
     /**

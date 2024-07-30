@@ -26,9 +26,10 @@ public class RegisterCommandHandler implements CommandHandler {
         int userId = userService.addUser(user);
         user.setId(userId);
         mainHandler.setUser(user);
-
+        
         mainHandler.sendMessageToClient("Registration successful. Welcome, " + username);
-
+        mainHandler.setLogin(true);
+        
         var tokens = refreshTokenService.generateRefreshToken(user);
         var updateToken = tokens.updateToken;
         var refreshToken = tokens.refreshToken;

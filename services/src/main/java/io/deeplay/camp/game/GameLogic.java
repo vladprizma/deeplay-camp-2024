@@ -56,7 +56,7 @@ public class GameLogic implements ReversiListener {
         return makeMove(scanner.nextLine(), currentPlayerId, boardLogic);
     }
 
-    private boolean makeMove(String userInput, int currentPlayerId, BoardLogic boardLogic) {
+    public boolean makeMove(String userInput, int currentPlayerId, BoardLogic boardLogic) {
         int[] move = getCurrentPlayerMove(userInput, currentPlayerId, boardLogic);
         int x = move[0];
         int y = move[1];
@@ -67,11 +67,13 @@ public class GameLogic implements ReversiListener {
     private int[] getCurrentPlayerMove(String userInput, int currentPlayerId, BoardLogic boardLogic) {
         int[] move;
         move = getUserMove(userInput);
+        logger.info(Integer.toString(move[0]) + " " + Integer.toString(move[1]));
+        
         if (boardLogic.isValidMove(move[0], move[1], currentPlayerId)) {
             return new int[]{move[0], move[1]};
         } else {
             logger.info("Данных ход невозможен, попробуйте еще раз.");
-            getCurrentPlayerMove(userInput, currentPlayerId, boardLogic);
+//            getCurrentPlayerMove(userInput, currentPlayerId, boardLogic);
         }
         return new int[]{move[0], move[1]};
     }
@@ -82,7 +84,10 @@ public class GameLogic implements ReversiListener {
         if (userInput.length() == 2 &&
                 userInput.charAt(0) >= 'a' && userInput.charAt(0) <= 'h' &&
                 userInput.charAt(1) >= '1' && userInput.charAt(1) <= '8') {
-
+            
+            logger.error(String.valueOf(userInput.charAt(0)));
+            logger.error(String.valueOf(userInput.charAt(1)));
+            
             move[0] = userInput.charAt(0) - 'a';
             move[1] = Math.abs(userInput.charAt(1) - '8');
         }

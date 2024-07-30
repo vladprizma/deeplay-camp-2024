@@ -10,7 +10,7 @@ public class DisplayServices {
 
     public void display(int currentPlayerId, BoardLogic boardLogic) {
         displayBoard(currentPlayerId, boardLogic);
-        displayScore(boardLogic);
+//        displayScore(boardLogic);
     }
 
     public void displayBoard(int currentPlayerId, BoardLogic boardLogic) {

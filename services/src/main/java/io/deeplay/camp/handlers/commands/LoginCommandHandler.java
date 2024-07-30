@@ -30,6 +30,7 @@ public class LoginCommandHandler implements CommandHandler {
                 var tokens = refreshTokenService.generateRefreshToken(user);
                 var updateToken = tokens.updateToken;
                 var refreshToken = tokens.refreshToken;
+                mainHandler.setLogin(true);
                 mainHandler.sendMessageToClient(refreshToken + "::" + updateToken);
             } else {
                 mainHandler.sendMessageToClient("Invalid password.");

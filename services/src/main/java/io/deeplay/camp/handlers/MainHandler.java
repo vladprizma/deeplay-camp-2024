@@ -1,11 +1,14 @@
 package io.deeplay.camp.handlers;
 
+import entity.Board;
+import io.deeplay.camp.board.BoardLogic;
 import io.deeplay.camp.chat.ChatService;
 import entity.ChatMessage;
 import entity.GameSession;
 import entity.User;
 import enums.GameStatus;
 import io.deeplay.camp.Main;
+import io.deeplay.camp.game.GameLogic;
 import io.deeplay.camp.handlers.commands.*;
 import io.deeplay.camp.managers.SessionManager;
 import io.deeplay.camp.password.PasswordService;
@@ -39,11 +42,8 @@ public class MainHandler implements Runnable {
     private User user;
     public static String splitRegex = " ";
     private boolean isLogin = false;
-    
-    private final RefreshTokenService refreshTokenService = new RefreshTokenService();
-    private final UserService userService = new UserService();
-    private final JwtService jwtService = new JwtService();
-    private final ChatService chatService = new ChatService();
+    private GameLogic gameLogic;
+    private BoardLogic boardLogic;
     private final Map<String, CommandHandler> commandHandlers = new HashMap<>();
 
     /**
@@ -59,7 +59,7 @@ public class MainHandler implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        
         commandHandlers.put("login", new LoginCommandHandler());
         commandHandlers.put("register", new RegisterCommandHandler());
         commandHandlers.put("start", new StartCommandHandler());
@@ -68,6 +68,7 @@ public class MainHandler implements Runnable {
         commandHandlers.put("get-messages", new GetMessagesCommandHandler());
         commandHandlers.put("pause", new PauseCommandHandler());
         commandHandlers.put("disconnect", new DisconnectCommandHandler());
+        commandHandlers.put("move", new MoveCommandHandler());
     }
 
     /**
@@ -93,6 +94,7 @@ public class MainHandler implements Runnable {
                     handler.handle(message, this);
                 } else {
                     logger.info("Empty request or bad request: {}", message);
+                    sendMessageToClient("Empty request or bad request");
                 }
             }
         } catch (IOException e) {
@@ -132,6 +134,30 @@ public class MainHandler implements Runnable {
 
     public void setLogin(boolean login) {
         isLogin = login;
+    }
+    
+    public void setGameLogic(GameLogic gameLogic) {
+        this.gameLogic = gameLogic;
+    }
+    
+    public GameLogic getGameLogic() {
+        return this.gameLogic;
+    }
+    
+    public void setBoardLogic(BoardLogic boardLogic) {
+        this.boardLogic = boardLogic;
+    }
+    
+    public BoardLogic getBoardLogic() {
+        return boardLogic;
+    }
+    
+    public void setBoard(Board board) {
+        session.setBoard(board);
+    }
+    
+    public Board getBoard() {
+        return session.getBoard();
     }
     
     /**
@@ -175,7 +201,7 @@ public class MainHandler implements Runnable {
      */
     public void closeConnection() {
         try {
-            logger.info("Игрок отключился.");
+            logger.info("Player disconnect.");
             SessionManager.getInstance().deleteHandler(this);
 
             if (socket != null) socket.close();
