@@ -1,19 +1,17 @@
-package game;
+package io.deeplay.camp.game;
 
-import board.BoardLogic;
-import bot.BotServices;
-import display.DisplayServices;
-import entity.Board;
+import io.deeplay.camp.board.BoardLogic;
+import io.deeplay.camp.bot.BotServices;
+import io.deeplay.camp.display.DisplayServices;
 import entity.Bot;
 import entity.User;
 import enums.GameStatus;
 import io.deeplay.camp.Main;
+import io.deeplay.camp.repository.ReversiListener;
+import io.deeplay.camp.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import user.UserService;
-import repository.ReversiListener;
 
-import java.util.Map;
 import java.util.Scanner;
 
 public class GameLogic implements ReversiListener {

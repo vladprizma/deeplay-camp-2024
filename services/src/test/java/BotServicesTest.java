@@ -1,15 +1,9 @@
-import board.BoardLogic;
-import bot.BotServices;
+import io.deeplay.camp.board.BoardLogic;
+import io.deeplay.camp.bot.BotServices;
 import entity.Board;
-import entity.Bot;
 import entity.User;
-import enums.Color;
-import game.GameLogic;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import io.deeplay.camp.game.GameLogic;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class BotServicesTest {

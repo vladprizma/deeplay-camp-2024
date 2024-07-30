@@ -1,11 +1,10 @@
-package managers;
+package io.deeplay.camp.managers;
 
 import TokenGenerator.TokenGenerator;
 import entity.GameSession;
 import entity.User;
-import enums.Color;
 import enums.GameStatus;
-import handlers.ClientHandler;
+import io.deeplay.camp.handlers.ClientHandler;
 
 import java.util.ArrayList;
 import java.util.List;

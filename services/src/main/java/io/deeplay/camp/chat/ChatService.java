@@ -1,4 +1,4 @@
-package chat;
+package io.deeplay.camp.chat;
 
 import entity.ChatMessage;
 import io.deeplay.camp.dao.ChatMessageDAO;

@@ -1,4 +1,4 @@
-package token;
+package io.deeplay.camp.token;
 
 import entity.User;
 import io.deeplay.camp.dao.TokenDAO;

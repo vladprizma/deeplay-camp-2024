@@ -1,5 +1,5 @@
 import entity.Board;
-import board.BoardLogic;
+import io.deeplay.camp.board.BoardLogic;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

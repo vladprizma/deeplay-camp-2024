@@ -1,18 +1,18 @@
-package handlers;
+package io.deeplay.camp.handlers;
 
-import chat.ChatService;
+import io.deeplay.camp.chat.ChatService;
 import entity.ChatMessage;
 import entity.GameSession;
 import entity.User;
 import enums.GameStatus;
 import io.deeplay.camp.Main;
+import io.deeplay.camp.managers.SessionManager;
+import io.deeplay.camp.password.PasswordService;
+import io.deeplay.camp.token.JwtService;
+import io.deeplay.camp.token.RefreshTokenService;
+import io.deeplay.camp.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import managers.SessionManager;
-import password.PasswordService;
-import token.JwtService;
-import token.RefreshTokenService;
-import user.UserService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,7 +33,7 @@ public class ClientHandler implements Runnable {
     private BufferedReader in;
     private GameSession session;
     private User user;
-    private static String splitRegex = " ";
+    private static final String splitRegex = " ";
     private boolean isLogin = false;
     
     private final RefreshTokenService refreshTokenService = new RefreshTokenService();
