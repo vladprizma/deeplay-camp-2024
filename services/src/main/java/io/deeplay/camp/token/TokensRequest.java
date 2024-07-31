@@ -1,4 +1,4 @@
-package token;
+package io.deeplay.camp.token;
 
 public class TokensRequest {
     public String refreshToken;

@@ -1,25 +1,23 @@
-package game;
+package io.deeplay.camp.game;
 
-import board.BoardLogic;
-import bot.BotServices;
-import display.DisplayServices;
-import entity.Board;
+import io.deeplay.camp.board.BoardLogic;
+import io.deeplay.camp.bot.BotService;
+import io.deeplay.camp.display.DisplayServices;
 import entity.Bot;
 import entity.User;
 import enums.GameStatus;
 import io.deeplay.camp.Main;
+import io.deeplay.camp.repository.ReversiListener;
+import io.deeplay.camp.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import user.UserService;
-import repository.ReversiListener;
 
-import java.util.Map;
 import java.util.Scanner;
 
 public class GameLogic implements ReversiListener {
 
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
-    private BotServices botServices = new BotServices();
+    private BotService botServices = new BotService();
     private UserService playerService = new UserService();
     private DisplayServices displayServices = new DisplayServices();
 
@@ -58,7 +56,7 @@ public class GameLogic implements ReversiListener {
         return makeMove(scanner.nextLine(), currentPlayerId, boardLogic);
     }
 
-    private boolean makeMove(String userInput, int currentPlayerId, BoardLogic boardLogic) {
+    public boolean makeMove(String userInput, int currentPlayerId, BoardLogic boardLogic) {
         int[] move = getCurrentPlayerMove(userInput, currentPlayerId, boardLogic);
         int x = move[0];
         int y = move[1];
@@ -69,11 +67,13 @@ public class GameLogic implements ReversiListener {
     private int[] getCurrentPlayerMove(String userInput, int currentPlayerId, BoardLogic boardLogic) {
         int[] move;
         move = getUserMove(userInput);
+        logger.info(Integer.toString(move[0]) + " " + Integer.toString(move[1]));
+        
         if (boardLogic.isValidMove(move[0], move[1], currentPlayerId)) {
             return new int[]{move[0], move[1]};
         } else {
             logger.info("Данных ход невозможен, попробуйте еще раз.");
-            getCurrentPlayerMove(userInput, currentPlayerId, boardLogic);
+//            getCurrentPlayerMove(userInput, currentPlayerId, boardLogic);
         }
         return new int[]{move[0], move[1]};
     }
@@ -84,7 +84,10 @@ public class GameLogic implements ReversiListener {
         if (userInput.length() == 2 &&
                 userInput.charAt(0) >= 'a' && userInput.charAt(0) <= 'h' &&
                 userInput.charAt(1) >= '1' && userInput.charAt(1) <= '8') {
-
+            
+            logger.error(String.valueOf(userInput.charAt(0)));
+            logger.error(String.valueOf(userInput.charAt(1)));
+            
             move[0] = userInput.charAt(0) - 'a';
             move[1] = Math.abs(userInput.charAt(1) - '8');
         }

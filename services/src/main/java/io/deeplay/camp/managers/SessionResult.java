@@ -1,4 +1,4 @@
-package managers;
+package io.deeplay.camp.managers;
 
 import entity.GameSession;
 import entity.User;

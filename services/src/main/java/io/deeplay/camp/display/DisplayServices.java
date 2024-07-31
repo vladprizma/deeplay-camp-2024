@@ -1,6 +1,6 @@
-package display;
+package io.deeplay.camp.display;
 
-import board.BoardLogic;
+import io.deeplay.camp.board.BoardLogic;
 import io.deeplay.camp.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +10,7 @@ public class DisplayServices {
 
     public void display(int currentPlayerId, BoardLogic boardLogic) {
         displayBoard(currentPlayerId, boardLogic);
-        displayScore(boardLogic);
+//        displayScore(boardLogic);
     }
 
     public void displayBoard(int currentPlayerId, BoardLogic boardLogic) {

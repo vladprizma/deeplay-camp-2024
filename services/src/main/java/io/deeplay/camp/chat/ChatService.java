@@ -1,6 +1,7 @@
-package chat;
+package io.deeplay.camp.chat;
 
 import entity.ChatMessage;
+import entity.User;
 import io.deeplay.camp.dao.ChatMessageDAO;
 
 import java.sql.SQLException;
@@ -10,7 +11,7 @@ import java.util.List;
 public class ChatService {
     private final ChatMessageDAO chatMessageDAO = new ChatMessageDAO();
 
-    public void addMessage(int userId, String message) throws SQLException {
+    public void addMessage(User userId, String message) throws SQLException {
         ChatMessage chatMessage = new ChatMessage(0, userId, message, new Timestamp(System.currentTimeMillis()));
         chatMessageDAO.addMessage(chatMessage);
     }

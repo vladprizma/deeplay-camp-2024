@@ -1,11 +1,8 @@
-package repository;
+package io.deeplay.camp.repository;
 
-import board.BoardLogic;
+import io.deeplay.camp.board.BoardLogic;
 import entity.User;
-import enums.Color;
 import enums.GameStatus;
-
-import java.util.Map;
 
 public interface ReversiListener {
     boolean moveMade(User user, int currentPlayerId, BoardLogic boardLogic);

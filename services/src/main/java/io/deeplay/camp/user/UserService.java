@@ -1,15 +1,11 @@
-package user;
+package io.deeplay.camp.user;
 
-import board.BoardLogic;
 import entity.User;
-import enums.Color;
 import io.deeplay.camp.dao.UserDAO;
-import password.PasswordService;
+import io.deeplay.camp.password.PasswordService;
 
 import java.sql.SQLException;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Scanner;
 
 public class UserService {
     private final UserDAO userDAO;

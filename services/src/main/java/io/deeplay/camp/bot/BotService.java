@@ -1,14 +1,9 @@
-package bot;
+package io.deeplay.camp.bot;
 
-import board.BoardLogic;
-import entity.Bot;
-import entity.User;
+import io.deeplay.camp.board.BoardLogic;
 import entity.Tile;
-import enums.Color;
 
-import java.util.Map;
-
-public class BotServices {
+public class BotService {
 
     public boolean makeMove(int currentPlayerId, BoardLogic boardLogic) {
         int[] move = getCurrentPlayerMove(currentPlayerId, boardLogic);

@@ -1,4 +1,4 @@
-package board;
+package io.deeplay.camp.board;
 
 import entity.Board;
 
