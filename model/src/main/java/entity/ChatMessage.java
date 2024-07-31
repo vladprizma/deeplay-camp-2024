@@ -4,11 +4,11 @@ import java.sql.Timestamp;
 
 public class ChatMessage {
     private int id;
-    private int userId;
+    private User userId;
     private String message;
     private Timestamp timestamp;
 
-    public ChatMessage(int id, int userId, String message, Timestamp timestamp) {
+    public ChatMessage(int id, User userId, String message, Timestamp timestamp) {
         this.id = id;
         this.userId = userId;
         this.message = message;
@@ -24,11 +24,11 @@ public class ChatMessage {
         this.id = id;
     }
 
-    public int getUserId() {
+    public User getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(User userId) {
         this.userId = userId;
     }
 

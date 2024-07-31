@@ -23,12 +23,12 @@ public class MoveCommandHandler implements CommandHandler {
             if (moveMade) {
                 mainHandler.getLogger().info("{}: Move made successfully.", mainHandler.getUser().getId());
                 mainHandler.sendMessageToClient(mainHandler.getUser().getId() + ": Move made successfully.");
-                mainHandler.getGameLogic().display(user, mainHandler.getBoardLogic());
+                mainHandler.getGameLogic().display((user == 1) ? 2 : 1, mainHandler.getBoardLogic());
                 if (mainHandler.getGameLogic().checkForWin()) {
                     mainHandler.getGameLogic().displayEndGame(mainHandler.getBoardLogic());
                     mainHandler.getSession().setGameState(GameStatus.FINISHED);
                 }
-                mainHandler.getSession().setCurrentPlayerId(3 - mainHandler.getUser().getId());
+                mainHandler.getSession().setCurrentPlayerId((user == 1) ? mainHandler.getSession().getPlayer2().getId() : mainHandler.getSession().getPlayer1().getId());
             } else {
                 mainHandler.getLogger().info("{}: Invalid move.", mainHandler.getUser().getId());
                 mainHandler.sendMessageToClient(mainHandler.getUser().getId() + ": Invalid move.");

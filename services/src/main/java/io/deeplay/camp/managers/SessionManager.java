@@ -55,6 +55,7 @@ public class SessionManager {
         GameSession newSession = new GameSession();
         newSession.setBoard(new Board());
         newSession.setPlayer1(user);
+        newSession.setCurrentPlayerId(user.getId());
         newSession.setSessionId(TokenGenerator.generateID());
         sessions.add(newSession);
         return new SessionResult(newSession, user);
@@ -73,6 +74,12 @@ public class SessionManager {
                     && !Objects.equals(playerHandler.getHandlerPlayer().getId(), handler.getHandlerPlayer().getId())) {
                 playerHandler.sendMessageToClient(msg);
             }
+        }
+    }
+    
+    public void sendMessageToAll(String msg) {
+        for (var playerHandler : handlers) {
+            playerHandler.sendMessageToClient(msg);
         }
     }
 

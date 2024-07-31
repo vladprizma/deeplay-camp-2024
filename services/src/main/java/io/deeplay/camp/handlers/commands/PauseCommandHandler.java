@@ -13,8 +13,9 @@ public class PauseCommandHandler implements CommandHandler {
             SessionManager.getInstance().sendMessageToOpponent(
                     mainHandler,
                     mainHandler.getSession(),
-                    mainHandler.getUser().getId() + " start pause"
+                    mainHandler.getUser().getId() + "pause"
             );
+            mainHandler.sendMessageToClient("pause");
         } else {
             mainHandler.sendMessageToClient("Cannot pause game. Game is not in progress.");
         }
