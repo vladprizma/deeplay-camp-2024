@@ -5,10 +5,17 @@ import javafx.animation.Interpolator;
 import javafx.animation.Timeline;
 import javafx.animation.Transition;
 import javafx.beans.property.BooleanProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.util.Callback;
 import javafx.util.Duration;
 import navigator.ViewNavigator;
 
@@ -31,11 +38,56 @@ public class MainMenuView {
     private Pane chatPanel;
 
     @FXML
+    private ListView<String> chatListView;
+
+    @FXML
+    private TextField chatInput;
+
+    private ObservableList<String> chatMessages;
+
+    private void openChat() {
+        chatButton.setVisible(false);
+        chatPanel.setVisible(true);
+    }
+
+    @FXML
+    private void sendMessage() {
+        String message = chatInput.getText();
+        if (!message.isEmpty()) {
+            chatListView.getItems().add(message);
+            chatInput.clear();
+        }
+    }
+
+    @FXML
     public void initialize() {
         animation();
         playButton.setOnAction(event -> onButtonClicked(ButtonEnum.PLAY));
         settingsButton.setOnAction(event -> onButtonClicked(ButtonEnum.SETTINGS));
         exitButton.setOnAction(event -> onButtonClicked(ButtonEnum.EXIT));
+        chatButton.setOnAction(event -> onButtonClicked(ButtonEnum.CHAT));
+    }
+
+    @FXML
+    private void handleRootClick(MouseEvent event) {
+        if (chatPanel.isVisible()) {
+            // Проверка, находится ли клик внутри панели чата
+            if (!chatPanel.getBoundsInParent().contains(event.getX(), event.getY())) {
+                closeChat();
+            }
+        }
+    }
+
+    @FXML
+    private void handleChatPanelClick(MouseEvent event) {
+        // Остановка распространения события, чтобы клик внутри панели чата
+        // не закрывал чат
+        event.consume();
+    }
+
+    private void closeChat() {
+        chatPanel.setVisible(false);
+        chatButton.setVisible(true);
     }
 
     private void onButtonClicked(ButtonEnum buttonType) {
@@ -72,8 +124,37 @@ public class MainMenuView {
     }
 
     private void onChatButtonClicked() {
+        chatMessages = FXCollections.observableArrayList(
+                "Привет! Как дела?",
+                "hello child!",
+                "Сегодня отличная погода."
+        );
+
+        // Установка сообщений в ListView
+        chatListView.setItems(chatMessages);
+        chatListView.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+            @Override
+            public ListCell<String> call(ListView<String> param) {
+                return new ListCell<String>() {
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null) {
+                            setText(null);
+                            setStyle("-fx-text-fill: black; -fx-font-size: 14px; -fx-background-color: rgba(255, 255, 255, 0.5); ");
+                        } else {
+                            setText(item);
+                            // Применение стиля к тексту внутри ListView
+                            setStyle("-fx-text-fill: black; -fx-font-size: 14px; -fx-background-color: rgba(255, 255, 255, 0.5); ");
+                        }
+                    }
+                };
+            }
+        });
+
         setupButton(settingsButton, viewModel::chatButtonEnabledProperty, viewModel.chatButtonEnabledProperty());
-        chatPanel.setVisible(true); // Показываем панель чата
+        openChat();
+        sendMessage();
         viewModel.playButtonEnabledProperty().set(false);
         viewModel.settingsButtonEnabledProperty().set(false);
         viewModel.exitButtonEnabledProperty().set(false);
