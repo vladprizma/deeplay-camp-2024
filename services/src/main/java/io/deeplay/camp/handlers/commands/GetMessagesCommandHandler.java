@@ -19,7 +19,7 @@ public class GetMessagesCommandHandler implements CommandHandler {
         StringBuilder response = new StringBuilder("Chat messages:");
         for (ChatMessage chatMessage : messages) {
             response.append("\n").append(chatMessage.getTimestamp())
-                    .append(" - ").append(chatMessage.getUserId())
+                    .append(" - ").append(chatMessage.getUserId().getUsername())
                     .append(": ").append(chatMessage.getMessage());
         }
         mainHandler.sendMessageToClient(response.toString());

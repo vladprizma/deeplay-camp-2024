@@ -99,9 +99,7 @@ public class MainHandler implements Runnable {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
+        } catch (SQLException | InterruptedException e) {
             throw new RuntimeException(e);
         } finally {
             closeConnection();

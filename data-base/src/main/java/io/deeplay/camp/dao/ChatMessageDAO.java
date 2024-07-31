@@ -1,6 +1,7 @@
 package io.deeplay.camp.dao;
 
 import entity.ChatMessage;
+import entity.User;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ public class ChatMessageDAO {
 
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
              PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, message.getUserId());
+            statement.setInt(1, message.getUserId().getId());
             statement.setString(2, message.getMessage());
             statement.setTimestamp(3, message.getTimestamp());
             statement.executeUpdate();
@@ -25,6 +26,7 @@ public class ChatMessageDAO {
 
     public List<ChatMessage> getAllMessages() throws SQLException {
         String sql = "SELECT * FROM chat_messages ORDER BY timestamp DESC";
+        UserDAO userDAO = new UserDAO();
 
         List<ChatMessage> messages = new ArrayList<>();
 
@@ -35,10 +37,11 @@ public class ChatMessageDAO {
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 int userId = resultSet.getInt("user_id");
+                User user = userDAO.getUserById(userId).get();
                 String message = resultSet.getString("message");
                 Timestamp timestamp = resultSet.getTimestamp("timestamp");
 
-                messages.add(new ChatMessage(id, userId, message, timestamp));
+                messages.add(new ChatMessage(id, user, message, timestamp));
             }
         }
 

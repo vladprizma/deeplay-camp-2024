@@ -16,7 +16,7 @@ public class SendMessageCommandHandler implements CommandHandler {
         String[] parts = message.split(MainHandler.splitRegex, 2);
         String chatMessage = parts[1];
 
-        chatService.addMessage(mainHandler.getUser().getId(), chatMessage);
+        chatService.addMessage(mainHandler.getUser(), chatMessage);
         mainHandler.sendMessageToClient("Message sent successfully.");
     }
 }
