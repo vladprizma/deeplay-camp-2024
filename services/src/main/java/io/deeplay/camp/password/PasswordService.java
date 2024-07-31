@@ -1,4 +1,4 @@
-package password;
+package io.deeplay.camp.password;
 
 import org.mindrot.jbcrypt.BCrypt;
 

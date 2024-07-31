@@ -1,5 +1,5 @@
-import board.BoardLogic;
-import display.DisplayServices;
+import io.deeplay.camp.board.BoardLogic;
+import io.deeplay.camp.display.DisplayServices;
 import entity.Board;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

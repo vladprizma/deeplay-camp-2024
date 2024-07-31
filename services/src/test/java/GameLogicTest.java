@@ -1,14 +1,9 @@
-import board.BoardLogic;
+import io.deeplay.camp.board.BoardLogic;
 import entity.Board;
-import entity.User;
-import enums.Color;
 import enums.GameStatus;
-import game.GameLogic;
+import io.deeplay.camp.game.GameLogic;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 

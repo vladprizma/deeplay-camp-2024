@@ -3,7 +3,7 @@ package entity;
 import enums.GameStatus;
 
 public class GameSession {
-    private String currentPlayerId;
+    private int currentPlayerId;
     private Board board;
     private User player1;
     private User player2;
@@ -42,11 +42,11 @@ public class GameSession {
         this.gameState = gameState;
     }
 
-    public String getCurrentPlayerId() {
+    public int getCurrentPlayerId() {
         return currentPlayerId;
     }
 
-    public void setCurrentPlayerId(String currentPlayerId) {
+    public void setCurrentPlayerId(int currentPlayerId) {
         this.currentPlayerId = currentPlayerId;
     }
     
