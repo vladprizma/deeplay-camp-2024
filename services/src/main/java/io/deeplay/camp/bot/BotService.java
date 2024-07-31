@@ -3,7 +3,7 @@ package io.deeplay.camp.bot;
 import io.deeplay.camp.board.BoardLogic;
 import entity.Tile;
 
-public class BotServices {
+public class BotService {
 
     public boolean makeMove(int currentPlayerId, BoardLogic boardLogic) {
         int[] move = getCurrentPlayerMove(currentPlayerId, boardLogic);

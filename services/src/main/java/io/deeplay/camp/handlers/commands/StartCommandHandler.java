@@ -33,8 +33,7 @@ public class StartCommandHandler implements CommandHandler {
             } else {
                 user = 2;
             }
-
-
+            
             mainHandler.getGameLogic().display(user, mainHandler.getBoardLogic());
         } else {
             mainHandler.sendMessageToClient("Please login or register.");

@@ -33,6 +33,6 @@ public class RegisterCommandHandler implements CommandHandler {
         var tokens = refreshTokenService.generateRefreshToken(user);
         var updateToken = tokens.updateToken;
         var refreshToken = tokens.refreshToken;
-        mainHandler.sendMessageToClient(refreshToken + "::" + updateToken);
+        mainHandler.sendMessageToClient("register::" + refreshToken + "::" + updateToken);
     }
 }

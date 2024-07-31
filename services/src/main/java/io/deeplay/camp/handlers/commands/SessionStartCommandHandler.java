@@ -27,7 +27,7 @@ public class SessionStartCommandHandler implements CommandHandler {
                 mainHandler.setUser(optionalUser.get());
                 mainHandler.sendMessageToClient("Session started successfully. Welcome back, " + username);
                 User user = mainHandler.getUser();
-                mainHandler.sendMessageToClient(user.getUsername() + "::" + user.getUserPhoto() + "::" + user.getMatches() + "::" + user.getRating());
+                mainHandler.sendMessageToClient("session-start::" + user.getUsername() + "::" + user.getUserPhoto() + "::" + user.getMatches() + "::" + user.getRating());
                 mainHandler.setLogin(true);
             } else {
                 mainHandler.sendMessageToClient("User not found.");

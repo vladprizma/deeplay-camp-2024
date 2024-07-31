@@ -1,5 +1,5 @@
 import io.deeplay.camp.board.BoardLogic;
-import io.deeplay.camp.bot.BotServices;
+import io.deeplay.camp.bot.BotService;
 import entity.Board;
 import entity.User;
 import io.deeplay.camp.game.GameLogic;
@@ -9,7 +9,7 @@ import java.util.Map;
 public class BotServicesTest {
 
     private Board board;
-    private BotServices botServices;
+    private BotService botServices;
     private Map<String, User> players;
     private BoardLogic boardLogic;
     private GameLogic gameLogic;

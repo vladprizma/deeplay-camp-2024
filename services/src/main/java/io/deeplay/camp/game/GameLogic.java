@@ -1,7 +1,7 @@
 package io.deeplay.camp.game;
 
 import io.deeplay.camp.board.BoardLogic;
-import io.deeplay.camp.bot.BotServices;
+import io.deeplay.camp.bot.BotService;
 import io.deeplay.camp.display.DisplayServices;
 import entity.Bot;
 import entity.User;
@@ -17,7 +17,7 @@ import java.util.Scanner;
 public class GameLogic implements ReversiListener {
 
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
-    private BotServices botServices = new BotServices();
+    private BotService botServices = new BotService();
     private UserService playerService = new UserService();
     private DisplayServices displayServices = new DisplayServices();
 

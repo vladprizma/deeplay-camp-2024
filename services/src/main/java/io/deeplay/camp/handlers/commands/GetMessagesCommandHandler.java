@@ -12,15 +12,15 @@ import java.util.List;
 public class GetMessagesCommandHandler implements CommandHandler {
 
     private final ChatService chatService = new ChatService();
-
+    public StringBuilder response = new StringBuilder("messages:");
+        
     @Override
     public void handle(String message, MainHandler mainHandler) throws IOException, SQLException {
         List<ChatMessage> messages = chatService.getAllMessages();
-        StringBuilder response = new StringBuilder("Chat messages:");
         for (ChatMessage chatMessage : messages) {
             response.append("\n").append(chatMessage.getTimestamp())
-                    .append(" - ").append(chatMessage.getUserId().getUsername())
-                    .append(": ").append(chatMessage.getMessage());
+                    .append("::").append(chatMessage.getUserId().getUsername())
+                    .append("::").append(chatMessage.getMessage());
         }
         mainHandler.sendMessageToClient(response.toString());
     }
