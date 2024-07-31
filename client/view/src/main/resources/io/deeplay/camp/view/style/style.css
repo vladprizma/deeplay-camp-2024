@@ -4,7 +4,7 @@
     -fx-border-color: black;
     -fx-border-width: 5;
     -fx-border-radius: 60;
-    -fx-padding: 10px;
+    -fx-padding: -5px;
     -fx-font-family: 'Just Me Again Down Here';
     -fx-text-fill: rgb(44, 17, 63);
     -fx-font-size: 96px;
@@ -48,4 +48,21 @@
   -fx-padding: 0;
   -fx-border-width: 0;
   -fx-border-color: transparent;
+}
+
+#chatPanel {
+}
+
+#chatInput {
+    -fx-background-color: rgba(255, 255, 255, 0.5); /* Прозрачный белый цвет */
+    -fx-background-radius: 15; /* Закругленные углы */
+    -fx-border-radius: 15; /* Закругленные углы */
+}
+
+#chatListView {
+    -fx-background-color: rgba(255, 255, 255, 0.8);
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
+    -fx-border-color: black;
+    /* Ширина текстового поля */
 }
