@@ -23,13 +23,13 @@ public class SendMessageCommandHandler implements CommandHandler {
         mainHandler.sendMessageToClient("Message sent successfully.");
 
         ChatService chatService = new ChatService();
-        StringBuilder response = new StringBuilder("messages:");
+        StringBuilder response = new StringBuilder("messages");
         
         List<ChatMessage> messages = chatService.getAllMessages();
         for (ChatMessage chatMessage1 : messages) {
-            response.append("\n").append(chatMessage1.getTimestamp())
-                    .append("::").append(chatMessage1.getUserId().getUsername())
-                    .append("::").append(chatMessage1.getMessage());
+            response.append("::").append(chatMessage1.getTimestamp())
+                    .append(" ").append(chatMessage1.getUserId().getUsername())
+                    .append(" ").append(chatMessage1.getMessage());
         }
         
         SessionManager.getInstance().sendMessageToAllInSession(mainHandler, response.toString());
