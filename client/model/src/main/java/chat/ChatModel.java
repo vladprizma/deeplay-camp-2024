@@ -4,16 +4,16 @@ import action.Action;
 
 public class ChatModel {
 
-    private String loginAndPassword;
+    private String chatMessages;
     private Action action;
 
-    public ChatModel(Action action, String loginAndPassword) {
-        this.loginAndPassword = loginAndPassword;
+    public ChatModel(Action action, String chatMessages) {
+        this.chatMessages = chatMessages;
         this.action = action;
-        loginModelMethod();
+        chatModelMethod();
     }
 
-    private void loginModelMethod() {
-        action.handleLoginAction(loginAndPassword);
+    private void chatModelMethod() {
+        action.handleChatAction(chatMessages);
     }
 }

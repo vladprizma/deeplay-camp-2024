@@ -1,5 +1,6 @@
 package mainmenu;
 
+import sigletonobserver.ChatString;
 import enums.ButtonEnum;
 import io.deeplay.camp.ModelManager;
 import javafx.animation.Interpolator;
@@ -20,13 +21,13 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import navigator.ViewNavigator;
+import observer.Observer;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
-public class MainMenuView {
-    private ViewNavigator viewModel = new ViewNavigator();
+public class MainMenuView implements Observer {
+        private ViewNavigator viewModel = new ViewNavigator();
 
     @FXML
     private Button playButton;
@@ -70,7 +71,11 @@ public class MainMenuView {
 
     private List<String> chat;
 
+    private ChatString singleton;
+
+
     public MainMenuView() throws IOException {
+        singleton = ChatString.getInstance();
         modelManager = new ModelManager();
     }
 
@@ -90,7 +95,9 @@ public class MainMenuView {
 
     @FXML
     public void initialize() {
+        singleton.registerObserver(this);
         animation();
+
         playButton.setOnAction(event -> onButtonClicked(ButtonEnum.PLAY));
         settingsButton.setOnAction(event -> onButtonClicked(ButtonEnum.SETTINGS));
         exitButton.setOnAction(event -> onButtonClicked(ButtonEnum.EXIT));
@@ -138,6 +145,7 @@ public class MainMenuView {
                 onEnterButtonClicked();
                 break;
             default:
+                break;
         }
     }
 
@@ -159,8 +167,6 @@ public class MainMenuView {
 
     private void onChatButtonClicked() {
         chatMessages = FXCollections.observableArrayList();
-
-        // Установка сообщений в ListView
         chatListView.setItems(chatMessages);
         chatListView.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
             @Override
@@ -174,9 +180,8 @@ public class MainMenuView {
                             setStyle("-fx-background-radius: 70; -fx-text-fill: black; -fx-font-size: 14px; -fx-background-color: rgba(255, 255, 255, 0.5); ");
                         } else {
                             setText(item);
-
-                            getAllMessages();
-                            // Применение стиля к тексту внутри ListView
+                            System.out.println(chatMessages.getLast());
+                            modelManager.chatModelMethod(chatMessages.getLast());
                             setStyle("-fx-text-fill: black; -fx-font-size: 14px; -fx-background-color: rgba(255, 255, 255, 0.5); ");
                         }
                     }
@@ -187,10 +192,6 @@ public class MainMenuView {
         setupButton(settingsButton, viewModel::chatButtonEnabledProperty, viewModel.chatButtonEnabledProperty());
         openChat();
         sendMessage();
-    }
-
-    public List<String> getAllMessages() {
-        return new ArrayList<>(chatMessages);
     }
 
     public void sendMessages(List<String> messages) {
@@ -256,5 +257,10 @@ public class MainMenuView {
             }
         };
         return gradientAnimation;
+    }
+
+    @Override
+    public void update(String newString) {
+        System.out.println("\n"+ newString+ "\n");
     }
 }

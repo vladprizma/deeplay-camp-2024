@@ -24,6 +24,7 @@ javafx {
 
 dependencies {
     implementation(project(":client:model"))
+    implementation(project(":client:storage"))
     implementation("org.controlsfx:controlsfx:11.1.2")
     implementation("org.controlsfx:controlsfx:11.1.2") {
         exclude(group = "org.openjfx")
