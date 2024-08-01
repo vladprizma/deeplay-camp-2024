@@ -55,8 +55,8 @@ public class MainHandler implements Runnable {
         commandHandlers.put("register", new RegisterCommandHandler());
         commandHandlers.put("game-start", new StartCommandHandler());
         commandHandlers.put("session-start", new SessionStartCommandHandler());
-        commandHandlers.put("send-message", new SendMessageCommandHandler());
-        commandHandlers.put("get-messages", new GetMessagesCommandHandler());
+        commandHandlers.put("send-global-message", new SendMessageCommandHandler());
+        commandHandlers.put("get-global-messages", new GetMessagesCommandHandler());
         commandHandlers.put("game-pause", new PauseCommandHandler());
         commandHandlers.put("game-disconnect", new DisconnectCommandHandler());
         commandHandlers.put("game-move", new MoveCommandHandler());
