@@ -1,8 +1,8 @@
 package client;
 
-import request.Request;
+import request.RequestResponse;
 import java.io.IOException;
 
 public interface Client {
-    void sendRequest(Request request) throws IOException;
+    void sendRequest(RequestResponse requestResponse) throws IOException;
 }

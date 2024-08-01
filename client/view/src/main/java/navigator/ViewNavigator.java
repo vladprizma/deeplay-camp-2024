@@ -9,6 +9,7 @@ public class ViewNavigator {
     private final BooleanProperty settingsButtonEnabled = new SimpleBooleanProperty(true);
     private final BooleanProperty exitButtonEnabled = new SimpleBooleanProperty(true);
     private final BooleanProperty chatButtonEnabled = new SimpleBooleanProperty(true);
+    private final BooleanProperty enterButtonEnabled = new SimpleBooleanProperty(true);
 
     public void onPlayButtonClicked() {
         ScreenSwitcher.loadView(getClass().getResource("/io/deeplay/camp/view/TestView.fxml"));
@@ -32,5 +33,9 @@ public class ViewNavigator {
 
     public BooleanProperty chatButtonEnabledProperty() {
         return chatButtonEnabled;
+    }
+
+    public BooleanProperty enterButtonEnabledProperty() {
+        return enterButtonEnabled;
     }
 }

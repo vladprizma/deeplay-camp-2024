@@ -1,9 +1,10 @@
 package client;
 
+import action.Action;
 import io.deeplay.camp.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import request.Request;
+import request.RequestResponse;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -22,6 +23,12 @@ public class TCPClient implements Client {
     private Socket socket;
     private BufferedWriter writer;
     private BufferedReader reader;
+    public static String splitRegex = "::";
+    public Action action;
+
+    public void setAction(Action action) {
+        this.action = action;
+    }
 
     public TCPClient(String serverIp, int serverPort) throws IOException {
         this.serverIp = serverIp;
@@ -37,10 +44,10 @@ public class TCPClient implements Client {
     }
 
     @Override
-    public void sendRequest(Request request) {
+    public void sendRequest(RequestResponse requestResponse) {
         executor.submit(() -> {
             try {
-                writer.write(request.toString());
+                writer.write(requestResponse.toString());
                 writer.newLine();
                 writer.flush();
             } catch (IOException e) {
@@ -54,7 +61,13 @@ public class TCPClient implements Client {
             String serverResponse;
             try {
                 while ((serverResponse = reader.readLine()) != null) {
-                    System.out.println("Server response: " + serverResponse);
+                    logger.info("Server response: " + serverResponse);
+                    String command = serverResponse.split(splitRegex)[0];
+                    switch (command) {
+                        case "login":
+                            action.handleLoginActionResponse(serverResponse.split(splitRegex)[1], serverResponse.split(splitRegex)[2]);
+                            break;
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
