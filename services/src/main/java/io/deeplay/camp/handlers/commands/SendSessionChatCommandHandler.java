@@ -1,6 +1,5 @@
 package io.deeplay.camp.handlers.commands;
 
-import entity.GameSession;
 import entity.SessionMessage;
 import io.deeplay.camp.handlers.MainHandler;
 import io.deeplay.camp.managers.SessionManager;
@@ -9,7 +8,7 @@ import io.deeplay.camp.repository.CommandHandler;
 import java.io.IOException;
 import java.sql.SQLException;
 
-public class SessionChatCommandHandler implements CommandHandler  {
+public class SendSessionChatCommandHandler implements CommandHandler  {
 
     @Override
     public void handle(String message, MainHandler mainHandler) throws IOException, SQLException, InterruptedException {
@@ -20,10 +19,10 @@ public class SessionChatCommandHandler implements CommandHandler  {
 
         StringBuilder sb = new StringBuilder();
         for (SessionMessage messageChat : sessionChat) {
-            sb.append(messageChat.getUsername()).append("::").append(messageChat.getMsg());
+            sb.append("::").append(messageChat.getUsername()).append(" ").append(messageChat.getMsg());
         }
         
-        var msg = "session-chat::" + sb.toString();
+        var msg = "send-message-session-chat" + sb.toString();
         
         SessionManager.getInstance().sendMessageToAllInSession(mainHandler, msg);
     }
