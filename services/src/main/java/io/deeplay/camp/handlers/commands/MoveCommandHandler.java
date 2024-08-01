@@ -1,15 +1,18 @@
 package io.deeplay.camp.handlers.commands;
 
+import dto.BoardDTO;
 import enums.GameStatus;
 import io.deeplay.camp.handlers.MainHandler;
+import io.deeplay.camp.managers.SessionManager;
 import io.deeplay.camp.repository.CommandHandler;
 
 import java.io.IOException;
 
 public class MoveCommandHandler implements CommandHandler {
-
+    
     @Override
     public void handle(String message, MainHandler mainHandler) throws IOException {
+        
         var user = mainHandler.getUser().getId();
         
         if (user == mainHandler.getSession().getPlayer1().getId()) {
@@ -22,7 +25,12 @@ public class MoveCommandHandler implements CommandHandler {
             boolean moveMade = mainHandler.getGameLogic().makeMove(message.split(" ")[1], user, mainHandler.getBoardLogic());
             if (moveMade) {
                 mainHandler.getLogger().info("{}: Move made successfully.", mainHandler.getUser().getId());
-                mainHandler.sendMessageToClient(mainHandler.getUser().getId() + ": Move made successfully.");
+                BoardDTO boardDTO = new BoardDTO(mainHandler.getBoard());
+                var msg = "board::" + mainHandler.getUser().getId() + "::" + boardDTO.toString();
+                
+                mainHandler.sendMessageToClient(msg);
+                SessionManager.getInstance().sendMessageToOpponent(mainHandler, mainHandler.getSession(), msg);
+                
                 mainHandler.getGameLogic().display((user == 1) ? 2 : 1, mainHandler.getBoardLogic());
                 if (mainHandler.getGameLogic().checkForWin()) {
                     mainHandler.getGameLogic().displayEndGame(mainHandler.getBoardLogic());
