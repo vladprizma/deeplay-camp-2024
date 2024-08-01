@@ -13,3 +13,5 @@ val clientModules = listOf("model", "view-model", "view", "services", "utilities
 
 for (module in clientModules)
     include(":client:$module")
+include("client:storage")
+findProject(":client:storage")?.name = "storage"

@@ -5,9 +5,11 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import utils.ScreenSwitcher;
 
+import java.io.IOException;
+
 public class Main extends Application {
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws IOException {
         installAnything();
         ScreenSwitcher.setMainStage(primaryStage);
         ScreenSwitcher.loadView(getClass().getResource("/io/deeplay/camp/view/MainMenuView.fxml"));
