@@ -26,7 +26,7 @@ public class MoveCommandHandler implements CommandHandler {
             if (moveMade) {
                 mainHandler.getLogger().info("{}: Move made successfully.", mainHandler.getUser().getId());
                 BoardDTO boardDTO = new BoardDTO(mainHandler.getBoard());
-                var msg = "board::" + mainHandler.getUser().getId() + "::" + boardDTO.toString();
+                var msg = "board::" + mainHandler.getUser().getId() + "::" + boardDTO.boardToClient();
                 
                 mainHandler.sendMessageToClient(msg);
                 SessionManager.getInstance().sendMessageToOpponent(mainHandler, mainHandler.getSession(), msg);
