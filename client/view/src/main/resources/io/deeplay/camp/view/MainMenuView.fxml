@@ -11,6 +11,9 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.effect.GaussianBlur?>
+<?import javafx.scene.control.PasswordField?>
+
 <AnchorPane id="mainWindow" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/8"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="mainmenu.MainMenuView" stylesheets="@style/style.css" onMouseClicked="#handleRootClick">
     <children>
@@ -71,5 +74,29 @@
                 </ImageView>
             </graphic>
         </Button>
+
+        <!-- Полупрозрачный прямоугольник с эффектом размытия -->
+        <Rectangle fx:id="blurBackground"  width="1920.0" height="1080.0" arcWidth="20.0" arcHeight="20.0" fill="rgba(0, 0, 0, 0.5)">
+            <effect>
+                <GaussianBlur radius="20"/>
+            </effect>
+        </Rectangle>
+
+        <VBox fx:id="loginVBox" spacing="10" layoutX="374.0" layoutY="240.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+            <ImageView fitHeight="900.0" fitWidth="1200.0" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="@resources/logIN.png"/>
+                </image>
+            </ImageView>
+
+            <!-- Текстовое поле для логина -->
+            <TextField fx:id="usernameField" promptText="Логин"/>
+
+            <!-- Текстовое поле для пароля -->
+            <PasswordField fx:id="passwordField" promptText="Пароль"/>
+
+            <!-- Кнопка войти -->
+            <Button fx:id="enterButton" text="Войти"/>
+        </VBox>
     </children>
 </AnchorPane>
