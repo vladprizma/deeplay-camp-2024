@@ -12,7 +12,7 @@ public class ViewNavigator {
     private final BooleanProperty enterButtonEnabled = new SimpleBooleanProperty(true);
 
     public void onPlayButtonClicked() {
-        ScreenSwitcher.loadView(getClass().getResource("/io/deeplay/camp/view/TestView.fxml"));
+        ScreenSwitcher.loadView(getClass().getResource("/io/deeplay/camp/view/GameView.fxml"));
     }
 
     public void onSettingsButtonClicked() {
