@@ -32,6 +32,6 @@ public class SendMessageCommandHandler implements CommandHandler {
                     .append(" ").append(chatMessage1.getMessage());
         }
         
-        SessionManager.getInstance().sendMessageToAllInSession(mainHandler, response.toString());
+        SessionManager.getInstance().sendMessageToAll(response.toString());
     }
 }
