@@ -53,13 +53,13 @@ public class MainHandler implements Runnable {
         
         commandHandlers.put("login", new LoginCommandHandler());
         commandHandlers.put("register", new RegisterCommandHandler());
-        commandHandlers.put("start", new StartCommandHandler());
+        commandHandlers.put("game-start", new StartCommandHandler());
         commandHandlers.put("session-start", new SessionStartCommandHandler());
         commandHandlers.put("send-message", new SendMessageCommandHandler());
         commandHandlers.put("get-messages", new GetMessagesCommandHandler());
-        commandHandlers.put("pause", new PauseCommandHandler());
-        commandHandlers.put("disconnect", new DisconnectCommandHandler());
-        commandHandlers.put("move", new MoveCommandHandler());
+        commandHandlers.put("game-pause", new PauseCommandHandler());
+        commandHandlers.put("game-disconnect", new DisconnectCommandHandler());
+        commandHandlers.put("game-move", new MoveCommandHandler());
         commandHandlers.put("send-message-session-chat", new SendSessionChatCommandHandler());
         commandHandlers.put("get-messages-session-chat", new GetSessionChatCommandHandler());
         commandHandlers.put("get-board", new GetBoardCommandHandler());
