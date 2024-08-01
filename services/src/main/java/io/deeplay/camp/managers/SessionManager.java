@@ -86,13 +86,34 @@ public class SessionManager {
         }
     }
     
+    public void sendMessageToAllInSession(MainHandler mainHandler, String msg) {
+        for (var handler : handlers) {
+            if (handler.getSession().getSessionId() == mainHandler.getSession().getSessionId() && handler.getUser().getId() != mainHandler.getUser().getId()) {
+                handler.sendMessageToClient(msg);
+                mainHandler.sendMessageToClient(msg);
+            }
+        }
+    }
+    
     public synchronized void sendSessionMessage(MainHandler handler, String msg) {
         for (var session : sessions) {
             if (Objects.equals(session.getSessionId(), handler.getSession().getSessionId())) {
                 var sessionMsg = new SessionMessage(msg, handler.getHandlerPlayer().getUsername());
                 session.addMessage(sessionMsg);
+                
+                break;
             }
         }
+    }
+    
+    public User getOpponent(MainHandler mainHandler) {
+        for (var handler : handlers) {
+            if (handler.getSession().getSessionId() == mainHandler.getSession().getSessionId() && handler.getUser().getId() != mainHandler.getUser().getId()) {
+                return handler.getUser();
+            }
+        }
+        
+        return mainHandler.getUser();
     }
 
     /**

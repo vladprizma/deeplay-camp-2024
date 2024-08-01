@@ -2,20 +2,13 @@ package io.deeplay.camp.handlers;
 
 import entity.Board;
 import io.deeplay.camp.board.BoardLogic;
-import io.deeplay.camp.chat.ChatService;
-import entity.ChatMessage;
 import entity.GameSession;
 import entity.User;
-import enums.GameStatus;
 import io.deeplay.camp.Main;
 import io.deeplay.camp.game.GameLogic;
 import io.deeplay.camp.handlers.commands.*;
 import io.deeplay.camp.managers.SessionManager;
-import io.deeplay.camp.password.PasswordService;
 import io.deeplay.camp.repository.CommandHandler;
-import io.deeplay.camp.token.JwtService;
-import io.deeplay.camp.token.RefreshTokenService;
-import io.deeplay.camp.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,9 +19,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * Handles communication with a connected client.
@@ -62,14 +53,17 @@ public class MainHandler implements Runnable {
         
         commandHandlers.put("login", new LoginCommandHandler());
         commandHandlers.put("register", new RegisterCommandHandler());
-        commandHandlers.put("start", new StartCommandHandler());
+        commandHandlers.put("game-start", new StartCommandHandler());
         commandHandlers.put("session-start", new SessionStartCommandHandler());
-        commandHandlers.put("send-message", new SendMessageCommandHandler());
-        commandHandlers.put("get-messages", new GetMessagesCommandHandler());
-        commandHandlers.put("pause", new PauseCommandHandler());
-        commandHandlers.put("disconnect", new DisconnectCommandHandler());
-        commandHandlers.put("move", new MoveCommandHandler());
-        commandHandlers.put("session-chat", new SessionChatCommandHandler());
+        commandHandlers.put("send-global-message", new SendMessageCommandHandler());
+        commandHandlers.put("get-global-messages", new GetMessagesCommandHandler());
+        commandHandlers.put("game-pause", new PauseCommandHandler());
+        commandHandlers.put("game-disconnect", new DisconnectCommandHandler());
+        commandHandlers.put("game-move", new MoveCommandHandler());
+        commandHandlers.put("send-message-session-chat", new SendSessionChatCommandHandler());
+        commandHandlers.put("get-messages-session-chat", new GetSessionChatCommandHandler());
+        commandHandlers.put("get-board", new GetBoardCommandHandler());
+        commandHandlers.put("get-valid-moves", new GetValidMovesCommandHandlers());
     }
 
     /**
