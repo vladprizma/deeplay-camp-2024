@@ -9,6 +9,7 @@ public class User {
     private int rating;
     private int matches;
     private String userPhoto;
+    private int elo;
 
     public User(int id, String username, String password, int rating, int matches, String userPhoto) {
         this.id = id;
@@ -38,4 +39,8 @@ public class User {
     public void setMatches(int matches) { this.matches = matches; }
     
     public String getUserPhoto() { return this.userPhoto; }
+    
+    public void setElo(int elo) { this.elo = elo; }
+    
+    public int getElo() { return elo; }
 }
