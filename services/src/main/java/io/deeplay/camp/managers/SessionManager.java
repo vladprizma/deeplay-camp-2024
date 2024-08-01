@@ -4,6 +4,7 @@ import TokenGenerator.TokenGenerator;
 import dto.Player;
 import entity.Board;
 import entity.GameSession;
+import entity.SessionMessage;
 import entity.User;
 import enums.GameStatus;
 import io.deeplay.camp.handlers.MainHandler;
@@ -73,6 +74,8 @@ public class SessionManager {
             if (Objects.equals(playerHandler.getHandlerSession().getSessionId(), session.getSessionId())
                     && !Objects.equals(playerHandler.getHandlerPlayer().getId(), handler.getHandlerPlayer().getId())) {
                 playerHandler.sendMessageToClient(msg);
+                
+                break;
             }
         }
     }
@@ -80,6 +83,15 @@ public class SessionManager {
     public void sendMessageToAll(String msg) {
         for (var playerHandler : handlers) {
             playerHandler.sendMessageToClient(msg);
+        }
+    }
+    
+    public synchronized void sendSessionMessage(MainHandler handler, String msg) {
+        for (var session : sessions) {
+            if (Objects.equals(session.getSessionId(), handler.getSession().getSessionId())) {
+                var sessionMsg = new SessionMessage(msg, handler.getHandlerPlayer().getUsername());
+                session.addMessage(sessionMsg);
+            }
         }
     }
 

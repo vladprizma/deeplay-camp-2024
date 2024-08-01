@@ -12,7 +12,8 @@ CREATE TABLE "gamesessions" (
     "player1_id" INT,
     "result" VARCHAR(30) NOT NULL,
     "log" TEXT,
-    "player2_id" INT
+    "player2_id" INT,
+    "session_chat" TEXT
 );
 
 CREATE TABLE "chat_messages" (

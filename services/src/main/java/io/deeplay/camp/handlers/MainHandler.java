@@ -69,6 +69,7 @@ public class MainHandler implements Runnable {
         commandHandlers.put("pause", new PauseCommandHandler());
         commandHandlers.put("disconnect", new DisconnectCommandHandler());
         commandHandlers.put("move", new MoveCommandHandler());
+        commandHandlers.put("session-chat", new SessionChatCommandHandler());
     }
 
     /**

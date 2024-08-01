@@ -20,6 +20,7 @@ public class GameLogic implements ReversiListener {
     private BotService botServices = new BotService();
     private UserService playerService = new UserService();
     private DisplayServices displayServices = new DisplayServices();
+    private boolean moveReturn = true;
 
     private BoardLogic boardLogic;
 
@@ -61,11 +62,12 @@ public class GameLogic implements ReversiListener {
         int x = move[0];
         int y = move[1];
         boardLogic.setPiece(x, y, currentPlayerId);
-        return true;
+        return moveReturn;
     }
 
     private int[] getCurrentPlayerMove(String userInput, int currentPlayerId, BoardLogic boardLogic) {
         int[] move;
+        moveReturn = true;
         move = getUserMove(userInput);
         logger.info(Integer.toString(move[0]) + " " + Integer.toString(move[1]));
         
@@ -73,6 +75,7 @@ public class GameLogic implements ReversiListener {
             return new int[]{move[0], move[1]};
         } else {
             logger.info("Данных ход невозможен, попробуйте еще раз.");
+            moveReturn = false;
 //            getCurrentPlayerMove(userInput, currentPlayerId, boardLogic);
         }
         return new int[]{move[0], move[1]};
