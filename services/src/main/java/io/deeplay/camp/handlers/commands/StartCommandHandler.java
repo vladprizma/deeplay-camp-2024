@@ -24,7 +24,10 @@ public class StartCommandHandler implements CommandHandler {
             mainHandler.setGameLogic(new GameLogic(mainHandler.getBoardLogic()));
 
             mainHandler.getLogger().info("{}: The enemy was found. The game begins...", mainHandler.getUser().getId());
-            mainHandler.sendMessageToClient(mainHandler.getUser().getId() + ": The enemy was found. The game begins...");
+            
+            var msg = SessionManager.getInstance().getOpponent(mainHandler);
+            
+            mainHandler.sendMessageToClient("session::" + msg.getId() + " " + msg.getUserPhoto() + " " + msg.getRating() + " " + msg.getMatches() + " " + msg.getUsername() + " " + msg.getElo());
 
             var user = mainHandler.getUser().getId();
 

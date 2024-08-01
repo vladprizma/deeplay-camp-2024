@@ -105,6 +105,16 @@ public class SessionManager {
             }
         }
     }
+    
+    public User getOpponent(MainHandler mainHandler) {
+        for (var handler : handlers) {
+            if (handler.getSession().getSessionId() == mainHandler.getSession().getSessionId() && handler.getUser().getId() != mainHandler.getUser().getId()) {
+                return handler.getUser();
+            }
+        }
+        
+        return mainHandler.getUser();
+    }
 
     /**
      * Adds a client handler to the list of handlers.
