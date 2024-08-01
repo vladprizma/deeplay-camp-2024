@@ -7,7 +7,15 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
-<AnchorPane id="mainWindow" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mainmenu.MainMenuView" stylesheets="@style/style.css">
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.effect.GaussianBlur?>
+<?import javafx.scene.control.PasswordField?>
+
+<AnchorPane id="mainWindow" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="mainmenu.MainMenuView" stylesheets="@style/style.css" onMouseClicked="#handleRootClick">
     <children>
         <ImageView fitHeight="1020.0" fitWidth="1860.0" layoutX="30.0" layoutY="30.0" pickOnBounds="true" preserveRatio="false">
             <image>
@@ -19,17 +27,13 @@
         </ImageView>
 
         <!-- Кнопка PLAY -->
-        <Button fx:id="playButton" layoutX="710.0" layoutY="465.0" prefHeight="150.0" prefWidth="500.0" text="PLAY"/>
+        <Button fx:id="playButton" layoutX="710.0" layoutY="465.0" prefHeight="100.0" prefWidth="500.0" text="PLAY"/>
 
         <!-- Кнопка Settings -->
-        <Button fx:id="settingsButton" layoutX="710.0" layoutY="715.0" prefHeight="150.0" prefWidth="500.0" text="SETTINGS"/>
+        <Button fx:id="settingsButton" layoutX="710.0" layoutY="715.0" prefHeight="100.0" prefWidth="500.0" text="SETTINGS"/>
 
         <!-- Кнопка Chat -->
         <Button fx:id="chatButton" layoutX="53.0" layoutY="971.0" prefHeight="59.0" prefWidth="174.0" text="CHAT" />
-
-        <Pane fx:id="chatPanel" visible="false">
-
-        </Pane>
 
         <!-- тройная кнопка-кртинка -->
         <Button id="roundGreenButton" layoutX="1730.0" layoutY="70.0" />
@@ -50,6 +54,18 @@
             </clip>
         </ImageView>
 
+        <!-- Панель чата -->
+        <Pane fx:id="chatPanel" layoutX="50.0" layoutY="50.0" prefHeight="800.0" prefWidth="600.0" visible="false" onMouseClicked="#handleChatPanelClick">
+            <children>
+                <VBox spacing="10" alignment="CENTER">
+                    <children>
+                        <ListView fx:id="chatListView" prefHeight="700.0" prefWidth="0.0"/>
+                        <TextField fx:id="chatInput" prefWidth="600.0" onAction="#sendMessage"/>
+                    </children>
+                </VBox>
+            </children>
+        </Pane>
+
         <!-- Кнопка Exit -->
         <Button fx:id="exitButton" layoutX="1685.0" layoutY="860.0">
             <graphic>
@@ -58,5 +74,29 @@
                 </ImageView>
             </graphic>
         </Button>
+
+        <!-- Полупрозрачный прямоугольник с эффектом размытия -->
+        <Rectangle fx:id="blurBackground"  width="1920.0" height="1080.0" arcWidth="20.0" arcHeight="20.0" fill="rgba(0, 0, 0, 0.5)">
+            <effect>
+                <GaussianBlur radius="20"/>
+            </effect>
+        </Rectangle>
+
+        <VBox fx:id="loginVBox" spacing="10" layoutX="374.0" layoutY="240.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+            <ImageView fitHeight="900.0" fitWidth="1200.0" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="@resources/logIN.png"/>
+                </image>
+            </ImageView>
+
+            <!-- Текстовое поле для логина -->
+            <TextField fx:id="usernameField" promptText="Логин"/>
+
+            <!-- Текстовое поле для пароля -->
+            <PasswordField fx:id="passwordField" promptText="Пароль"/>
+
+            <!-- Кнопка войти -->
+            <Button fx:id="enterButton" text="Войти"/>
+        </VBox>
     </children>
 </AnchorPane>

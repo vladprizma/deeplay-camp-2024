@@ -4,5 +4,6 @@ public enum ButtonEnum {
     PLAY,
     SETTINGS,
     CHAT,
-    EXIT
+    EXIT,
+    ENTER
 }

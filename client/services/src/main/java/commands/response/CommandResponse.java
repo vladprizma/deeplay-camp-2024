@@ -1,7 +1,7 @@
-package commands;
+package commands.response;
 
 import java.io.IOException;
 
-public interface Command {
+public interface CommandResponse {
     void execute() throws IOException;
 }

@@ -13,12 +13,17 @@ repositories {
     mavenCentral()
 }
 
+tasks.withType<JavaCompile> {
+    options.encoding = "UTF-8"
+}
+
 javafx {
     version = "21"
     modules("javafx.controls", "javafx.fxml", "javafx.web", "javafx.swing", "javafx.media")
 }
 
 dependencies {
+    implementation(project(":client:model"))
     implementation("org.controlsfx:controlsfx:11.1.2")
     implementation("org.controlsfx:controlsfx:11.1.2") {
         exclude(group = "org.openjfx")

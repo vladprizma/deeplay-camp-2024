@@ -1,16 +1,29 @@
 package mainmenu;
 
 import enums.ButtonEnum;
+import io.deeplay.camp.ModelManager;
 import javafx.animation.Interpolator;
 import javafx.animation.Timeline;
 import javafx.animation.Transition;
 import javafx.beans.property.BooleanProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.util.Callback;
 import javafx.util.Duration;
 import navigator.ViewNavigator;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainMenuView {
     private ViewNavigator viewModel = new ViewNavigator();
@@ -31,11 +44,80 @@ public class MainMenuView {
     private Pane chatPanel;
 
     @FXML
+    private ListView<String> chatListView;
+
+    @FXML
+    private TextField chatInput;
+
+    @FXML
+    private Button enterButton;
+
+    @FXML
+    private TextField usernameField;
+
+    @FXML
+    private PasswordField passwordField;
+
+    @FXML
+    private Rectangle blurBackground;
+
+    @FXML
+    private VBox loginVBox;
+
+    private ObservableList<String> chatMessages;
+
+    private ModelManager modelManager;
+
+    private List<String> chat;
+
+    public MainMenuView() throws IOException {
+        modelManager = new ModelManager();
+    }
+
+    private void openChat() {
+        chatButton.setVisible(false);
+        chatPanel.setVisible(true);
+    }
+
+    @FXML
+    private void sendMessage() {
+        String message = chatInput.getText();
+        if (!message.isEmpty()) {
+            chatListView.getItems().add(message);
+            chatInput.clear();
+        }
+    }
+
+    @FXML
     public void initialize() {
         animation();
         playButton.setOnAction(event -> onButtonClicked(ButtonEnum.PLAY));
         settingsButton.setOnAction(event -> onButtonClicked(ButtonEnum.SETTINGS));
         exitButton.setOnAction(event -> onButtonClicked(ButtonEnum.EXIT));
+        chatButton.setOnAction(event -> onButtonClicked(ButtonEnum.CHAT));
+        enterButton.setOnAction(event ->    onButtonClicked(ButtonEnum.ENTER));
+    }
+
+    @FXML
+    private void handleRootClick(MouseEvent event) {
+        if (chatPanel.isVisible()) {
+            // Проверка, находится ли клик внутри панели чата
+            if (!chatPanel.getBoundsInParent().contains(event.getX(), event.getY())) {
+                closeChat();
+            }
+        }
+    }
+
+    @FXML
+    private void handleChatPanelClick(MouseEvent event) {
+        // Остановка распространения события, чтобы клик внутри панели чата
+        // не закрывал чат
+        event.consume();
+    }
+
+    private void closeChat() {
+        chatPanel.setVisible(false);
+        chatButton.setVisible(true);
     }
 
     private void onButtonClicked(ButtonEnum buttonType) {
@@ -52,6 +134,10 @@ public class MainMenuView {
             case EXIT:
                 onExitButtonClicked();
                 break;
+            case ENTER:
+                onEnterButtonClicked();
+                break;
+            default:
         }
     }
 
@@ -72,16 +158,56 @@ public class MainMenuView {
     }
 
     private void onChatButtonClicked() {
+        chatMessages = FXCollections.observableArrayList();
+
+        // Установка сообщений в ListView
+        chatListView.setItems(chatMessages);
+        chatListView.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+            @Override
+            public ListCell<String> call(ListView<String> param) {
+                return new ListCell<String>() {
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null) {
+                            setText(null);
+                            setStyle("-fx-background-radius: 70; -fx-text-fill: black; -fx-font-size: 14px; -fx-background-color: rgba(255, 255, 255, 0.5); ");
+                        } else {
+                            setText(item);
+
+                            getAllMessages();
+                            // Применение стиля к тексту внутри ListView
+                            setStyle("-fx-text-fill: black; -fx-font-size: 14px; -fx-background-color: rgba(255, 255, 255, 0.5); ");
+                        }
+                    }
+                };
+            }
+        });
+
         setupButton(settingsButton, viewModel::chatButtonEnabledProperty, viewModel.chatButtonEnabledProperty());
-        chatPanel.setVisible(true); // Показываем панель чата
-        viewModel.playButtonEnabledProperty().set(false);
-        viewModel.settingsButtonEnabledProperty().set(false);
-        viewModel.exitButtonEnabledProperty().set(false);
+        openChat();
+        sendMessage();
+    }
+
+    public List<String> getAllMessages() {
+        return new ArrayList<>(chatMessages);
+    }
+
+    public void sendMessages(List<String> messages) {
+        chatMessages.addAll(messages);
     }
 
     private void onExitButtonClicked() {
         viewModel.playButtonEnabledProperty().set(false);
         viewModel.settingsButtonEnabledProperty().set(false);
+    }
+
+    private void onEnterButtonClicked() {
+        String username = usernameField.getText();
+        String password = passwordField.getText();
+        blurBackground.setVisible(false);
+        loginVBox.setVisible(false);
+        modelManager.loginModelMethod(username + " " + password);
     }
 
     private void setupButton(Button button, Runnable actionOnClick, BooleanProperty enabledProperty) {

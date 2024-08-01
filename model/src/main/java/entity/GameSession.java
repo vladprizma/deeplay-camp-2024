@@ -2,6 +2,9 @@ package entity;
 
 import enums.GameStatus;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GameSession {
     private int currentPlayerId;
     private Board board;
@@ -11,9 +14,10 @@ public class GameSession {
     private int sessionId;
     private String result;
     private String log;
+    private List<SessionMessage> sessionChat;
     
     public GameSession() {
-        
+        sessionChat = new ArrayList<>();
     }
 
     public GameSession(int id, User player1, String result, User player2, String log) {
@@ -21,6 +25,7 @@ public class GameSession {
         this.result = result;
         this.player1 = player1;
         this.player2 = player2;
+        sessionChat = new ArrayList<>();
     }
 
     public int getPlayersCount() {
@@ -84,5 +89,17 @@ public class GameSession {
 
     public void setSessionId(int sessionId) {
         this.sessionId = sessionId;
+    }
+
+    public List<SessionMessage> getSessionChat() {
+        return sessionChat;
+    }
+
+    public void setSessionChat(List<SessionMessage> sessionChat) {
+        this.sessionChat = sessionChat;
+    }
+
+    public void addMessage(SessionMessage sessionMessage) {
+        this.sessionChat.add(sessionMessage);
     }
 }
