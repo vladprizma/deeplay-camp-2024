@@ -70,6 +70,8 @@ public class MainHandler implements Runnable {
         commandHandlers.put("disconnect", new DisconnectCommandHandler());
         commandHandlers.put("move", new MoveCommandHandler());
         commandHandlers.put("session-chat", new SessionChatCommandHandler());
+        commandHandlers.put("get-board", new GetBoardCommandHandler());
+        commandHandlers.put("get-valid-moves", new GetValidMovesCommandHandlers());
     }
 
     /**
