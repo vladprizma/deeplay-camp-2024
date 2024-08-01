@@ -23,7 +23,8 @@ public class SessionChatCommandHandler implements CommandHandler  {
             sb.append(messageChat.getUsername()).append("::").append(messageChat.getMsg());
         }
         
-        mainHandler.sendMessageToClient("session-chat::" + sb.toString());
-        SessionManager.getInstance().sendMessageToOpponent(mainHandler, mainHandler.getSession(), "session-chat::" + sb.toString());
+        var msg = "session-chat::" + sb.toString();
+        
+        SessionManager.getInstance().sendMessageToAllInSession(mainHandler, msg);
     }
 }
