@@ -38,6 +38,11 @@ public class MainMenuView implements Observer {
     private ViewNavigator viewModel = new ViewNavigator();
     private static final String CHAT_INITIALIZER = "f9d7a792ac66a0db8557736e680a780802a21bd627bd37e72cc10eb0997fba4e";
     private static final String USER_PARSE = "04f8996da763b7a969b1028ee3007569eaf3a635486ddab211d512c85b9df8fb";
+
+    private static final String FIRST_LINE_PARSE = "a7937b64b8caa58f03721bb6bacf5c78cb235febe0e70b1b84cd99541461a08e";
+    private static final String MIDDLE_LINE_PARSE = "a4888af4e46c129c695ee32775a8c233f113c82e7cd4e6fd3cbb1fda5659f36a";
+    private static final String END_LINE_PARSE = "361e48d0308f20e32dba5fb56328baf18d72ef0ccb43b84f5c262d2a6a1fc6c8";
+
     private static final DateTimeFormatter INPUT_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
     private static final DateTimeFormatter OUTPUT_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
     public static String splitRegex = "::";
@@ -210,6 +215,31 @@ public class MainMenuView implements Observer {
                                     "-fx-padding: 10 10 10 500;" +
                                     "-fx-font-size: 24px; " +
                                     "-fx-font-family: 'Josefin Slab SemiBold' ");
+                        } else if (item.split(splitRegex).length > 1 &&
+                                item.split(splitRegex)[0].equals(FIRST_LINE_PARSE)) {
+                            setText(item.split(splitRegex)[1]);
+                            setStyle("-fx-background-radius: 0px 0px 500px 150px; " +
+                                    "-fx-text-fill: white; " +
+                                    "-fx-font-size: 32px; " +
+                                    "-fx-background-color: rgba(255, 255, 255, 0.6); " +
+                                    "-fx-font-family: 'Josefin Slab SemiBold'; ");
+
+                        } else if (item.split(splitRegex).length > 1 &&
+                                item.split(splitRegex)[0].equals(MIDDLE_LINE_PARSE)) {
+                            setText(item.split(splitRegex)[1]);
+                            setStyle("-fx-text-fill: white; " +
+                                    "-fx-font-size: 32px; " +
+                                    "-fx-background-color: rgba(255, 255, 255, 0.6); " +
+                                    "-fx-font-family: 'Josefin Slab SemiBold'; ");
+
+                        } else if (item.split(splitRegex).length > 1 &&
+                                item.split(splitRegex)[0].equals(END_LINE_PARSE)) {
+                            setText(item.split(splitRegex)[1]);
+                            setStyle("-fx-background-radius: 50px 200px 0px 0px; " +
+                                    "-fx-text-fill: white; " +
+                                    "-fx-font-size: 32px; " +
+                                    "-fx-background-color: rgba(255, 255, 255, 0.6); " +
+                                    "-fx-font-family: 'Josefin Slab SemiBold'; ");
                         } else {
                             setText(item);
                             setStyle("-fx-background-radius: 150px 50px 500px 150px; " +
@@ -340,10 +370,42 @@ public class MainMenuView implements Observer {
 
             if (!res.equals(CHAT_INITIALIZER)) {
                 result.add(timestamp);
-                result.add(message);
+                result.addAll((splitString(message, 35)).reversed());
                 result.add(USER_PARSE + "::" + username);
             } else {
                 result.add(res);
+            }
+        }
+
+        return result;
+    }
+
+    public static List<String> splitString(String text, int maxLength) {
+        List<String> result = new ArrayList<>();
+        String[] words = text.split(" ");
+        StringBuilder currentLine = new StringBuilder();
+
+        for (String word : words) {
+            if (currentLine.length() + word.length() + 1 <= maxLength) {
+                if (currentLine.length() > 0) {
+                    currentLine.append(" ");
+                }
+                currentLine.append(word);
+            } else {
+                if (result.isEmpty()) {
+                    result.add(END_LINE_PARSE + "::" + currentLine.toString());
+                } else {
+                    result.add(MIDDLE_LINE_PARSE + "::" + currentLine.toString());
+                }
+                currentLine = new StringBuilder(word);
+            }
+        }
+
+        if (currentLine.length() > 0) {
+            if (result.isEmpty()) {
+                result.add(currentLine.toString());
+            } else {
+                result.add(FIRST_LINE_PARSE + "::" + currentLine.toString());
             }
         }
 
