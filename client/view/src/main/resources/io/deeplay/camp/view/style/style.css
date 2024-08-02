@@ -66,3 +66,20 @@
     -fx-border-color: black;
     /* Ширина текстового поля */
 }
+
+#tile{
+    -fx-background-color: transparent;
+    -fx-border-color: black;
+    -fx-border-width: 3;
+    -fx-pref-width: 100;
+    -fx-pref-height: 100;
+}
+
+#score{
+    -fx-pref-width: 200.0;
+    -fx-pref-height: 100.0;
+    -fx-opacity: 0.5;
+    -fx-border-color: black;
+    -fx-border-radius: 30;
+    -fx-border-width: 10;
+}
