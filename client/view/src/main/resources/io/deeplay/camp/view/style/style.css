@@ -125,7 +125,16 @@
     -fx-background-radius: 50; /* Закруглённые углы ползунка */
 }
 
-#tile{
+#score{
+    -fx-pref-width: 200.0;
+    -fx-pref-height: 100.0;
+    -fx-opacity: 0.5;
+    -fx-border-color: black;
+    -fx-border-radius: 30;
+    -fx-border-width: 10;
+}
+
+.tile {
     -fx-background-color: transparent;
     -fx-border-color: black;
     -fx-border-width: 3;
@@ -133,7 +142,7 @@
     -fx-pref-height: 100;
 }
 
-#score{
+.score {
     -fx-pref-width: 200.0;
     -fx-pref-height: 100.0;
     -fx-opacity: 0.5;
