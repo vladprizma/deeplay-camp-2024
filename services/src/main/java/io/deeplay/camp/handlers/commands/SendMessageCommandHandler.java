@@ -2,7 +2,7 @@ package io.deeplay.camp.handlers.commands;
 
 import entity.ChatMessage;
 import io.deeplay.camp.chat.ChatService;
-import io.deeplay.camp.handlers.MainHandler;
+import io.deeplay.camp.handlers.main.MainHandler;
 import io.deeplay.camp.managers.SessionManager;
 import io.deeplay.camp.repository.CommandHandler;
 

@@ -1,13 +1,12 @@
 package io.deeplay.camp.managers;
 
 import TokenGenerator.TokenGenerator;
-import dto.Player;
 import entity.Board;
 import entity.GameSession;
 import entity.SessionMessage;
 import entity.User;
 import enums.GameStatus;
-import io.deeplay.camp.handlers.MainHandler;
+import io.deeplay.camp.handlers.main.MainHandler;
 
 import java.util.ArrayList;
 import java.util.List;

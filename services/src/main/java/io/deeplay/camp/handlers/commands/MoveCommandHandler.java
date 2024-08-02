@@ -4,7 +4,7 @@ import dto.BoardDTO;
 import enums.GameStatus;
 import io.deeplay.camp.board.BoardLogic;
 import io.deeplay.camp.game.GameLogic;
-import io.deeplay.camp.handlers.MainHandler;
+import io.deeplay.camp.handlers.main.MainHandler;
 import io.deeplay.camp.managers.SessionManager;
 import io.deeplay.camp.repository.CommandHandler;
 

@@ -1,4 +1,4 @@
-package io.deeplay.camp.handlers;
+package io.deeplay.camp.handlers.main;
 
 import io.deeplay.camp.repository.CommandHandler;
 

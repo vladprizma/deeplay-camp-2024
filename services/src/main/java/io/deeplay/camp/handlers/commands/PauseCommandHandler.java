@@ -1,7 +1,7 @@
 package io.deeplay.camp.handlers.commands;
 
 import enums.GameStatus;
-import io.deeplay.camp.handlers.MainHandler;
+import io.deeplay.camp.handlers.main.MainHandler;
 import io.deeplay.camp.managers.SessionManager;
 import io.deeplay.camp.repository.CommandHandler;
 
