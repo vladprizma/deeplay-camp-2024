@@ -64,6 +64,7 @@ public class MainHandler implements Runnable {
         commandHandlers.put("get-messages-session-chat", new GetSessionChatCommandHandler());
         commandHandlers.put("get-board", new GetBoardCommandHandler());
         commandHandlers.put("get-valid-moves", new GetValidMovesCommandHandlers());
+        commandHandlers.put("update-user-profile", new UpdateProfileCommandHandler());
     }
 
     /**
