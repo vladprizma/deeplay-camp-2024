@@ -9,24 +9,48 @@ import io.deeplay.camp.managers.SessionManager;
 import io.deeplay.camp.repository.CommandHandler;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+/**
+ * CommandHandler для обработки ходов в игре.
+ */
 public class MoveCommandHandler implements CommandHandler {
 
+    private static final Logger logger = Logger.getLogger(MoveCommandHandler.class.getName());
+
+    /**
+     * Обрабатывает команду для выполнения хода.
+     *
+     * @param message    Сообщение команды.
+     * @param mainHandler Основной обработчик, управляющий сессией.
+     * @throws IOException при возникновении ошибок ввода-вывода.
+     */
     @Override
     public void handle(String message, MainHandler mainHandler) throws IOException {
+        logger.info("Handling move command");
+
         if (!mainHandler.isLogin() || mainHandler.getSession() == null) {
             mainHandler.sendMessageToClient("Please start a game first.");
+            logger.warning("User is not logged in or session is null");
             return;
         }
 
         var userId = mainHandler.getUser().getId();
         var session = SessionManager.getInstance().getSession(mainHandler.getSession().getSessionId());
-        var newBoardLogic = new BoardLogic(SessionManager.getInstance().getSession(mainHandler.getSession().getSessionId()).getBoard());
+
+        if (session == null) {
+            mainHandler.sendMessageToClient("Session not found.");
+            logger.warning("Session not found for sessionId: " + mainHandler.getSession().getSessionId());
+            return;
+        }
+
+        var newBoardLogic = new BoardLogic(session.getBoard());
         mainHandler.setGameLogic(new GameLogic(newBoardLogic));
         mainHandler.setBoardLogic(newBoardLogic);
         var gameLogic = mainHandler.getGameLogic();
         var boardLogic = mainHandler.getBoardLogic();
-        
+
         int playerNumber;
         if (userId == session.getPlayer1().getId()) {
             playerNumber = 1;
@@ -34,20 +58,27 @@ public class MoveCommandHandler implements CommandHandler {
             playerNumber = 2;
         } else {
             mainHandler.sendMessageToClient("You are not a player in this session.");
+            logger.warning("User " + userId + " is not a player in session " + session.getSessionId());
             return;
         }
 
-        String move = message.split(" ")[1];
+        String[] messageParts = message.split(" ");
+        if (messageParts.length < 2) {
+            mainHandler.sendMessageToClient("Invalid move format.");
+            logger.warning("Invalid move format from user " + userId);
+            return;
+        }
+
+        String move = messageParts[1];
         boolean moveMade = gameLogic.moveMade(mainHandler.getUser(), playerNumber, boardLogic, move);
 
         if (moveMade) {
-            mainHandler.getLogger().info("{}: Move made successfully.", userId);
-            SessionManager.getInstance().getSession(mainHandler.getSession().getSessionId()).setBoard(boardLogic.getBoard());
+            logger.info(userId + ": Move made successfully.");
+            session.setBoard(boardLogic.getBoard());
+
             var buff = session.getBoard();
-            
             buff.setBlackChips(boardLogic.getBlackChips());
             buff.setWhiteChips(boardLogic.getWhiteChips());
-            
             session.setBoard(buff);
 
             BoardDTO boardDTO = new BoardDTO(session.getBoard());
@@ -65,7 +96,7 @@ public class MoveCommandHandler implements CommandHandler {
 
             session.setCurrentPlayerId(playerNumber == 1 ? session.getPlayer2().getId() : session.getPlayer1().getId());
         } else {
-            mainHandler.getLogger().info("{}: Invalid move.", userId);
+            logger.info(userId + ": Invalid move.");
             mainHandler.sendMessageToClient(userId + ": Invalid move.");
         }
     }
