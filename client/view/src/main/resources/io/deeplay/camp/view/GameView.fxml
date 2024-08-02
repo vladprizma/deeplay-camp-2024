@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.effect.GaussianBlur?>
+<?import javafx.scene.shape.Circle?>
 <AnchorPane id="mainWindow" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="game.GameView" stylesheets="@style/style.css">
     <children>
         <ImageView fitHeight="1020.0" fitWidth="1860.0" layoutX="30.0" layoutY="30.0" pickOnBounds="true" preserveRatio="false">
@@ -22,122 +23,98 @@
             </effect>
         </ImageView>
 
-        <Rectangle layoutX="575.0" layoutY="100" width="810.0" height="810.0" fill="white">
+        <Rectangle layoutX="555.0" layoutY="100" width="820.0" height="820.0" fill="white">
             <effect>
                 <GaussianBlur radius="20.0"/>
             </effect>
         </Rectangle>
 
-        <GridPane fx:id="gridPane" layoutX="580.0" layoutY="105" xmlns:fx="http://javafx.com/fxml" alignment="CENTER" hgap="0" vgap="0" style="-fx-background-color: linear-gradient(to bottom, #4D285A, #3C7747);">
+        <GridPane fx:id="gridPane" layoutX="560.0" layoutY="105" xmlns:fx="http://javafx.com/fxml" alignment="CENTER" hgap="0" vgap="0" style="-fx-background-color: linear-gradient(to bottom, #4D285A, #3C7747); -fx-border-width: 5px; -fx-border-color: black">
             <children>
                 <!-- Добавление кнопок в GridPane -->
-                <Button fx:id="tile" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                <Button fx:id="tile" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-                <Button fx:id="tile" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
-                <Button fx:id="tile" GridPane.rowIndex="0" GridPane.columnIndex="3"/>
-                <Button fx:id="tile" GridPane.rowIndex="0" GridPane.columnIndex="4"/>
-                <Button fx:id="tile" GridPane.rowIndex="0" GridPane.columnIndex="5"/>
-                <Button fx:id="tile" GridPane.rowIndex="0" GridPane.columnIndex="6"/>
-                <Button fx:id="tile" GridPane.rowIndex="0" GridPane.columnIndex="7"/>
+                <Button styleClass="tile" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <Button styleClass="tile" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                <Button styleClass="tile" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
+                <Button styleClass="tile" GridPane.rowIndex="0" GridPane.columnIndex="3"/>
+                <Button styleClass="tile" GridPane.rowIndex="0" GridPane.columnIndex="4"/>
+                <Button styleClass="tile" GridPane.rowIndex="0" GridPane.columnIndex="5"/>
+                <Button styleClass="tile" GridPane.rowIndex="0" GridPane.columnIndex="6"/>
+                <Button styleClass="tile" GridPane.rowIndex="0" GridPane.columnIndex="7"/>
 
-                <Button fx:id="tile" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                <Button fx:id="tile" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-                <Button fx:id="tile" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
-                <Button fx:id="tile" GridPane.rowIndex="1" GridPane.columnIndex="3"/>
-                <Button fx:id="tile" GridPane.rowIndex="1" GridPane.columnIndex="4"/>
-                <Button fx:id="tile" GridPane.rowIndex="1" GridPane.columnIndex="5"/>
-                <Button fx:id="tile" GridPane.rowIndex="1" GridPane.columnIndex="6"/>
-                <Button fx:id="tile" GridPane.rowIndex="1" GridPane.columnIndex="7"/>
+                <Button styleClass="tile" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                <Button styleClass="tile" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                <Button styleClass="tile" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+                <Button styleClass="tile" GridPane.rowIndex="1" GridPane.columnIndex="3"/>
+                <Button styleClass="tile" GridPane.rowIndex="1" GridPane.columnIndex="4"/>
+                <Button styleClass="tile" GridPane.rowIndex="1" GridPane.columnIndex="5"/>
+                <Button styleClass="tile" GridPane.rowIndex="1" GridPane.columnIndex="6"/>
+                <Button styleClass="tile" GridPane.rowIndex="1" GridPane.columnIndex="7"/>
 
-                <Button fx:id="tile" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                <Button fx:id="tile" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-                <Button fx:id="tile" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
-                <Button fx:id="tile" GridPane.rowIndex="2" GridPane.columnIndex="3"/>
-                <Button fx:id="tile" GridPane.rowIndex="2" GridPane.columnIndex="4"/>
-                <Button fx:id="tile" GridPane.rowIndex="2" GridPane.columnIndex="5"/>
-                <Button fx:id="tile" GridPane.rowIndex="2" GridPane.columnIndex="6"/>
-                <Button fx:id="tile" GridPane.rowIndex="2" GridPane.columnIndex="7"/>
+                <Button styleClass="tile" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                <Button styleClass="tile" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                <Button styleClass="tile" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
+                <Button styleClass="tile" GridPane.rowIndex="2" GridPane.columnIndex="3"/>
+                <Button styleClass="tile" GridPane.rowIndex="2" GridPane.columnIndex="4"/>
+                <Button styleClass="tile" GridPane.rowIndex="2" GridPane.columnIndex="5"/>
+                <Button styleClass="tile" GridPane.rowIndex="2" GridPane.columnIndex="6"/>
+                <Button styleClass="tile" GridPane.rowIndex="2" GridPane.columnIndex="7"/>
 
-                <Button fx:id="tile" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                <Button fx:id="tile" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
-                <Button fx:id="tile" GridPane.rowIndex="3" GridPane.columnIndex="2"/>
-                <Button fx:id="tile" GridPane.rowIndex="3" GridPane.columnIndex="3"/>
-                <Button fx:id="tile" GridPane.rowIndex="3" GridPane.columnIndex="4"/>
-                <Button fx:id="tile" GridPane.rowIndex="3" GridPane.columnIndex="5"/>
-                <Button fx:id="tile" GridPane.rowIndex="3" GridPane.columnIndex="6"/>
-                <Button fx:id="tile" GridPane.rowIndex="3" GridPane.columnIndex="7"/>
+                <Button styleClass="tile" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                <Button styleClass="tile" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                <Button styleClass="tile" GridPane.rowIndex="3" GridPane.columnIndex="2"/>
+                <Button styleClass="tile" GridPane.rowIndex="3" GridPane.columnIndex="3"/>
+                <Button styleClass="tile" GridPane.rowIndex="3" GridPane.columnIndex="4"/>
+                <Button styleClass="tile" GridPane.rowIndex="3" GridPane.columnIndex="5"/>
+                <Button styleClass="tile" GridPane.rowIndex="3" GridPane.columnIndex="6"/>
+                <Button styleClass="tile" GridPane.rowIndex="3" GridPane.columnIndex="7"/>
 
-                <Button fx:id="tile" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-                <Button fx:id="tile" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
-                <Button fx:id="tile" GridPane.rowIndex="4" GridPane.columnIndex="2"/>
-                <Button fx:id="tile" GridPane.rowIndex="4" GridPane.columnIndex="3"/>
-                <Button fx:id="tile" GridPane.rowIndex="4" GridPane.columnIndex="4"/>
-                <Button fx:id="tile" GridPane.rowIndex="4" GridPane.columnIndex="5"/>
-                <Button fx:id="tile" GridPane.rowIndex="4" GridPane.columnIndex="6"/>
-                <Button fx:id="tile" GridPane.rowIndex="4" GridPane.columnIndex="7"/>
+                <Button styleClass="tile" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                <Button styleClass="tile" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+                <Button styleClass="tile" GridPane.rowIndex="4" GridPane.columnIndex="2"/>
+                <Button styleClass="tile" GridPane.rowIndex="4" GridPane.columnIndex="3"/>
+                <Button styleClass="tile" GridPane.rowIndex="4" GridPane.columnIndex="4"/>
+                <Button styleClass="tile" GridPane.rowIndex="4" GridPane.columnIndex="5"/>
+                <Button styleClass="tile" GridPane.rowIndex="4" GridPane.columnIndex="6"/>
+                <Button styleClass="tile" GridPane.rowIndex="4" GridPane.columnIndex="7"/>
 
-                <Button fx:id="tile" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
-                <Button fx:id="tile" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
-                <Button fx:id="tile" GridPane.rowIndex="5" GridPane.columnIndex="2"/>
-                <Button fx:id="tile" GridPane.rowIndex="5" GridPane.columnIndex="3"/>
-                <Button fx:id="tile" GridPane.rowIndex="5" GridPane.columnIndex="4"/>
-                <Button fx:id="tile" GridPane.rowIndex="5" GridPane.columnIndex="5"/>
-                <Button fx:id="tile" GridPane.rowIndex="5" GridPane.columnIndex="6"/>
-                <Button fx:id="tile" GridPane.rowIndex="5" GridPane.columnIndex="7"/>
+                <Button styleClass="tile" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                <Button styleClass="tile" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+                <Button styleClass="tile" GridPane.rowIndex="5" GridPane.columnIndex="2"/>
+                <Button styleClass="tile" GridPane.rowIndex="5" GridPane.columnIndex="3"/>
+                <Button styleClass="tile" GridPane.rowIndex="5" GridPane.columnIndex="4"/>
+                <Button styleClass="tile" GridPane.rowIndex="5" GridPane.columnIndex="5"/>
+                <Button styleClass="tile" GridPane.rowIndex="5" GridPane.columnIndex="6"/>
+                <Button styleClass="tile" GridPane.rowIndex="5" GridPane.columnIndex="7"/>
 
-                <Button fx:id="tile" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
-                <Button fx:id="tile" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
-                <Button fx:id="tile" GridPane.rowIndex="6" GridPane.columnIndex="2"/>
-                <Button fx:id="tile" GridPane.rowIndex="6" GridPane.columnIndex="3"/>
-                <Button fx:id="tile" GridPane.rowIndex="6" GridPane.columnIndex="4"/>
-                <Button fx:id="tile" GridPane.rowIndex="6" GridPane.columnIndex="5"/>
-                <Button fx:id="tile" GridPane.rowIndex="6" GridPane.columnIndex="6"/>
-                <Button fx:id="tile" GridPane.rowIndex="6" GridPane.columnIndex="7"/>
+                <Button styleClass="tile" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+                <Button styleClass="tile" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+                <Button styleClass="tile" GridPane.rowIndex="6" GridPane.columnIndex="2"/>
+                <Button styleClass="tile" GridPane.rowIndex="6" GridPane.columnIndex="3"/>
+                <Button styleClass="tile" GridPane.rowIndex="6" GridPane.columnIndex="4"/>
+                <Button styleClass="tile" GridPane.rowIndex="6" GridPane.columnIndex="5"/>
+                <Button styleClass="tile" GridPane.rowIndex="6" GridPane.columnIndex="6"/>
+                <Button styleClass="tile" GridPane.rowIndex="6" GridPane.columnIndex="7"/>
 
-                <Button fx:id="tile" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
-                <Button fx:id="tile" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
-                <Button fx:id="tile" GridPane.rowIndex="7" GridPane.columnIndex="2"/>
-                <Button fx:id="tile" GridPane.rowIndex="7" GridPane.columnIndex="3"/>
-                <Button fx:id="tile" GridPane.rowIndex="7" GridPane.columnIndex="4"/>
-                <Button fx:id="tile" GridPane.rowIndex="7" GridPane.columnIndex="5"/>
-                <Button fx:id="tile" GridPane.rowIndex="7" GridPane.columnIndex="6"/>
-                <Button fx:id="tile" GridPane.rowIndex="7" GridPane.columnIndex="7"/>
+                <Button styleClass="tile" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
+                <Button styleClass="tile" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+                <Button styleClass="tile" GridPane.rowIndex="7" GridPane.columnIndex="2"/>
+                <Button styleClass="tile" GridPane.rowIndex="7" GridPane.columnIndex="3"/>
+                <Button styleClass="tile" GridPane.rowIndex="7" GridPane.columnIndex="4"/>
+                <Button styleClass="tile" GridPane.rowIndex="7" GridPane.columnIndex="5"/>
+                <Button styleClass="tile" GridPane.rowIndex="7" GridPane.columnIndex="6"/>
+                <Button styleClass="tile" GridPane.rowIndex="7" GridPane.columnIndex="7"/>
             </children>
         </GridPane>
 
+        <Rectangle layoutX="450.0" layoutY="938.0" width="200" height="100" fill="rgba(255, 0, 0, 0.5)" stroke="BLACK" strokeWidth="10" arcWidth="30" arcHeight="30"/>
+        <Button layoutX="915" layoutY="938.0" style="-fx-background-radius: 50; -fx-background-color: green; -fx-pref-width: 100; -fx-pref-height: 100; -fx-border-width: 10px; -fx-border-color: black; -fx-border-radius: 50px; -fx-font-size: 35" text="| |"/>
+        <Rectangle layoutX="1280.0" layoutY="938.0" width="200" height="100" fill="rgba(0, 255, 0, 0.5)" stroke="BLACK" strokeWidth="10" arcWidth="30" arcHeight="30"/>
 
-        <Rectangle layoutX="444.0" layoutY="938.0" fill="red" height="100" width="200"/>
+        <Text layoutX="115.0" layoutY="104.0" text="Ka_Chan_666" fill="white" style="-fx-font-size: 40; -fx-font-family: 'Josefin Slab SemiBold';"/>
+        <Text layoutX="1568.0" layoutY="104.0" text="Deku_Might" fill="white" style="-fx-font-size: 40; -fx-font-family: 'Josefin Slab SemiBold';"/>
 
-        <!-- Добавление двух анимированных таймеров по указанным координатам -->
-        <Button layoutX="728.0" layoutY="965.0" style="-fx-background-color: red; -fx-pref-width: 50; -fx-pref-height: 50;"/>
-        <Button layoutX="1182.0" layoutY="965.0" style="-fx-background-color: green; -fx-pref-width: 50; -fx-pref-height: 50;"/>
-
-        <Button layoutX="931" layoutY="938.0" style="-fx-background-radius: 50; -fx-pref-width: 100; -fx-pref-height: 100;" text="Pause" />
-
-        <Rectangle layoutX="1318.0" layoutY="938.0" fill="green" height="100" width="200"/>
-
-
-
-        <Text layoutX="113.0" layoutY="104.0" text="Ka_Chan_666" fill="white"/>
-
-        <!-- тройная кнопка-кртинка -->
-        <Button id="roundGreenButton" layoutX="1730.0" layoutY="70.0" />
-        <ImageView fitHeight="200.0" fitWidth="185.0" layoutX="1720.0" layoutY="30.0" pickOnBounds="true" preserveRatio="false">
-            <image>
-                <Image url="@resources/pererb_1.png" />
-            </image>
-            <clip>
-                <Rectangle arcHeight="100.0" arcWidth="100.0" height="1020.0" width="1860.0"/>
-            </clip>
-        </ImageView>
-        <ImageView fitHeight="83.0" fitWidth="137.0" layoutX="1730.0" layoutY="130.0" pickOnBounds="true" preserveRatio="false" scaleX="-1">
-            <image>
-                <Image url="@resources/duga.png" />
-            </image>
-            <clip>
-                <Rectangle arcHeight="100.0" arcWidth="100.0" height="1020.0" width="1860.0"/>
-            </clip>
-        </ImageView>
+        <Circle layoutX="230" layoutY="280" radius="125"  style="-fx-fill: linear-gradient(to bottom, red, black);" stroke="BLACK" strokeWidth="20"/>
+        <Circle layoutX="1680.0" layoutY="280" radius="125" style="-fx-fill: linear-gradient(to bottom, green, black);"  stroke="BLACK" strokeWidth="20"/>
 
     </children>
 </AnchorPane>
