@@ -51,10 +51,10 @@
 }
 
 #chatPanel {
- -fx-background-color: transparent; /* Светло-серый фон */
- -fx-background-radius: 15;
- -fx-border-radius: 15;
- -fx-padding: 10;
+    -fx-background-color: transparent; /* Светло-серый фон */
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
+    -fx-padding: 10;
 }
 
 #chatInput {
@@ -65,23 +65,20 @@
     -fx-prompt-text-fill: #555555;
     -fx-font-family: 'Josefin Slab SemiBold';
 }
-}
 
 #chatListView {
- -fx-background-color: transparent; /* Прозрачный фон, чтобы виден был фон chatPanel */
- -fx-background-radius: 15;
- -fx-border-radius: 15;
- -fx-border-color: transparent;
+    -fx-background-color: transparent;
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
+    -fx-border-color: transparent;
 }
 
 .list-cell {
- -fx-padding: 10;
- -fx-background-radius: 15;
- -fx-border-radius: 15;
- -fx-background-color: rgba(255, 255, 255, 0.8); /* Прозрачный белый фон */
- -fx-text-fill: black;
- -fx-font-size: 14px;
- -fx-margin: 5px 0; /* Отступы между ячейками */
+    -fx-padding: 10;
+    -fx-background-color: rgba(255, 255, 255, 0.8);
+    -fx-text-fill: black;
+    -fx-font-size: 14px;
+    -fx-margin: 5px 0;
 }
 
 .list-cell:empty {
