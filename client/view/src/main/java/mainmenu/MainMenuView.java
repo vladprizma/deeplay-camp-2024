@@ -1,5 +1,7 @@
 package mainmenu;
 
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import sigletonobserver.ChatString;
 import enums.ButtonEnum;
 import io.deeplay.camp.ModelManager;
@@ -24,10 +26,21 @@ import navigator.ViewNavigator;
 import observer.Observer;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MainMenuView implements Observer {
-        private ViewNavigator viewModel = new ViewNavigator();
+    private ViewNavigator viewModel = new ViewNavigator();
+    private static final String CHAT_INITIALIZER = "f9d7a792ac66a0db8557736e680a780802a21bd627bd37e72cc10eb0997fba4e";
+    private static final String USER_PARSE = "04f8996da763b7a969b1028ee3007569eaf3a635486ddab211d512c85b9df8fb";
+    private static final DateTimeFormatter INPUT_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+    private static final DateTimeFormatter OUTPUT_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
+    public static String splitRegex = "::";
 
     @FXML
     private Button playButton;
@@ -72,6 +85,8 @@ public class MainMenuView implements Observer {
     private List<String> chat;
 
     private ChatString singleton;
+    private boolean isBlocked = false;
+
 
 
     public MainMenuView() throws IOException {
@@ -88,7 +103,7 @@ public class MainMenuView implements Observer {
     private void sendMessage() {
         String message = chatInput.getText();
         if (!message.isEmpty()) {
-            chatListView.getItems().add(message);
+            modelManager.chatModelMethod(message);
             chatInput.clear();
         }
     }
@@ -166,6 +181,7 @@ public class MainMenuView implements Observer {
     }
 
     private void onChatButtonClicked() {
+        modelManager.chatModelMethod(CHAT_INITIALIZER);
         chatMessages = FXCollections.observableArrayList();
         chatListView.setItems(chatMessages);
         chatListView.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
@@ -177,12 +193,30 @@ public class MainMenuView implements Observer {
                         super.updateItem(item, empty);
                         if (empty || item == null) {
                             setText(null);
-                            setStyle("-fx-background-radius: 70; -fx-text-fill: black; -fx-font-size: 14px; -fx-background-color: rgba(255, 255, 255, 0.5); ");
+                            setStyle("");
+                        } else if (item.split(splitRegex).length > 1 &&
+                                item.split(splitRegex)[0].equals(USER_PARSE)) {
+                            setText(item.split(splitRegex)[1] + ":");
+                            setStyle("-fx-background-color: transparent; " +
+                                    "-fx-text-fill: white;" +
+                                    "-fx-padding: 10 10 10 10;" +
+                                    "-fx-font-size: 24px; " +
+                                    "-fx-font-family: 'Josefin Slab SemiBold'; ");
+                        } else if (isValidDate(item)) {
+                            String formattedTime = formatTime(item);
+                            setText(formattedTime);
+                            setStyle("-fx-background-color: transparent; " +
+                                    "-fx-text-fill: white;" +
+                                    "-fx-padding: 10 10 10 500;" +
+                                    "-fx-font-size: 24px; " +
+                                    "-fx-font-family: 'Josefin Slab SemiBold' ");
                         } else {
                             setText(item);
-                            System.out.println(chatMessages.getLast());
-                            modelManager.chatModelMethod(chatMessages.getLast());
-                            setStyle("-fx-text-fill: black; -fx-font-size: 14px; -fx-background-color: rgba(255, 255, 255, 0.5); ");
+                            setStyle("-fx-background-radius: 150px 50px 500px 150px; " +
+                                    "-fx-text-fill: white; " +
+                                    "-fx-font-size: 32px; " +
+                                    "-fx-background-color: rgba(255, 255, 255, 0.6); " +
+                                    "-fx-font-family: 'Josefin Slab SemiBold'; ");
                         }
                     }
                 };
@@ -191,11 +225,25 @@ public class MainMenuView implements Observer {
 
         setupButton(settingsButton, viewModel::chatButtonEnabledProperty, viewModel.chatButtonEnabledProperty());
         openChat();
-        sendMessage();
+    }
+
+    public static boolean isValidDate(String dateStr) {
+        DateTimeFormatter formatter = INPUT_FORMATTER;
+        try {
+            LocalDateTime.parse(dateStr, formatter);
+            return true;
+        } catch (DateTimeParseException e) {
+            return false;
+        }
+    }
+
+    private String formatTime(String dateStr) {
+        LocalDateTime dateTime = LocalDateTime.parse(dateStr, INPUT_FORMATTER);
+        return dateTime.format(OUTPUT_FORMATTER);
     }
 
     public void sendMessages(List<String> messages) {
-        chatMessages.addAll(messages);
+        Platform.runLater(() -> chatMessages.addAll(messages));
     }
 
     private void onExitButtonClicked() {
@@ -208,6 +256,9 @@ public class MainMenuView implements Observer {
         String password = passwordField.getText();
         blurBackground.setVisible(false);
         loginVBox.setVisible(false);
+        usernameField.setVisible(false);
+        passwordField.setVisible(false);
+        enterButton.setVisible(false);
         modelManager.loginModelMethod(username + " " + password);
     }
 
@@ -261,6 +312,41 @@ public class MainMenuView implements Observer {
 
     @Override
     public void update(String newString) {
-        System.out.println("\n"+ newString+ "\n");
+        List<String> parsedLogs = parseLog(newString);
+
+        parsedLogs.removeIf(item -> item.equals(CHAT_INITIALIZER));
+        Platform.runLater(() -> {
+            chatMessages.clear();
+            sendMessages(parsedLogs.reversed());
+        });
+    }
+
+    public static List<String> parseLog(String log) {
+        List<String> result = new ArrayList<>();
+
+        // Регулярное выражение для поиска нужных шаблонов
+        String regex = "(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\.\\d{3}) (\\S+) ([^:]+)";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(log);
+
+        while (matcher.find()) {
+            // Собираем найденные группы в строку
+            String timestamp = matcher.group(1);
+            String username = matcher.group(2);
+            String message = matcher.group(3);
+
+            String res = (message.equals(CHAT_INITIALIZER)) ?
+                    CHAT_INITIALIZER : timestamp + " " + username + " " + message;
+
+            if (!res.equals(CHAT_INITIALIZER)) {
+                result.add(timestamp);
+                result.add(message);
+                result.add(USER_PARSE + "::" + username);
+            } else {
+                result.add(res);
+            }
+        }
+
+        return result;
     }
 }
