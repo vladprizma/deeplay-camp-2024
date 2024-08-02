@@ -12,7 +12,7 @@ public class ModelManager {
     private ChatModel chatModel;
     private Action action;
     private String loginAndPassword;
-    private String chatMemory;
+    private String chatMessages;
 
     public ModelManager() throws IOException {
         action = new Action();
@@ -23,8 +23,8 @@ public class ModelManager {
         loginModel = new LoginModel(action, loginAndPassword);
     }
 
-    public void chatModelMethod(String chatMemory) {
-        this.chatMemory = chatMemory;
-        loginModel = new LoginModel(action, loginAndPassword);
+    public void chatModelMethod(String chatMessages) {
+        this.chatMessages = chatMessages;
+        chatModel = new ChatModel(action, chatMessages);
     }
 }

@@ -51,20 +51,81 @@
 }
 
 #chatPanel {
+ -fx-background-color: transparent; /* Светло-серый фон */
+ -fx-background-radius: 15;
+ -fx-border-radius: 15;
+ -fx-padding: 10;
 }
 
 #chatInput {
-    -fx-background-color: rgba(255, 255, 255, 0.5); /* Прозрачный белый цвет */
-    -fx-background-radius: 15; /* Закругленные углы */
-    -fx-border-radius: 15; /* Закругленные углы */
+    -fx-font-size: 32px;
+    -fx-background-color: rgba(255, 255, 255, 0.8);
+    -fx-background-radius: 25;
+    -fx-border-color: #555555;
+    -fx-prompt-text-fill: #555555;
+    -fx-font-family: 'Josefin Slab SemiBold';
+}
 }
 
 #chatListView {
+ -fx-background-color: transparent; /* Прозрачный фон, чтобы виден был фон chatPanel */
+ -fx-background-radius: 15;
+ -fx-border-radius: 15;
+ -fx-border-color: transparent;
+}
+
+.list-cell {
+ -fx-padding: 10;
+ -fx-background-radius: 15;
+ -fx-border-radius: 15;
+ -fx-background-color: rgba(255, 255, 255, 0.8); /* Прозрачный белый фон */
+ -fx-text-fill: black;
+ -fx-font-size: 14px;
+ -fx-margin: 5px 0; /* Отступы между ячейками */
+}
+
+.list-cell:empty {
+ -fx-background-color: transparent; /* Прозрачный фон для пустых ячеек */
+}
+
+#usernameField, #passwordField {
+    -fx-font-size: 40px;
     -fx-background-color: rgba(255, 255, 255, 0.8);
-    -fx-background-radius: 15;
-    -fx-border-radius: 15;
-    -fx-border-color: black;
-    /* Ширина текстового поля */
+    -fx-background-radius: 25;
+    -fx-border-color: #555555;
+    -fx-border-width: 5;
+    -fx-border-radius: 25;
+    -fx-padding: 20 213 20 20;
+    -fx-prompt-text-fill: #555555;
+    -fx-font-family: 'Julee';
+    -fx-border-insets: -2;
+}
+
+#enterButton {
+     -fx-font-size: 40px;
+     -fx-background-color: #4BD03E; /* Задний фон */
+     -fx-background-radius: 20;
+     -fx-border-color: #3E2441; /* Цвет рамки */
+     -fx-border-width: 5;
+     -fx-border-radius: 20;
+     -fx-padding: 20;
+     -fx-text-fill: white; /* Цвет текста */
+     -fx-font-family: 'Julee';
+     -fx-border-insets: -5;
+}
+
+.list-view .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+}
+
+.list-view .scroll-bar .track {
+    -fx-background-color: transparent; /* Цвет фона трека */
+}
+
+.list-view .scroll-bar .thumb {
+    -fx-background-color: rgba(44, 17, 63, 0.9); /* Цвет ползунка */
+    -fx-background-radius: 50; /* Закруглённые углы ползунка */
 }
 
 #tile{

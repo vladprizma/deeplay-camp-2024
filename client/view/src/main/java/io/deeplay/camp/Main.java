@@ -23,5 +23,6 @@ public class Main extends Application {
     public void installAnything() {
         Font.loadFont(getClass().getResourceAsStream("/io/deeplay/camp/view/resources/JustMeAgainDownHere.ttf"), 96);
         Font.loadFont(getClass().getResourceAsStream("/io/deeplay/camp/view/resources/Julee-Regular.ttf"), 96);
+        Font.loadFont(getClass().getResourceAsStream("/io/deeplay/camp/view/resources/JosefinSlab-SemiBoldItalic.ttf"), 96);
     }
 }
