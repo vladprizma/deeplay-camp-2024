@@ -71,8 +71,8 @@ public class SessionManager {
      */
     public void sendMessageToOpponent(MainHandler handler, GameSession session, String msg) {
         for (var playerHandler : handlers) {
-            if (Objects.equals(playerHandler.getHandlerSession().getSessionId(), session.getSessionId())
-                    && !Objects.equals(playerHandler.getHandlerPlayer().getId(), handler.getHandlerPlayer().getId())) {
+            if (Objects.equals(playerHandler.getSession().getSessionId(), session.getSessionId())
+                    && !Objects.equals(playerHandler.getUser().getId(), handler.getUser().getId())) {
                 playerHandler.sendMessageToClient(msg);
                 
                 break;
@@ -84,6 +84,16 @@ public class SessionManager {
         for (var playerHandler : handlers) {
             playerHandler.sendMessageToClient(msg);
         }
+    }
+    
+    public GameSession getSession(int sessionId) {
+        for (var session : sessions) {
+            if (session.getSessionId() == sessionId) {
+                return session;
+            }
+        }
+        
+        return null;
     }
     
     public void sendMessageToAllInSession(MainHandler mainHandler, String msg) {
@@ -98,7 +108,7 @@ public class SessionManager {
     public synchronized void sendSessionMessage(MainHandler handler, String msg) {
         for (var session : sessions) {
             if (Objects.equals(session.getSessionId(), handler.getSession().getSessionId())) {
-                var sessionMsg = new SessionMessage(msg, handler.getHandlerPlayer().getUsername());
+                var sessionMsg = new SessionMessage(msg, handler.getUser().getUsername());
                 session.addMessage(sessionMsg);
                 
                 break;

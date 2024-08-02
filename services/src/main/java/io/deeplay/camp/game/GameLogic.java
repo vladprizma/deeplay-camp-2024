@@ -43,18 +43,16 @@ public class GameLogic implements ReversiListener {
     }
 
     @Override 
-    public boolean moveMade(User user, int currentPlayerId, BoardLogic boardLogic) {
+    public boolean moveMade(User user, int currentPlayerId, BoardLogic boardLogic, String move) {
         if (user instanceof Bot) {
             return botServices.makeMove(currentPlayerId, boardLogic);
         } else {
-            return makeUserMove(currentPlayerId, boardLogic);
+            return makeUserMove(currentPlayerId, boardLogic, move);
         }
     }
 
-    private boolean makeUserMove(int currentPlayerId, BoardLogic boardLogic) {
-        logger.info("Введите ваш ход (например, 'e2' или 'f6'):");
-        Scanner scanner = new Scanner(System.in);
-        return makeMove(scanner.nextLine(), currentPlayerId, boardLogic);
+    private boolean makeUserMove(int currentPlayerId, BoardLogic boardLogic, String move) {
+        return makeMove(move, currentPlayerId, boardLogic);
     }
 
     public boolean makeMove(String userInput, int currentPlayerId, BoardLogic boardLogic) {
