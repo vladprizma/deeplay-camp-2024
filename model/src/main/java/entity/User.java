@@ -28,7 +28,11 @@ public class User {
 
     public String getUsername() { return username; }
     
+    public void setUsername(String username) { this.username = username; }
+    
     public String getPassword() { return password; }
+    
+    public void setPassword(String password) { this.password = password; }
     
     public int getRating() { return rating; }
     
@@ -39,6 +43,8 @@ public class User {
     public void setMatches(int matches) { this.matches = matches; }
     
     public String getUserPhoto() { return this.userPhoto; }
+    
+    public void setUserPhoto(String userPhoto) { this.userPhoto = userPhoto; }
     
     public void setElo(int elo) { this.elo = elo; }
     

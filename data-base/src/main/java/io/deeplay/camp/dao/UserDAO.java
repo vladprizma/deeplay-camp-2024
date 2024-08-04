@@ -52,7 +52,7 @@ public class UserDAO {
     }
 
     public void updateUser(User user) throws SQLException {
-        String sql = "UPDATE users SET password = ?, userPhoto = ?, rating = ?, matches = ? WHERE id = ?";
+        String sql = "UPDATE users SET password = ?, \"userPhoto\" = ?, rating = ?, matches = ? WHERE id = ?";
 
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
              PreparedStatement statement = connection.prepareStatement(sql)) {

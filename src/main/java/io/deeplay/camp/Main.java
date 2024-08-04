@@ -1,7 +1,7 @@
 package io.deeplay.camp;
 
 import config.LoadServerProperties;
-import io.deeplay.camp.handlers.MainHandler;
+import io.deeplay.camp.handlers.main.MainHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

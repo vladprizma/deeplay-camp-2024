@@ -11,7 +11,7 @@ public class BoardLogic {
     private long whiteValidMoves;
 
     public BoardLogic(Board board) {
-        this.board = new Board();
+        this.board = board;
         this.blackChips = board.getBlackChips();
         this.whiteChips = board.getWhiteChips();
     }
@@ -133,6 +133,10 @@ public class BoardLogic {
         long mask = 1L << (x + 8 * y);
         return ((blackChips & mask) != 0) || ((whiteChips & mask) != 0);
     }
+    
+    public Board getBoard() {
+        return board;
+    }
 
     // Проверка на возможность хода
     public boolean isValidMove(int x, int y, int player) {
@@ -148,6 +152,7 @@ public class BoardLogic {
 
     // Получение возможных вариантов
     public long getValidMoves(int player) {
+        createValidMoves();
         long validMoves = 0x0000000000000000L;
         if (player == 1) {
             validMoves |= blackValidMoves;
