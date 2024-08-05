@@ -376,13 +376,11 @@ public class MainMenuView implements Observer {
     public static List<String> parseLog(String log) {
         List<String> result = new ArrayList<>();
 
-        // Регулярное выражение для поиска нужных шаблонов
         String regex = "(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\.\\d{3}) (\\S+) ([^:]+)";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(log);
 
         while (matcher.find()) {
-            // Собираем найденные группы в строку
             String timestamp = matcher.group(1);
             String username = matcher.group(2);
             String message = matcher.group(3);
