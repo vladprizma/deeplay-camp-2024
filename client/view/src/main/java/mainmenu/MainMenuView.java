@@ -175,12 +175,13 @@ public class MainMenuView implements Observer {
     }
 
     private void onPlayButtonClicked() {
-            modelManager.startGameModelMethod();
-            setupButton(playButton, viewModel::onPlayButtonClicked, viewModel.playButtonEnabledProperty());
-            playButton.fire();
-            viewModel.playButtonEnabledProperty().set(false);
-            viewModel.settingsButtonEnabledProperty().set(false);
-            viewModel.exitButtonEnabledProperty().set(false);
+        modelManager.startGameModelMethod();
+        setupButton(playButton, viewModel::onPlayButtonClicked, viewModel.playButtonEnabledProperty());
+
+        playButton.fire();
+        viewModel.playButtonEnabledProperty().set(false);
+        viewModel.settingsButtonEnabledProperty().set(false);
+        viewModel.exitButtonEnabledProperty().set(false);
     }
 
     private void onSettingsButtonClicked() {
@@ -192,76 +193,76 @@ public class MainMenuView implements Observer {
     }
 
     private void onChatButtonClicked() {
-            modelManager.chatModelMethod(CHAT_INITIALIZER);
-            chatMessages = FXCollections.observableArrayList();
-            chatListView.setItems(chatMessages);
-            chatListView.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
-                @Override
-                public ListCell<String> call(ListView<String> param) {
-                    return new ListCell<String>() {
-                        @Override
-                        protected void updateItem(String item, boolean empty) {
-                            super.updateItem(item, empty);
-                            if (empty || item == null) {
-                                setText(null);
-                                setStyle("");
-                            } else if (item.split(splitRegex).length > 1 &&
-                                    item.split(splitRegex)[0].equals(USER_PARSE)) {
-                                setText(item.split(splitRegex)[1] + ":");
-                                setStyle("-fx-background-color: transparent; " +
-                                        "-fx-text-fill: white;" +
-                                        "-fx-padding: 10 10 10 10;" +
-                                        "-fx-font-size: 24px; " +
-                                        "-fx-font-family: 'Josefin Slab SemiBold'; ");
-                            } else if (isValidDate(item)) {
-                                String formattedTime = formatTime(item);
-                                setText(formattedTime);
-                                setStyle("-fx-background-color: transparent; " +
-                                        "-fx-text-fill: white;" +
-                                        "-fx-padding: 10 10 10 500;" +
-                                        "-fx-font-size: 24px; " +
-                                        "-fx-font-family: 'Josefin Slab SemiBold' ");
-                            } else if (item.split(splitRegex).length > 1 &&
-                                    item.split(splitRegex)[0].equals(FIRST_LINE_PARSE)) {
-                                setText(item.split(splitRegex)[1]);
-                                setStyle("-fx-background-radius: 0px 0px 500px 150px; " +
-                                        "-fx-text-fill: white; " +
-                                        "-fx-font-size: 32px; " +
-                                        "-fx-background-color: rgba(255, 255, 255, 0.6); " +
-                                        "-fx-font-family: 'Josefin Slab SemiBold'; ");
+        modelManager.chatModelMethod(CHAT_INITIALIZER);
+        chatMessages = FXCollections.observableArrayList();
+        chatListView.setItems(chatMessages);
+        chatListView.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+            @Override
+            public ListCell<String> call(ListView<String> param) {
+                return new ListCell<String>() {
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null) {
+                            setText(null);
+                            setStyle("");
+                        } else if (item.split(splitRegex).length > 1 &&
+                                item.split(splitRegex)[0].equals(USER_PARSE)) {
+                            setText(item.split(splitRegex)[1] + ":");
+                            setStyle("-fx-background-color: transparent; " +
+                                    "-fx-text-fill: white;" +
+                                    "-fx-padding: 10 10 10 10;" +
+                                    "-fx-font-size: 24px; " +
+                                    "-fx-font-family: 'Josefin Slab SemiBold'; ");
+                        } else if (isValidDate(item)) {
+                            String formattedTime = formatTime(item);
+                            setText(formattedTime);
+                            setStyle("-fx-background-color: transparent; " +
+                                    "-fx-text-fill: white;" +
+                                    "-fx-padding: 10 10 10 500;" +
+                                    "-fx-font-size: 24px; " +
+                                    "-fx-font-family: 'Josefin Slab SemiBold' ");
+                        } else if (item.split(splitRegex).length > 1 &&
+                                item.split(splitRegex)[0].equals(FIRST_LINE_PARSE)) {
+                            setText(item.split(splitRegex)[1]);
+                            setStyle("-fx-background-radius: 0px 0px 500px 150px; " +
+                                    "-fx-text-fill: white; " +
+                                    "-fx-font-size: 32px; " +
+                                    "-fx-background-color: rgba(255, 255, 255, 0.6); " +
+                                    "-fx-font-family: 'Josefin Slab SemiBold'; ");
 
-                            } else if (item.split(splitRegex).length > 1 &&
-                                    item.split(splitRegex)[0].equals(MIDDLE_LINE_PARSE)) {
-                                setText(item.split(splitRegex)[1]);
-                                setStyle("-fx-text-fill: white; " +
-                                        "-fx-font-size: 32px; " +
-                                        "-fx-background-color: rgba(255, 255, 255, 0.6); " +
-                                        "-fx-font-family: 'Josefin Slab SemiBold'; ");
+                        } else if (item.split(splitRegex).length > 1 &&
+                                item.split(splitRegex)[0].equals(MIDDLE_LINE_PARSE)) {
+                            setText(item.split(splitRegex)[1]);
+                            setStyle("-fx-text-fill: white; " +
+                                    "-fx-font-size: 32px; " +
+                                    "-fx-background-color: rgba(255, 255, 255, 0.6); " +
+                                    "-fx-font-family: 'Josefin Slab SemiBold'; ");
 
-                            } else if (item.split(splitRegex).length > 1 &&
-                                    item.split(splitRegex)[0].equals(END_LINE_PARSE)) {
-                                setText(item.split(splitRegex)[1]);
-                                setStyle("-fx-background-radius: 50px 200px 0px 0px; " +
-                                        "-fx-text-fill: white; " +
-                                        "-fx-font-size: 32px; " +
-                                        "-fx-background-color: rgba(255, 255, 255, 0.6); " +
-                                        "-fx-font-family: 'Josefin Slab SemiBold'; ");
-                            } else {
-                                setText(item);
-                                setStyle("-fx-background-radius: 150px 50px 500px 150px; " +
-                                        "-fx-text-fill: white; " +
-                                        "-fx-font-size: 32px; " +
-                                        "-fx-background-color: rgba(255, 255, 255, 0.6); " +
-                                        "-fx-font-family: 'Josefin Slab SemiBold'; ");
-                            }
+                        } else if (item.split(splitRegex).length > 1 &&
+                                item.split(splitRegex)[0].equals(END_LINE_PARSE)) {
+                            setText(item.split(splitRegex)[1]);
+                            setStyle("-fx-background-radius: 50px 200px 0px 0px; " +
+                                    "-fx-text-fill: white; " +
+                                    "-fx-font-size: 32px; " +
+                                    "-fx-background-color: rgba(255, 255, 255, 0.6); " +
+                                    "-fx-font-family: 'Josefin Slab SemiBold'; ");
+                        } else {
+                            setText(item);
+                            setStyle("-fx-background-radius: 150px 50px 500px 150px; " +
+                                    "-fx-text-fill: white; " +
+                                    "-fx-font-size: 32px; " +
+                                    "-fx-background-color: rgba(255, 255, 255, 0.6); " +
+                                    "-fx-font-family: 'Josefin Slab SemiBold'; ");
                         }
-                    };
-                }
-            });
+                    }
+                };
+            }
+        });
 
-            setupButton(settingsButton, viewModel::chatButtonEnabledProperty, viewModel.chatButtonEnabledProperty());
-            openChat();
-        }
+        setupButton(settingsButton, viewModel::chatButtonEnabledProperty, viewModel.chatButtonEnabledProperty());
+        openChat();
+    }
 
 
     public static boolean isValidDate(String dateStr) {
@@ -376,11 +377,13 @@ public class MainMenuView implements Observer {
     public static List<String> parseLog(String log) {
         List<String> result = new ArrayList<>();
 
+        // Регулярное выражение для поиска нужных шаблонов
         String regex = "(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\.\\d{3}) (\\S+) ([^:]+)";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(log);
 
         while (matcher.find()) {
+            // Собираем найденные группы в строку
             String timestamp = matcher.group(1);
             String username = matcher.group(2);
             String message = matcher.group(3);
