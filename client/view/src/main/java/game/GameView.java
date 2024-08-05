@@ -11,6 +11,7 @@ import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.RadialGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.shape.Rectangle;
+import mainmenu.MainMenuView;
 
 public class GameView {
     @FXML
@@ -20,6 +21,9 @@ public class GameView {
     // Метод для инициализации кнопок
     @FXML
     public void initialize() {
+
+        MainMenuView.getModelManager();
+
         // Проверка на null, если gridPane не инициализирован
         if (gridPane == null) {
             System.err.println("GridPane не инициализирован!");

@@ -76,13 +76,13 @@
         </Button>
 
         <!-- Полупрозрачный прямоугольник с эффектом размытия -->
-        <Rectangle fx:id="blurBackground" visible="true" width="1920.0" height="1080.0" arcWidth="20.0" arcHeight="20.0" fill="rgba(0, 0, 0, 0.5)">
+        <Rectangle fx:id="blurBackground" visible="false" width="1920.0" height="1080.0" arcWidth="20.0" arcHeight="20.0" fill="rgba(0, 0, 0, 0.5)">
             <effect>
                 <GaussianBlur radius="20"/>
             </effect>
         </Rectangle>
 
-        <VBox fx:id="loginVBox" visible="true" spacing="10" layoutX="374.0" layoutY="240.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+        <VBox fx:id="loginVBox" visible="false" spacing="10" layoutX="374.0" layoutY="240.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
             <ImageView fitHeight="900.0" fitWidth="1200.0" pickOnBounds="true" preserveRatio="true" opacity="0.95">
                 <image>
                     <Image url="@resources/logIN.png"/>
@@ -91,12 +91,12 @@
         </VBox>
 
         <!-- Текстовое поле для логина -->
-        <TextField fx:id="usernameField" layoutX="650.0" layoutY="450.0" promptText="Login"/>
+        <TextField fx:id="usernameField" visible="false" layoutX="650.0" layoutY="450.0" promptText="Login"/>
 
         <!-- Текстовое поле для пароля -->
-        <PasswordField fx:id="passwordField" layoutX="650.0" layoutY="570.0" promptText="Password"/>
+        <PasswordField fx:id="passwordField" visible="false" layoutX="650.0" layoutY="570.0" promptText="Password"/>
 
         <!-- Кнопка войти -->
-        <Button fx:id="enterButton" layoutX="654.0" layoutY="715.0" text="Sign in"/>
+        <Button fx:id="enterButton" visible="false" layoutX="654.0" layoutY="715.0" text="Sign in"/>
     </children>
 </AnchorPane>

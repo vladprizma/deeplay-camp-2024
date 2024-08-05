@@ -85,14 +85,19 @@ public class MainMenuView implements Observer {
 
     private ObservableList<String> chatMessages;
 
-    private ModelManager modelManager;
+    public static ModelManager getModelManager() {
+        return modelManager;
+    }
+
+    private static ModelManager modelManager;
 
     private List<String> chat;
 
     private ChatString singleton;
     private boolean isBlocked = false;
-
-
+    private boolean isLogin = false;
+    private boolean timeToStart = false;
+    private boolean timeToChat = false;
 
     public MainMenuView() throws IOException {
         singleton = ChatString.getInstance();
@@ -128,7 +133,6 @@ public class MainMenuView implements Observer {
     @FXML
     private void handleRootClick(MouseEvent event) {
         if (chatPanel.isVisible()) {
-            // Проверка, находится ли клик внутри панели чата
             if (!chatPanel.getBoundsInParent().contains(event.getX(), event.getY())) {
                 closeChat();
             }
@@ -137,8 +141,6 @@ public class MainMenuView implements Observer {
 
     @FXML
     private void handleChatPanelClick(MouseEvent event) {
-        // Остановка распространения события, чтобы клик внутри панели чата
-        // не закрывал чат
         event.consume();
     }
 
@@ -171,10 +173,17 @@ public class MainMenuView implements Observer {
 
     private void onPlayButtonClicked() {
         setupButton(playButton, viewModel::onPlayButtonClicked, viewModel.playButtonEnabledProperty());
-        playButton.fire();
-        viewModel.playButtonEnabledProperty().set(false);
-        viewModel.settingsButtonEnabledProperty().set(false);
-        viewModel.exitButtonEnabledProperty().set(false);
+
+        if (isLogin == false) {
+            modelManager.startSessionModelMethod();
+            timeToStart = true;
+        } else {
+            modelManager.startGameModelMethod();
+            playButton.fire();
+            viewModel.playButtonEnabledProperty().set(false);
+            viewModel.settingsButtonEnabledProperty().set(false);
+            viewModel.exitButtonEnabledProperty().set(false);
+        }
     }
 
     private void onSettingsButtonClicked() {
@@ -186,76 +195,81 @@ public class MainMenuView implements Observer {
     }
 
     private void onChatButtonClicked() {
-        modelManager.chatModelMethod(CHAT_INITIALIZER);
-        chatMessages = FXCollections.observableArrayList();
-        chatListView.setItems(chatMessages);
-        chatListView.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
-            @Override
-            public ListCell<String> call(ListView<String> param) {
-                return new ListCell<String>() {
-                    @Override
-                    protected void updateItem(String item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty || item == null) {
-                            setText(null);
-                            setStyle("");
-                        } else if (item.split(splitRegex).length > 1 &&
-                                item.split(splitRegex)[0].equals(USER_PARSE)) {
-                            setText(item.split(splitRegex)[1] + ":");
-                            setStyle("-fx-background-color: transparent; " +
-                                    "-fx-text-fill: white;" +
-                                    "-fx-padding: 10 10 10 10;" +
-                                    "-fx-font-size: 24px; " +
-                                    "-fx-font-family: 'Josefin Slab SemiBold'; ");
-                        } else if (isValidDate(item)) {
-                            String formattedTime = formatTime(item);
-                            setText(formattedTime);
-                            setStyle("-fx-background-color: transparent; " +
-                                    "-fx-text-fill: white;" +
-                                    "-fx-padding: 10 10 10 500;" +
-                                    "-fx-font-size: 24px; " +
-                                    "-fx-font-family: 'Josefin Slab SemiBold' ");
-                        } else if (item.split(splitRegex).length > 1 &&
-                                item.split(splitRegex)[0].equals(FIRST_LINE_PARSE)) {
-                            setText(item.split(splitRegex)[1]);
-                            setStyle("-fx-background-radius: 0px 0px 500px 150px; " +
-                                    "-fx-text-fill: white; " +
-                                    "-fx-font-size: 32px; " +
-                                    "-fx-background-color: rgba(255, 255, 255, 0.6); " +
-                                    "-fx-font-family: 'Josefin Slab SemiBold'; ");
+//        if (isLogin == false) {
+//            modelManager.startSessionModelMethod();
+//            timeToChat = true;
+//        } else {
+            modelManager.chatModelMethod(CHAT_INITIALIZER);
+            chatMessages = FXCollections.observableArrayList();
+            chatListView.setItems(chatMessages);
+            chatListView.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+                @Override
+                public ListCell<String> call(ListView<String> param) {
+                    return new ListCell<String>() {
+                        @Override
+                        protected void updateItem(String item, boolean empty) {
+                            super.updateItem(item, empty);
+                            if (empty || item == null) {
+                                setText(null);
+                                setStyle("");
+                            } else if (item.split(splitRegex).length > 1 &&
+                                    item.split(splitRegex)[0].equals(USER_PARSE)) {
+                                setText(item.split(splitRegex)[1] + ":");
+                                setStyle("-fx-background-color: transparent; " +
+                                        "-fx-text-fill: white;" +
+                                        "-fx-padding: 10 10 10 10;" +
+                                        "-fx-font-size: 24px; " +
+                                        "-fx-font-family: 'Josefin Slab SemiBold'; ");
+                            } else if (isValidDate(item)) {
+                                String formattedTime = formatTime(item);
+                                setText(formattedTime);
+                                setStyle("-fx-background-color: transparent; " +
+                                        "-fx-text-fill: white;" +
+                                        "-fx-padding: 10 10 10 500;" +
+                                        "-fx-font-size: 24px; " +
+                                        "-fx-font-family: 'Josefin Slab SemiBold' ");
+                            } else if (item.split(splitRegex).length > 1 &&
+                                    item.split(splitRegex)[0].equals(FIRST_LINE_PARSE)) {
+                                setText(item.split(splitRegex)[1]);
+                                setStyle("-fx-background-radius: 0px 0px 500px 150px; " +
+                                        "-fx-text-fill: white; " +
+                                        "-fx-font-size: 32px; " +
+                                        "-fx-background-color: rgba(255, 255, 255, 0.6); " +
+                                        "-fx-font-family: 'Josefin Slab SemiBold'; ");
 
-                        } else if (item.split(splitRegex).length > 1 &&
-                                item.split(splitRegex)[0].equals(MIDDLE_LINE_PARSE)) {
-                            setText(item.split(splitRegex)[1]);
-                            setStyle("-fx-text-fill: white; " +
-                                    "-fx-font-size: 32px; " +
-                                    "-fx-background-color: rgba(255, 255, 255, 0.6); " +
-                                    "-fx-font-family: 'Josefin Slab SemiBold'; ");
+                            } else if (item.split(splitRegex).length > 1 &&
+                                    item.split(splitRegex)[0].equals(MIDDLE_LINE_PARSE)) {
+                                setText(item.split(splitRegex)[1]);
+                                setStyle("-fx-text-fill: white; " +
+                                        "-fx-font-size: 32px; " +
+                                        "-fx-background-color: rgba(255, 255, 255, 0.6); " +
+                                        "-fx-font-family: 'Josefin Slab SemiBold'; ");
 
-                        } else if (item.split(splitRegex).length > 1 &&
-                                item.split(splitRegex)[0].equals(END_LINE_PARSE)) {
-                            setText(item.split(splitRegex)[1]);
-                            setStyle("-fx-background-radius: 50px 200px 0px 0px; " +
-                                    "-fx-text-fill: white; " +
-                                    "-fx-font-size: 32px; " +
-                                    "-fx-background-color: rgba(255, 255, 255, 0.6); " +
-                                    "-fx-font-family: 'Josefin Slab SemiBold'; ");
-                        } else {
-                            setText(item);
-                            setStyle("-fx-background-radius: 150px 50px 500px 150px; " +
-                                    "-fx-text-fill: white; " +
-                                    "-fx-font-size: 32px; " +
-                                    "-fx-background-color: rgba(255, 255, 255, 0.6); " +
-                                    "-fx-font-family: 'Josefin Slab SemiBold'; ");
+                            } else if (item.split(splitRegex).length > 1 &&
+                                    item.split(splitRegex)[0].equals(END_LINE_PARSE)) {
+                                setText(item.split(splitRegex)[1]);
+                                setStyle("-fx-background-radius: 50px 200px 0px 0px; " +
+                                        "-fx-text-fill: white; " +
+                                        "-fx-font-size: 32px; " +
+                                        "-fx-background-color: rgba(255, 255, 255, 0.6); " +
+                                        "-fx-font-family: 'Josefin Slab SemiBold'; ");
+                            } else {
+                                setText(item);
+                                setStyle("-fx-background-radius: 150px 50px 500px 150px; " +
+                                        "-fx-text-fill: white; " +
+                                        "-fx-font-size: 32px; " +
+                                        "-fx-background-color: rgba(255, 255, 255, 0.6); " +
+                                        "-fx-font-family: 'Josefin Slab SemiBold'; ");
+                            }
                         }
-                    }
-                };
-            }
-        });
+                    };
+                }
+            });
 
-        setupButton(settingsButton, viewModel::chatButtonEnabledProperty, viewModel.chatButtonEnabledProperty());
-        openChat();
-    }
+            setupButton(settingsButton, viewModel::chatButtonEnabledProperty, viewModel.chatButtonEnabledProperty());
+            openChat();
+        }
+//    }
 
     public static boolean isValidDate(String dateStr) {
         DateTimeFormatter formatter = INPUT_FORMATTER;
@@ -342,13 +356,36 @@ public class MainMenuView implements Observer {
 
     @Override
     public void update(String newString) {
-        List<String> parsedLogs = parseLog(newString);
+        String command = newString.split(splitRegex)[0];
+        switch (command) {
+            case "messages":
+                List<String> parsedLogs = parseLog(newString);
 
-        parsedLogs.removeIf(item -> item.equals(CHAT_INITIALIZER));
-        Platform.runLater(() -> {
-            chatMessages.clear();
-            sendMessages(parsedLogs.reversed());
-        });
+                parsedLogs.removeIf(item -> item.equals(CHAT_INITIALIZER));
+                Platform.runLater(() -> {
+                    chatMessages.clear();
+                    sendMessages(parsedLogs.reversed());
+                });
+                break;
+            case "Please login or register":
+                blurBackground.setVisible(true);
+                loginVBox.setVisible(true);
+                usernameField.setVisible(true);
+                passwordField.setVisible(true);
+                enterButton.setVisible(true);
+                break;
+            case "session-start":
+                isLogin = true;
+                if (timeToStart == true) {
+                    timeToStart = false;
+                    onPlayButtonClicked();
+                }
+                if (timeToChat == true) {
+                    timeToChat = false;
+                    onChatButtonClicked();
+                }
+                break;
+        }
     }
 
     public static List<String> parseLog(String log) {

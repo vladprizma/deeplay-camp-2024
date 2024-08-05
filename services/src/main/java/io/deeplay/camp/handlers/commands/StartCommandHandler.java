@@ -58,6 +58,9 @@ public class StartCommandHandler implements CommandHandler {
         logger.info("User {}: The enemy was found. The game begins...", mainHandler.getUser().getId());
 
         var opponent = SessionManager.getInstance().getOpponent(mainHandler);
+        logger.info("efreferfer" + String.format("session::%d %s %d %d %s %d",
+                opponent.getId(), opponent.getUserPhoto(), opponent.getRating(),
+                opponent.getMatches(), opponent.getUsername(), opponent.getElo()));
         mainHandler.sendMessageToClient(String.format("session::%d %s %d %d %s %d",
                 opponent.getId(), opponent.getUserPhoto(), opponent.getRating(),
                 opponent.getMatches(), opponent.getUsername(), opponent.getElo()));
