@@ -29,6 +29,7 @@ public class Action {
 
     public void handleStartAction() {
         try {
+            System.out.println(tokenStorage.getRefreshToken() + "\n" + tokenStorage.getUpdateToken());
             CommandRequest startCommandRequest = new StartCommandRequest(client);
             startCommandRequest.execute();
         } catch (IOException e) {
@@ -65,7 +66,6 @@ public class Action {
 
     public void handleLoginAction(String loginAndPassword) {
         try {
-            System.out.println(tokenStorage.getRefreshToken());
             CommandRequest loginCommandRequest = new LoginCommandRequest(client, loginAndPassword);
             loginCommandRequest.execute();
         } catch (IOException e) {
@@ -76,6 +76,7 @@ public class Action {
     public void handleLoginActionResponse(String refreshToken, String updateToken) {
         tokenStorage.saveTokens(refreshToken, updateToken);
         handleStartSessionAction();
+//        System.out.println(tokenStorage.getRefreshToken() + "\n" + tokenStorage.getUpdateToken());
     }
 
     public void handleChatAction(String chatMessages) {

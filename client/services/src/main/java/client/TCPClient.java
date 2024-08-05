@@ -47,7 +47,7 @@ public class TCPClient implements Client {
     public void sendRequest(RequestResponse requestResponse) {
         executor.submit(() -> {
             try {
-                logger.info(requestResponse.toString());
+                logger.info("Server request: " + requestResponse.toString() );
                 writer.write(requestResponse.toString());
                 writer.newLine();
                 writer.flush();
@@ -71,6 +71,13 @@ public class TCPClient implements Client {
                         case "messages":
                             action.handleChatActionResponse(serverResponse);
                             break;
+                        case "Please login or register":
+                            action.handleChatActionResponse(serverResponse);
+                            break;
+                        case "session-start":
+                            action.handleChatActionResponse(serverResponse);
+                            break;
+
                     }
                 }
             } catch (IOException e) {

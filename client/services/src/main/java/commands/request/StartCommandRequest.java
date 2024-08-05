@@ -11,7 +11,7 @@ public class StartCommandRequest implements CommandRequest {
 
     public StartCommandRequest(Client client) {
         this.client = client;
-        this.requestResponse = new RequestResponse("start", null);
+        this.requestResponse = new RequestResponse("game-start", null);
     }
 
     @Override
