@@ -18,7 +18,7 @@ import java.util.function.Function;
 
 public class RefreshTokenService {
     private static final String SECRET_KEY = "e6620c7252a94eb85d59399f3a07cc66c10f700365532dacf5dc234";
-    private final Integer ONE_DAY = 1000 * 60 * 60 * 24;
+    private final Integer ONE_DAY = 1000 * 60 * 60;
     private final TokenDAO tokenDAO = new TokenDAO();
 
     public TokensRequest generateRefreshToken(User user) throws SQLException {
