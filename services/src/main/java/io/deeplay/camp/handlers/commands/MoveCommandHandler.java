@@ -83,7 +83,9 @@ public class MoveCommandHandler implements CommandHandler {
 
             BoardDTO boardDTO = new BoardDTO(session.getBoard());
             String boardState = boardDTO.boardToClient();
-            String msg = "board::" + userId + "::" + boardState;
+            String score = Integer.toString(boardLogic.score()[0]) + " " + Integer.toString(boardLogic.score()[1]);
+            String validMoves = Long.toString(boardLogic.getValidMoves(playerNumber));
+            String msg = "board::" + userId + "::" + boardState + "::" + score + "::" + validMoves;
 
             mainHandler.sendMessageToClient(msg);
             SessionManager.getInstance().sendMessageToOpponent(mainHandler, session, msg);

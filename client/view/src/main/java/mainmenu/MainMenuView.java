@@ -175,7 +175,6 @@ public class MainMenuView implements Observer {
     }
 
     private void onPlayButtonClicked() {
-        modelManager.startGameModelMethod();
         setupButton(playButton, viewModel::onPlayButtonClicked, viewModel.playButtonEnabledProperty());
 
         playButton.fire();
