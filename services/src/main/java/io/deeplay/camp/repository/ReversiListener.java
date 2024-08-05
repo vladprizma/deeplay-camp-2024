@@ -5,7 +5,7 @@ import entity.User;
 import enums.GameStatus;
 
 public interface ReversiListener {
-    boolean moveMade(User user, int currentPlayerId, BoardLogic boardLogic);
+    boolean moveMade(User user, int currentPlayerId, BoardLogic boardLogic, String move);
 
     GameStatus gameFinished();
     GameStatus gameStarted();

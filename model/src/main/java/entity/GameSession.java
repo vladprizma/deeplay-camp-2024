@@ -39,11 +39,11 @@ public class GameSession {
     
     public void setLog(String log) { this.log = log; }
     
-    public GameStatus getGameState() {
+    public synchronized GameStatus getGameState() {
         return gameState;
     }
 
-    public void setGameState(GameStatus gameState) {
+    public synchronized void setGameState(GameStatus gameState) {
         this.gameState = gameState;
     }
 
@@ -51,11 +51,11 @@ public class GameSession {
         return currentPlayerId;
     }
 
-    public void setCurrentPlayerId(int currentPlayerId) {
+    public synchronized void setCurrentPlayerId(int currentPlayerId) {
         this.currentPlayerId = currentPlayerId;
     }
     
-    public void setResult(String result) { this.result = result; }
+    public synchronized void setResult(String result) { this.result = result; }
     
     public String getResult() { return result; }
 
@@ -63,7 +63,7 @@ public class GameSession {
         return board;
     }
 
-    public void setBoard(Board board) {
+    public synchronized void setBoard(Board board) {
         this.board = board;
     }
 
@@ -71,7 +71,7 @@ public class GameSession {
         return player1;
     }
 
-    public void setPlayer1(User player1) {
+    public synchronized void setPlayer1(User player1) {
         this.player1 = player1;
     }
 
@@ -79,15 +79,15 @@ public class GameSession {
         return player2;
     }
 
-    public void setPlayer2(User player2) {
+    public synchronized void setPlayer2(User player2) {
         this.player2 = player2;
     }
 
-    public int getSessionId() {
+    public synchronized int getSessionId() {
         return sessionId;
     }
 
-    public void setSessionId(int sessionId) {
+    public synchronized void setSessionId(int sessionId) {
         this.sessionId = sessionId;
     }
 
@@ -95,11 +95,11 @@ public class GameSession {
         return sessionChat;
     }
 
-    public void setSessionChat(List<SessionMessage> sessionChat) {
+    public synchronized void setSessionChat(List<SessionMessage> sessionChat) {
         this.sessionChat = sessionChat;
     }
 
-    public void addMessage(SessionMessage sessionMessage) {
+    public synchronized void addMessage(SessionMessage sessionMessage) {
         this.sessionChat.add(sessionMessage);
     }
 }
