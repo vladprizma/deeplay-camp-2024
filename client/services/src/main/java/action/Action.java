@@ -57,8 +57,13 @@ public class Action {
 
     public void handleStartSessionAction() {
         try {
-            CommandRequest startSessionCommandRequest = new StartSessionCommandRequest(client, tokenStorage.getUpdateToken());
-            startSessionCommandRequest.execute();
+            if (tokenStorage.getUpdateToken() != null) {
+                CommandRequest startSessionCommandRequest = new StartSessionCommandRequest(client, tokenStorage.getUpdateToken());
+                startSessionCommandRequest.execute();
+            } else {
+                ChatString singleton = ChatString.getInstance();
+                singleton.setString("Please login or register");
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
