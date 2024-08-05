@@ -47,4 +47,9 @@ public class TokenStorage {
         String encryptedUpdateToken = preferences.get(UPDATE_TOKEN_KEY, null);
         return encryptedUpdateToken != null ? textEncryptor.decrypt(encryptedUpdateToken) : null;
     }
+
+    public void clearTokens() {
+        preferences.remove(REFRESH_TOKEN_KEY);
+        preferences.remove(UPDATE_TOKEN_KEY);
+    }
 }

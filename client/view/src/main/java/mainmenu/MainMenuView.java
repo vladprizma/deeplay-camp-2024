@@ -122,7 +122,10 @@ public class MainMenuView implements Observer {
     public void initialize() {
         singleton.registerObserver(this);
         animation();
-
+        if (isLogin == false) {
+            modelManager.startSessionModelMethod();
+            timeToStart = true;
+        }
         playButton.setOnAction(event -> onButtonClicked(ButtonEnum.PLAY));
         settingsButton.setOnAction(event -> onButtonClicked(ButtonEnum.SETTINGS));
         exitButton.setOnAction(event -> onButtonClicked(ButtonEnum.EXIT));
@@ -172,18 +175,12 @@ public class MainMenuView implements Observer {
     }
 
     private void onPlayButtonClicked() {
-        setupButton(playButton, viewModel::onPlayButtonClicked, viewModel.playButtonEnabledProperty());
-
-        if (isLogin == false) {
-            modelManager.startSessionModelMethod();
-            timeToStart = true;
-        } else {
             modelManager.startGameModelMethod();
+            setupButton(playButton, viewModel::onPlayButtonClicked, viewModel.playButtonEnabledProperty());
             playButton.fire();
             viewModel.playButtonEnabledProperty().set(false);
             viewModel.settingsButtonEnabledProperty().set(false);
             viewModel.exitButtonEnabledProperty().set(false);
-        }
     }
 
     private void onSettingsButtonClicked() {
@@ -195,10 +192,6 @@ public class MainMenuView implements Observer {
     }
 
     private void onChatButtonClicked() {
-//        if (isLogin == false) {
-//            modelManager.startSessionModelMethod();
-//            timeToChat = true;
-//        } else {
             modelManager.chatModelMethod(CHAT_INITIALIZER);
             chatMessages = FXCollections.observableArrayList();
             chatListView.setItems(chatMessages);
@@ -269,7 +262,7 @@ public class MainMenuView implements Observer {
             setupButton(settingsButton, viewModel::chatButtonEnabledProperty, viewModel.chatButtonEnabledProperty());
             openChat();
         }
-//    }
+
 
     public static boolean isValidDate(String dateStr) {
         DateTimeFormatter formatter = INPUT_FORMATTER;
@@ -376,14 +369,6 @@ public class MainMenuView implements Observer {
                 break;
             case "session-start":
                 isLogin = true;
-                if (timeToStart == true) {
-                    timeToStart = false;
-                    onPlayButtonClicked();
-                }
-                if (timeToChat == true) {
-                    timeToChat = false;
-                    onChatButtonClicked();
-                }
                 break;
         }
     }
