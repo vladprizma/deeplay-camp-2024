@@ -77,7 +77,9 @@ public class TCPClient implements Client {
                         case "session-start":
                             action.handleChatActionResponse(serverResponse);
                             break;
-
+                        case "get-board":
+                            action.handleBoardActionResponse(serverResponse);
+                            break;
                     }
                 }
             } catch (IOException e) {

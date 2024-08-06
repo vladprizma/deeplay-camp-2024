@@ -39,6 +39,5 @@ public class GetBoardCommandHandler implements CommandHandler {
         // Send the board notation to the client
         mainHandler.sendMessageToClient("get-board::" + boardNotation);
         logger.info("Board information sent to client successfully");
-
     }
 }

@@ -2,6 +2,7 @@ package io.deeplay.camp;
 
 import action.Action;
 import chat.ChatModel;
+import board.boardModel;
 import login.LoginModel;
 import login.StartGameModel;
 import login.StartSessionModel;
@@ -14,6 +15,7 @@ public class ModelManager {
     private StartSessionModel startSessionModel;
     private StartGameModel startGameModel;
     private ChatModel chatModel;
+    private boardModel boardModel;
     private Action action;
     private String loginAndPassword;
     private String chatMessages;
@@ -40,5 +42,9 @@ public class ModelManager {
     public void chatModelMethod(String chatMessages) {
         this.chatMessages = chatMessages;
         chatModel = new ChatModel(action, chatMessages);
+    }
+
+    public void boardModelMethod() {
+        boardModel = new boardModel(action);
     }
 }

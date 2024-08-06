@@ -1,5 +1,14 @@
 package game;
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.util.Duration;
+import mainmenu.MainMenuView;
+
+import io.deeplay.camp.ModelManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
@@ -11,9 +20,51 @@ import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.RadialGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.shape.Rectangle;
-import mainmenu.MainMenuView;
+import javafx.scene.text.Text;
+import observer.Observer;
 
-public class GameView {
+import java.util.List;
+
+public class GameView implements Observer {
+    @FXML
+    private Rectangle redScore;
+
+    @FXML
+    private Rectangle greenScore;
+
+    @FXML
+    private Text text1;
+
+    @FXML
+    private Text text2;
+
+    @FXML
+    private Text timer1;
+
+    @FXML
+    private Text timer2;
+
+    private Timeline timeline1;
+    private Timeline timeline2;
+
+    public static String splitRegex = "::";
+
+    private int count1 = 2;
+    private int count2 = 2;
+
+    private long BlackChips;
+    private long WhiteChips;
+
+    public static ModelManager modelManager;
+
+    // Создаем RadialGradient для зеленой фишки
+    RadialGradient radialGradientGreen = new RadialGradient(0, 0, 0.5, 0.5, 0.8, true,
+            CycleMethod.NO_CYCLE, new Stop(0, Color.WHITE), new Stop(1, Color.GREEN));
+
+    // Создаем RadialGradient для красной фишки
+    RadialGradient radialGradientRed = new RadialGradient(0, 0, 0.5, 0.5, 0.8, true, CycleMethod.NO_CYCLE,
+            new Stop(0, Color.WHITE), new Stop(1, Color.RED));
+
     @FXML
     private GridPane gridPane; // связываем с FXML
     int player = 1;
@@ -21,15 +72,26 @@ public class GameView {
     // Метод для инициализации кнопок
     @FXML
     public void initialize() {
+        placeInitialChips();
+        initializeButtons();
+        modelManager = MainMenuView.getModelManager();
+        modelManager.boardModelMethod();
+    }
 
-        MainMenuView.getModelManager();
+    //public void receiveMessageFromServer(String message) {
+    //    GameView gameView = new GameView();
+    //    gameView.processBoardInformation(message);
+    //}
 
-        // Проверка на null, если gridPane не инициализирован
-        if (gridPane == null) {
-            System.err.println("GridPane не инициализирован!");
-            return;
+    public void processBoardInformation(String message) {
+        if (message.startsWith("get-board::")) {
+            String boardNotation = message.substring("get-board::".length());
+            // Теперь у вас есть boardNotation, который можно использовать дальше
+            System.out.println("Received board notation: " + boardNotation);
         }
+    }
 
+    private void initializeChips() {
         RadialGradient radialGradientGreen = new RadialGradient(0, 0, 0.5, 0.5, 0.8, true, CycleMethod.NO_CYCLE,
                 new Stop(0, Color.WHITE),
                 new Stop(1, Color.GREEN));
@@ -37,101 +99,123 @@ public class GameView {
                 new Stop(0, Color.WHITE),
                 new Stop(1, Color.RED));
 
+        // Размещаем фишки на доске
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                Circle chip = new Circle(35);
+                chip.setFill(radialGradientGreen);
+                chip.setStroke(Color.BLACK);
+                chip.setStrokeWidth(5);
+                DropShadow dropShadow = new DropShadow();
+                dropShadow.setColor(Color.WHITE);
+                chip.setEffect(dropShadow);
+
+                StackPane stackPane = new StackPane();
+                stackPane.getChildren().add(chip);
+
+                gridPane.add(stackPane, col, row);
+            }
+        }
+    }
+
+    private void initializeButtons() {
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
                 Button button = new Button();
                 button.setStyle("-fx-background-color: transparent; -fx-border-color: black; -fx-border-width: 3; -fx-pref-width: 100; -fx-pref-height: 100;");
 
-                // Делаем col и row финальными для использования внутри лямбда-выражения
                 final int finalRow = row;
                 final int finalCol = col;
 
-                // Обработчик клика
-                button.setOnAction(e -> {
-                    Circle chip = new Circle(35); // радиус 35 для диаметра 70
-                    if(player == 1){
-                        chip.setFill(radialGradientGreen);
-                    } else chip.setFill(radialGradientRed);
-
-                    chip.setStroke(Color.BLACK);
-                    chip.setStrokeWidth(5);
-
-                    DropShadow dropShadow = new DropShadow();
-                    dropShadow.setColor(Color.WHITE);
-                    chip.setEffect(dropShadow);
-                    StackPane stackPane = new StackPane();
-
-                    // Добавить круг в StackPane
-                    stackPane.getChildren().add(chip);
-
-                    // Удаляем кнопку и добавляем StackPane с кругом
-                    gridPane.getChildren().remove(button);
-                    gridPane.add(stackPane, finalCol, finalRow); // используем финальные переменные
-
-                    if(player == 1){
-                        player = 2;
-                    } else player = 1;
-                });
+                button.setOnAction(e -> handleButtonClick(button, finalRow, finalCol));
 
                 gridPane.add(button, col, row);
             }
         }
-        // Размещение начальных фишек
-        placeInitialChips();
     }
 
-    private void placeInitialChips() {
-        Circle greenChip1 = new Circle(35);
-        Circle greenChip2 = new Circle(35);
-        // Создание эффекта RadialGradient
-        RadialGradient radialGradientGreen = new RadialGradient(0, 0, 0.5, 0.5, 0.8, true, CycleMethod.NO_CYCLE,
-                new Stop(0, Color.WHITE),
-                new Stop(1, Color.GREEN));
-
-        greenChip1.setFill(radialGradientGreen);
-        greenChip1.setStroke(Color.BLACK);
-        greenChip1.setStrokeWidth(5);
-        greenChip2.setFill(radialGradientGreen);
-        greenChip2.setStroke(Color.BLACK);
-        greenChip2.setStrokeWidth(5);
+    private void handleButtonClick(Button button, int row, int col) {
+        Circle chip = new Circle(35);
+        if (player == 1) {
+            chip.setFill(radialGradientGreen);
+        } else {
+            chip.setFill(radialGradientRed);
+        }
+        chip.setStroke(Color.BLACK);
+        chip.setStrokeWidth(5);
 
         DropShadow dropShadow = new DropShadow();
         dropShadow.setColor(Color.WHITE);
-        greenChip1.setEffect(dropShadow);
-        greenChip2.setEffect(dropShadow);
+        chip.setEffect(dropShadow);
 
-        // Создаем зеленую фишку
-        StackPane stackPane1 = new StackPane();
-        stackPane1.getChildren().add(greenChip1);
-        gridPane.add(stackPane1, 3, 3); // (3,3)
+        StackPane stackPane = new StackPane();
+        stackPane.getChildren().add(chip);
 
-        StackPane stackPane2 = new StackPane();
-        stackPane2.getChildren().add(greenChip2);
-        gridPane.add(stackPane2, 4, 4); // (4,4)
+        gridPane.getChildren().remove(button);
+        gridPane.add(stackPane, col, row);
 
-        Circle redChip1 = new Circle(35);
-        Circle redChip2 = new Circle(35);
+        if (player == 1) {
+            player = 2;
+        } else {
+            player = 1;
+        }
 
-        // Создание эффекта RadialGradient
-        RadialGradient radialGradientRed = new RadialGradient(0, 0, 0.5, 0.5, 0.8, true, CycleMethod.NO_CYCLE,
-                new Stop(0, Color.WHITE),
-                new Stop(1, Color.RED));
+        if (player == 1) {
+            count1++;
+        } else {
+            count2++;
+        }
+        text1.setText(Integer.toString(count1));
+        text2.setText(Integer.toString(count2));
+    }
 
-        redChip1.setFill(radialGradientRed);
-        redChip1.setStroke(Color.BLACK);
-        redChip1.setStrokeWidth(5);
-        redChip1.setEffect(dropShadow);
-        redChip2.setFill(radialGradientRed);
-        redChip2.setStroke(Color.BLACK);
-        redChip2.setStrokeWidth(5);
-        redChip2.setEffect(dropShadow);
+    private void placeInitialChips() {
+        // Создаем DropShadow
+        DropShadow dropShadow = new DropShadow();
+        dropShadow.setColor(Color.WHITE);
 
-        StackPane stackPane3 = new StackPane();
-        stackPane3.getChildren().add(redChip1);
-        gridPane.add(stackPane3, 3, 4); // (3,4)
+        // Создаем и настраиваем фишки
+        Circle greenChip1 = createChip(radialGradientGreen, dropShadow);
+        Circle greenChip2 = createChip(radialGradientGreen, dropShadow);
+        Circle redChip1 = createChip(radialGradientRed, dropShadow);
+        Circle redChip2 = createChip(radialGradientRed, dropShadow);
 
-        StackPane stackPane4 = new StackPane();
-        stackPane4.getChildren().add(redChip2);
-        gridPane.add(stackPane4, 4, 3); // (4,3)
+        // Размещаем фишки на GridPane
+        gridPane.add(createStackPane(greenChip1), 3, 3); // (3,3)
+        gridPane.add(createStackPane(greenChip2), 4, 4); // (4,4)
+        gridPane.add(createStackPane(redChip1), 3, 4); // (3,4)
+        gridPane.add(createStackPane(redChip2), 4, 3); // (4,3)
+    }
+
+    private Circle createChip(RadialGradient radialGradient, DropShadow dropShadow) {
+        Circle chip = new Circle(35);
+        chip.setFill(radialGradient);
+        chip.setStroke(Color.BLACK);
+        chip.setStrokeWidth(5);
+        chip.setEffect(dropShadow);
+        return chip;
+    }
+
+    private StackPane createStackPane(Circle chip) {
+        StackPane stackPane = new StackPane();
+        stackPane.getChildren().add(chip);
+        return stackPane;
+    }
+
+    public void increaseRectangles() {
+    }
+
+    @FXML
+    public void handleTimerButtonClicked() {
+    }
+
+    @Override
+    public void update(String newString) {
+        String command = newString.split(splitRegex)[0];
+        switch (command) {
+            case "get-board":
+                System.out.println(newString + "smth");
+                break;
+        }
     }
 }
