@@ -94,6 +94,8 @@ public class MoveCommandHandler implements CommandHandler {
             if (gameLogic.checkForWin()) {
                 gameLogic.displayEndGame(boardLogic);
                 session.setGameState(GameStatus.FINISHED);
+                String msgWin = "game-status::finished";
+                SessionManager.getInstance().sendMessageToAllInSession(mainHandler, msgWin);
             }
 
             session.setCurrentPlayerId(playerNumber == 1 ? session.getPlayer2().getId() : session.getPlayer1().getId());
