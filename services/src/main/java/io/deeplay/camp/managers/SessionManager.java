@@ -6,8 +6,11 @@ import entity.GameSession;
 import entity.SessionMessage;
 import entity.User;
 import enums.GameStatus;
+import io.deeplay.camp.elo.EloService;
 import io.deeplay.camp.handlers.main.MainHandler;
+import io.deeplay.camp.user.UserService;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -141,6 +144,55 @@ public class SessionManager {
      */
     public synchronized void deleteHandler(MainHandler clientHandler) {
         handlers.remove(clientHandler);
+    }
+    
+    public synchronized void finishedSession(MainHandler clientHandler, boolean playerWon) throws SQLException {
+        GameSession gameSession;
+        
+        for (var session : sessions) {
+            if (Objects.equals(session.getSessionId(), clientHandler.getSession().getSessionId())) {
+                gameSession = session;
+                var eloService = new EloService();
+                
+                
+                var eloChangedPlayer1 = eloService.calculateEloChange(gameSession.getPlayer1(), gameSession.getPlayer2(), playerWon);
+                var eloChangedPlayer2 = eloService.calculateEloChange(gameSession.getPlayer2(), gameSession.getPlayer1(), !playerWon);
+
+                gameSession.getPlayer1().setRating(eloChangedPlayer1);
+                gameSession.getPlayer2().setRating(eloChangedPlayer2);
+                
+                var userService = new UserService();
+                
+                userService.updateRating(gameSession.getPlayer1().getId(), eloChangedPlayer1);
+                userService.updateRating(gameSession.getPlayer2().getId(), eloChangedPlayer2);
+
+                for (var handler : handlers) {
+                    if (handler.getSession().getSessionId() == clientHandler.getSession().getSessionId() && handler.getUser().getId() != clientHandler.getUser().getId()) {
+                        handler.setUser(gameSession.getPlayer2());
+                        
+                        if (handler.getSession().getPlayer1() == gameSession.getPlayer1()) {
+                            handler.setUser(gameSession.getPlayer1());
+                            clientHandler.setUser(gameSession.getPlayer2());
+                            
+                            handler.sendMessageToClient("new-elo::" + gameSession.getPlayer1().getRating());
+                            clientHandler.sendMessageToClient("new-elo::" + gameSession.getPlayer2().getRating());
+                        } else {
+                            handler.setUser(gameSession.getPlayer2());
+                            clientHandler.setUser(gameSession.getPlayer1());
+
+                            handler.sendMessageToClient("new-elo::" + gameSession.getPlayer2().getRating());
+                            clientHandler.sendMessageToClient("new-elo::" + gameSession.getPlayer1().getRating());
+                        }
+                        
+                        break;
+                    }
+                }
+                
+                break;
+            }
+        }
+        
+        sessions.remove(clientHandler.getSession());
     }
 
     /**

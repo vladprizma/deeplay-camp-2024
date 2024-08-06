@@ -29,6 +29,7 @@ public class Action {
 
     public void handleStartAction() {
         try {
+            System.out.println(tokenStorage.getRefreshToken() + "\n" + tokenStorage.getUpdateToken());
             CommandRequest startCommandRequest = new StartCommandRequest(client);
             startCommandRequest.execute();
         } catch (IOException e) {
@@ -56,8 +57,13 @@ public class Action {
 
     public void handleStartSessionAction() {
         try {
-            CommandRequest startSessionCommandRequest = new StartSessionCommandRequest(client, tokenStorage.getUpdateToken());
-            startSessionCommandRequest.execute();
+            if (tokenStorage.getUpdateToken() != null) {
+                CommandRequest startSessionCommandRequest = new StartSessionCommandRequest(client, tokenStorage.getUpdateToken());
+                startSessionCommandRequest.execute();
+            } else {
+                ChatString singleton = ChatString.getInstance();
+                singleton.setString("Please login or register");
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -65,7 +71,6 @@ public class Action {
 
     public void handleLoginAction(String loginAndPassword) {
         try {
-            System.out.println(tokenStorage.getRefreshToken());
             CommandRequest loginCommandRequest = new LoginCommandRequest(client, loginAndPassword);
             loginCommandRequest.execute();
         } catch (IOException e) {
@@ -76,6 +81,7 @@ public class Action {
     public void handleLoginActionResponse(String refreshToken, String updateToken) {
         tokenStorage.saveTokens(refreshToken, updateToken);
         handleStartSessionAction();
+//        System.out.println(tokenStorage.getRefreshToken() + "\n" + tokenStorage.getUpdateToken());
     }
 
     public void handleChatAction(String chatMessages) {

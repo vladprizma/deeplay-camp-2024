@@ -9,7 +9,7 @@ import io.deeplay.camp.managers.SessionManager;
 import io.deeplay.camp.repository.CommandHandler;
 
 import java.io.IOException;
-import java.util.logging.Level;
+import java.sql.SQLException;
 import java.util.logging.Logger;
 
 /**
@@ -27,7 +27,7 @@ public class MoveCommandHandler implements CommandHandler {
      * @throws IOException при возникновении ошибок ввода-вывода.
      */
     @Override
-    public void handle(String message, MainHandler mainHandler) throws IOException {
+    public void handle(String message, MainHandler mainHandler) throws IOException, SQLException {
         logger.info("Handling move command");
 
         if (!mainHandler.isLogin() || mainHandler.getSession() == null) {
@@ -75,7 +75,7 @@ public class MoveCommandHandler implements CommandHandler {
         if (moveMade) {
             logger.info(userId + ": Move made successfully.");
             session.setBoard(boardLogic.getBoard());
-
+            var newCurrentPlayer = playerNumber == 1 ? session.getPlayer2().getId() : session.getPlayer1().getId();
             var buff = session.getBoard();
             buff.setBlackChips(boardLogic.getBlackChips());
             buff.setWhiteChips(boardLogic.getWhiteChips());
@@ -83,7 +83,9 @@ public class MoveCommandHandler implements CommandHandler {
 
             BoardDTO boardDTO = new BoardDTO(session.getBoard());
             String boardState = boardDTO.boardToClient();
-            String msg = "board::" + userId + "::" + boardState;
+            String score = Integer.toString(boardLogic.score()[0]) + " " + Integer.toString(boardLogic.score()[1]);
+            String validMoves = Long.toString(boardLogic.getValidMoves(3 - playerNumber));
+            String msg = "board-after-move::" + userId + "::" + boardState + "::" + score + "::" + validMoves + "::" + newCurrentPlayer;
 
             mainHandler.sendMessageToClient(msg);
             SessionManager.getInstance().sendMessageToOpponent(mainHandler, session, msg);
@@ -92,6 +94,13 @@ public class MoveCommandHandler implements CommandHandler {
             if (gameLogic.checkForWin()) {
                 gameLogic.displayEndGame(boardLogic);
                 session.setGameState(GameStatus.FINISHED);
+                String msgWin = "game-status::finished";
+                
+                SessionManager.getInstance().sendMessageToAllInSession(mainHandler, msgWin);
+                
+                boolean playerWon = boardLogic.score()[0] > boardLogic.score()[1];
+                
+                SessionManager.getInstance().finishedSession(mainHandler, playerWon);
             }
 
             session.setCurrentPlayerId(playerNumber == 1 ? session.getPlayer2().getId() : session.getPlayer1().getId());

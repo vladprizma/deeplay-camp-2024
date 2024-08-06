@@ -20,6 +20,7 @@ public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
     private static String serverIp;
     private static int serverPort;
+    private static boolean selfPlay;
     private static final int maxLengthQueue = 50;
     private static final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
 
@@ -37,14 +38,20 @@ public class Main {
 
             serverIp = properties.getProperty("server.ip");
             serverPort = Integer.parseInt(properties.getProperty("server.port"));
+            selfPlay = Boolean.getBoolean(properties.getProperty("server.self-play"));
+            
+            if (selfPlay) {
+                //логика игры бот против бота
+            }
+            else {
+                ServerSocket serverSocket = new ServerSocket(serverPort, maxLengthQueue, InetAddress.getByName(serverIp));
+                logger.info("Server started on IP: " + serverIp + ", Port: " + serverPort);
 
-            ServerSocket serverSocket = new ServerSocket(serverPort, maxLengthQueue, InetAddress.getByName(serverIp));
-            logger.info("Server started on IP: " + serverIp + ", Port: " + serverPort);
-
-            while (true) {
-                Socket clientSocket = serverSocket.accept();
-                logger.info("New client connected: " + clientSocket.getRemoteSocketAddress());
-                executor.execute(new MainHandler(clientSocket));
+                while (true) {
+                    Socket clientSocket = serverSocket.accept();
+                    logger.info("New client connected: " + clientSocket.getRemoteSocketAddress());
+                    executor.execute(new MainHandler(clientSocket));
+                }
             }
         } else {
             logger.error("Server IP or port is not configured correctly.");

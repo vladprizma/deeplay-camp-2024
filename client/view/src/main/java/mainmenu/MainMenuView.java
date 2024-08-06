@@ -85,14 +85,19 @@ public class MainMenuView implements Observer {
 
     private ObservableList<String> chatMessages;
 
-    private ModelManager modelManager;
+    public static ModelManager getModelManager() {
+        return modelManager;
+    }
+
+    private static ModelManager modelManager;
 
     private List<String> chat;
 
     private ChatString singleton;
     private boolean isBlocked = false;
-
-
+    private boolean isLogin = false;
+    private boolean timeToStart = false;
+    private boolean timeToChat = false;
 
     public MainMenuView() throws IOException {
         singleton = ChatString.getInstance();
@@ -117,7 +122,10 @@ public class MainMenuView implements Observer {
     public void initialize() {
         singleton.registerObserver(this);
         animation();
-
+        if (isLogin == false) {
+            modelManager.startSessionModelMethod();
+            timeToStart = true;
+        }
         playButton.setOnAction(event -> onButtonClicked(ButtonEnum.PLAY));
         settingsButton.setOnAction(event -> onButtonClicked(ButtonEnum.SETTINGS));
         exitButton.setOnAction(event -> onButtonClicked(ButtonEnum.EXIT));
@@ -128,7 +136,6 @@ public class MainMenuView implements Observer {
     @FXML
     private void handleRootClick(MouseEvent event) {
         if (chatPanel.isVisible()) {
-            // Проверка, находится ли клик внутри панели чата
             if (!chatPanel.getBoundsInParent().contains(event.getX(), event.getY())) {
                 closeChat();
             }
@@ -137,8 +144,6 @@ public class MainMenuView implements Observer {
 
     @FXML
     private void handleChatPanelClick(MouseEvent event) {
-        // Остановка распространения события, чтобы клик внутри панели чата
-        // не закрывал чат
         event.consume();
     }
 
@@ -171,6 +176,7 @@ public class MainMenuView implements Observer {
 
     private void onPlayButtonClicked() {
         setupButton(playButton, viewModel::onPlayButtonClicked, viewModel.playButtonEnabledProperty());
+
         playButton.fire();
         viewModel.playButtonEnabledProperty().set(false);
         viewModel.settingsButtonEnabledProperty().set(false);
@@ -257,6 +263,7 @@ public class MainMenuView implements Observer {
         openChat();
     }
 
+
     public static boolean isValidDate(String dateStr) {
         DateTimeFormatter formatter = INPUT_FORMATTER;
         try {
@@ -342,13 +349,28 @@ public class MainMenuView implements Observer {
 
     @Override
     public void update(String newString) {
-        List<String> parsedLogs = parseLog(newString);
+        String command = newString.split(splitRegex)[0];
+        switch (command) {
+            case "messages":
+                List<String> parsedLogs = parseLog(newString);
 
-        parsedLogs.removeIf(item -> item.equals(CHAT_INITIALIZER));
-        Platform.runLater(() -> {
-            chatMessages.clear();
-            sendMessages(parsedLogs.reversed());
-        });
+                parsedLogs.removeIf(item -> item.equals(CHAT_INITIALIZER));
+                Platform.runLater(() -> {
+                    chatMessages.clear();
+                    sendMessages(parsedLogs.reversed());
+                });
+                break;
+            case "Please login or register":
+                blurBackground.setVisible(true);
+                loginVBox.setVisible(true);
+                usernameField.setVisible(true);
+                passwordField.setVisible(true);
+                enterButton.setVisible(true);
+                break;
+            case "session-start":
+                isLogin = true;
+                break;
+        }
     }
 
     public static List<String> parseLog(String log) {

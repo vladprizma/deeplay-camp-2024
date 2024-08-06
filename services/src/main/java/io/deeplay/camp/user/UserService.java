@@ -25,6 +25,12 @@ public class UserService {
     public boolean verifyPassword(String password, String userPassword) {
         return PasswordService.checkPassword(password, userPassword);
     }
+    
+    public void updateRating(int userId, int rating) throws SQLException {
+        User user = userDAO.getUserById(userId).orElseThrow(() -> new SQLException("User not found"));
+        user.setRating(rating);
+        userDAO.updateUser(user);
+    }
 
     public void updateUsername(int userId, String newUsername) throws SQLException {
         User user = userDAO.getUserById(userId).orElseThrow(() -> new SQLException("User not found"));
