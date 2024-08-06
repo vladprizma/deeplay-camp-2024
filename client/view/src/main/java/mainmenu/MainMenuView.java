@@ -176,12 +176,16 @@ public class MainMenuView implements Observer {
 
     private void onPlayButtonClicked() {
         setupButton(playButton, viewModel::onPlayButtonClicked, viewModel.playButtonEnabledProperty());
+        modelManager.startGameModelMethod();
+    }
 
+    private void SessionSearched() {
         playButton.fire();
         viewModel.playButtonEnabledProperty().set(false);
         viewModel.settingsButtonEnabledProperty().set(false);
         viewModel.exitButtonEnabledProperty().set(false);
     }
+
 
     private void onSettingsButtonClicked() {
         setupButton(settingsButton, viewModel::onSettingsButtonClicked, viewModel.settingsButtonEnabledProperty());
@@ -369,6 +373,9 @@ public class MainMenuView implements Observer {
                 break;
             case "session-start":
                 isLogin = true;
+                break;
+            case "session":
+                SessionSearched();
                 break;
         }
     }

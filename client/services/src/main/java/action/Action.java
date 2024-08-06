@@ -81,7 +81,6 @@ public class Action {
     public void handleLoginActionResponse(String refreshToken, String updateToken) {
         tokenStorage.saveTokens(refreshToken, updateToken);
         handleStartSessionAction();
-//        System.out.println(tokenStorage.getRefreshToken() + "\n" + tokenStorage.getUpdateToken());
     }
 
     public void handleChatAction(String chatMessages) {
@@ -107,7 +106,7 @@ public class Action {
         }
     }
 
-    public void handleBoardActionResponse(String chatMessages) {
+    public void handleResponseActionResponse(String chatMessages) {
         ChatString singleton = ChatString.getInstance();
         singleton.setString(chatMessages);
     }

@@ -1,5 +1,6 @@
 package client;
 
+import javafx.application.Platform;
 import action.Action;
 import io.deeplay.camp.Main;
 import org.slf4j.Logger;
@@ -45,20 +46,20 @@ public class TCPClient implements Client {
 
     @Override
     public void sendRequest(RequestResponse requestResponse) {
-        executor.submit(() -> {
+        new Thread(() -> {
             try {
-                logger.info("Server request: " + requestResponse.toString() );
+                logger.info("Server request: " + requestResponse);
                 writer.write(requestResponse.toString());
                 writer.newLine();
                 writer.flush();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Failed to send request: " + requestResponse, e);
             }
-        });
+        }).start();
     }
 
     public void getResponse() {
-        executor.submit(() -> {
+        new Thread(() -> {
             String serverResponse;
             try {
                 while ((serverResponse = reader.readLine()) != null) {
@@ -66,25 +67,23 @@ public class TCPClient implements Client {
                     String command = serverResponse.split(splitRegex)[0];
                     switch (command) {
                         case "login":
-                            action.handleLoginActionResponse(serverResponse.split(splitRegex)[1], serverResponse.split(splitRegex)[2]);
+                            String finalServerResponse = serverResponse;
+                            Platform.runLater(() -> action.handleLoginActionResponse(finalServerResponse.split(splitRegex)[1], finalServerResponse.split(splitRegex)[2]));
                             break;
                         case "messages":
-                            action.handleChatActionResponse(serverResponse);
-                            break;
                         case "Please login or register":
-                            action.handleChatActionResponse(serverResponse);
-                            break;
                         case "session-start":
-                            action.handleChatActionResponse(serverResponse);
-                            break;
                         case "get-board":
-                            action.handleBoardActionResponse(serverResponse);
-                            break;
+                        case "session":
+                            String finalServerResponse1 = serverResponse;
+                            Platform.runLater(() -> action.handleResponseActionResponse(finalServerResponse1));
+                        default:
+                            logger.warn("Unknown command: " + command);
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Failed to read response from server", e);
             }
-        });
+        }).start();
     }
 }
