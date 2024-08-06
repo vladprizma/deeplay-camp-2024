@@ -173,9 +173,15 @@ public class SessionManager {
                         if (handler.getSession().getPlayer1() == gameSession.getPlayer1()) {
                             handler.setUser(gameSession.getPlayer1());
                             clientHandler.setUser(gameSession.getPlayer2());
+                            
+                            handler.sendMessageToClient("new-elo::" + gameSession.getPlayer1().getRating());
+                            clientHandler.sendMessageToClient("new-elo::" + gameSession.getPlayer2().getRating());
                         } else {
                             handler.setUser(gameSession.getPlayer2());
                             clientHandler.setUser(gameSession.getPlayer1());
+
+                            handler.sendMessageToClient("new-elo::" + gameSession.getPlayer2().getRating());
+                            clientHandler.sendMessageToClient("new-elo::" + gameSession.getPlayer1().getRating());
                         }
                         
                         break;

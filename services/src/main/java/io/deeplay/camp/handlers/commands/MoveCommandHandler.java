@@ -75,7 +75,7 @@ public class MoveCommandHandler implements CommandHandler {
         if (moveMade) {
             logger.info(userId + ": Move made successfully.");
             session.setBoard(boardLogic.getBoard());
-
+            var newCurrentPlayer = playerNumber == 1 ? session.getPlayer2().getId() : session.getPlayer1().getId();
             var buff = session.getBoard();
             buff.setBlackChips(boardLogic.getBlackChips());
             buff.setWhiteChips(boardLogic.getWhiteChips());
@@ -84,8 +84,8 @@ public class MoveCommandHandler implements CommandHandler {
             BoardDTO boardDTO = new BoardDTO(session.getBoard());
             String boardState = boardDTO.boardToClient();
             String score = Integer.toString(boardLogic.score()[0]) + " " + Integer.toString(boardLogic.score()[1]);
-            String validMoves = Long.toString(boardLogic.getValidMoves(playerNumber));
-            String msg = "board::" + userId + "::" + boardState + "::" + score + "::" + validMoves;
+            String validMoves = Long.toString(boardLogic.getValidMoves(3 - playerNumber));
+            String msg = "board-after-move::" + userId + "::" + boardState + "::" + score + "::" + validMoves + "::" + newCurrentPlayer;
 
             mainHandler.sendMessageToClient(msg);
             SessionManager.getInstance().sendMessageToOpponent(mainHandler, session, msg);
