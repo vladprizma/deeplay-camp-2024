@@ -9,7 +9,7 @@ import io.deeplay.camp.managers.SessionManager;
 import io.deeplay.camp.repository.CommandHandler;
 
 import java.io.IOException;
-import java.util.logging.Level;
+import java.sql.SQLException;
 import java.util.logging.Logger;
 
 /**
@@ -27,7 +27,7 @@ public class MoveCommandHandler implements CommandHandler {
      * @throws IOException при возникновении ошибок ввода-вывода.
      */
     @Override
-    public void handle(String message, MainHandler mainHandler) throws IOException {
+    public void handle(String message, MainHandler mainHandler) throws IOException, SQLException {
         logger.info("Handling move command");
 
         if (!mainHandler.isLogin() || mainHandler.getSession() == null) {
@@ -95,7 +95,12 @@ public class MoveCommandHandler implements CommandHandler {
                 gameLogic.displayEndGame(boardLogic);
                 session.setGameState(GameStatus.FINISHED);
                 String msgWin = "game-status::finished";
+                
                 SessionManager.getInstance().sendMessageToAllInSession(mainHandler, msgWin);
+                
+                boolean playerWon = boardLogic.score()[0] > boardLogic.score()[1];
+                
+                SessionManager.getInstance().finishedSession(mainHandler, playerWon);
             }
 
             session.setCurrentPlayerId(playerNumber == 1 ? session.getPlayer2().getId() : session.getPlayer1().getId());
