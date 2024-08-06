@@ -23,6 +23,7 @@ public class LoadServerProperties {
 
         var ip = properties.getProperty("server.ip");
         var port = Integer.parseInt(properties.getProperty("server.port"));
+        var selfPlay = Boolean.getBoolean(properties.getProperty("server.self-play"));
         Properties propertiesBadConfig = new Properties();
         
         if (!ValidateServerProperties.validateIpAddress(ip)) {
