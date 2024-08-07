@@ -10,6 +10,7 @@ public class User {
     private int matches;
     private String userPhoto;
     private int elo;
+    private boolean isBot;
 
     public User(int id, String username, String password, int rating, int matches, String userPhoto) {
         this.id = id;
@@ -18,6 +19,7 @@ public class User {
         this.rating = rating;
         this.matches = matches;
         this.userPhoto = userPhoto;
+        isBot = false;
     }
 
     public int getId() {
@@ -49,4 +51,8 @@ public class User {
     public void setElo(int elo) { this.elo = elo; }
     
     public int getElo() { return elo; }
+    
+    public boolean getIsBot() { return isBot; }
+    
+    public void setIsBot(boolean isBot) { this.isBot = isBot; }
 }

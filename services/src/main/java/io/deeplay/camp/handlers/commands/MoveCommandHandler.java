@@ -88,15 +88,17 @@ public class MoveCommandHandler implements CommandHandler {
             String msg = "board-after-move::" + userId + "::" + boardState + "::" + score + "::" + validMoves + "::" + newCurrentPlayer;
 
             mainHandler.sendMessageToClient(msg);
-            SessionManager.getInstance().sendMessageToOpponent(mainHandler, session, msg);
+            
+            if (!SessionManager.getInstance().getSession(mainHandler.getSession().getSessionId()).getPlayer2().getIsBot()) SessionManager.getInstance().sendMessageToOpponent(mainHandler, session, msg);
 
             gameLogic.display(playerNumber == 1 ? 2 : 1, boardLogic);
             if (gameLogic.checkForWin()) {
                 gameLogic.displayEndGame(boardLogic);
                 session.setGameState(GameStatus.FINISHED);
                 String msgWin = "game-status::finished";
-                
-                SessionManager.getInstance().sendMessageToAllInSession(mainHandler, msgWin);
+
+                if (!SessionManager.getInstance().getSession(mainHandler.getSession().getSessionId()).getPlayer2().getIsBot()) SessionManager.getInstance().sendMessageToAllInSession(mainHandler, msgWin);
+                else mainHandler.sendMessageToClient(msgWin);
                 
                 boolean playerWon = boardLogic.score()[0] > boardLogic.score()[1];
                 
@@ -104,6 +106,11 @@ public class MoveCommandHandler implements CommandHandler {
             }
 
             session.setCurrentPlayerId(playerNumber == 1 ? session.getPlayer2().getId() : session.getPlayer1().getId());
+            
+            //логика хода бота
+            if (SessionManager.getInstance().getSession(mainHandler.getSession().getSessionId()).getPlayer2().getIsBot()) {
+                mainHandler.sendMessageToClient("Я бот и меня надо писать, да. Я в файле MoveCommandHandler на 112 строке. Тут я должен походить.");
+            }
         } else {
             logger.info(userId + ": Invalid move.");
             mainHandler.sendMessageToClient(userId + ": Invalid move.");

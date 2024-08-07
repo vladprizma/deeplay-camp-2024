@@ -1,10 +1,7 @@
 package io.deeplay.camp.managers;
 
 import TokenGenerator.TokenGenerator;
-import entity.Board;
-import entity.GameSession;
-import entity.SessionMessage;
-import entity.User;
+import entity.*;
 import enums.GameStatus;
 import io.deeplay.camp.elo.EloService;
 import io.deeplay.camp.handlers.main.MainHandler;
@@ -47,7 +44,25 @@ public class SessionManager {
      * @param clientHandler the client handler requesting a session
      * @return the session result containing the game session and user
      */
-    public synchronized SessionResult findOrCreateSession(MainHandler clientHandler, User user) {
+    public synchronized SessionResult findOrCreateSession(MainHandler clientHandler, User user, boolean isBot) {
+        if (isBot) {
+            GameSession newSession = new GameSession();
+            newSession.setBoard(new Board());
+            newSession.setPlayer1(user);
+            newSession.setCurrentPlayerId(user.getId());
+            newSession.setSessionId(TokenGenerator.generateID());
+            
+            var userBot = new User(0, "Bot", "Bot", 1000, 1000, "");
+            
+            userBot.setIsBot(true);
+            newSession.setPlayer2(userBot);
+            newSession.setGameState(GameStatus.IN_PROGRESS);
+            
+            sessions.add(newSession);
+            
+            return new SessionResult(newSession, user);
+        }
+        
         for (GameSession session : sessions) {
             if (session.getPlayersCount() < 2 && session.getGameState() == GameStatus.NOT_STARTED) {
                 session.setPlayer2(user);
@@ -153,42 +168,55 @@ public class SessionManager {
             if (Objects.equals(session.getSessionId(), clientHandler.getSession().getSessionId())) {
                 gameSession = session;
                 var eloService = new EloService();
-                
-                
-                var eloChangedPlayer1 = eloService.calculateEloChange(gameSession.getPlayer1(), gameSession.getPlayer2(), playerWon);
-                var eloChangedPlayer2 = eloService.calculateEloChange(gameSession.getPlayer2(), gameSession.getPlayer1(), !playerWon);
 
-                gameSession.getPlayer1().setRating(eloChangedPlayer1);
-                gameSession.getPlayer2().setRating(eloChangedPlayer2);
-                
-                var userService = new UserService();
-                
-                userService.updateRating(gameSession.getPlayer1().getId(), eloChangedPlayer1);
-                userService.updateRating(gameSession.getPlayer2().getId(), eloChangedPlayer2);
+                if (!gameSession.getPlayer2().getIsBot()) {
+                    var eloChangedPlayer1 = eloService.calculateEloChange(gameSession.getPlayer1(), gameSession.getPlayer2(), playerWon);
+                    var eloChangedPlayer2 = eloService.calculateEloChange(gameSession.getPlayer2(), gameSession.getPlayer1(), !playerWon);
 
-                for (var handler : handlers) {
-                    if (handler.getSession().getSessionId() == clientHandler.getSession().getSessionId() && handler.getUser().getId() != clientHandler.getUser().getId()) {
-                        handler.setUser(gameSession.getPlayer2());
-                        
-                        if (handler.getSession().getPlayer1() == gameSession.getPlayer1()) {
-                            handler.setUser(gameSession.getPlayer1());
-                            clientHandler.setUser(gameSession.getPlayer2());
-                            
-                            handler.sendMessageToClient("new-elo::" + gameSession.getPlayer1().getRating());
-                            clientHandler.sendMessageToClient("new-elo::" + gameSession.getPlayer2().getRating());
-                        } else {
+                    gameSession.getPlayer1().setRating(eloChangedPlayer1);
+                    gameSession.getPlayer2().setRating(eloChangedPlayer2);
+
+                    var userService = new UserService();
+
+                    userService.updateRating(gameSession.getPlayer1().getId(), eloChangedPlayer1);
+                    userService.updateRating(gameSession.getPlayer2().getId(), eloChangedPlayer2);
+
+                    for (var handler : handlers) {
+                        if (handler.getSession().getSessionId() == clientHandler.getSession().getSessionId() && handler.getUser().getId() != clientHandler.getUser().getId()) {
                             handler.setUser(gameSession.getPlayer2());
-                            clientHandler.setUser(gameSession.getPlayer1());
 
-                            handler.sendMessageToClient("new-elo::" + gameSession.getPlayer2().getRating());
-                            clientHandler.sendMessageToClient("new-elo::" + gameSession.getPlayer1().getRating());
+                            if (handler.getSession().getPlayer1() == gameSession.getPlayer1()) {
+                                handler.setUser(gameSession.getPlayer1());
+                                clientHandler.setUser(gameSession.getPlayer2());
+
+                                handler.sendMessageToClient("new-elo::" + gameSession.getPlayer1().getRating());
+                                clientHandler.sendMessageToClient("new-elo::" + gameSession.getPlayer2().getRating());
+                            } else {
+                                handler.setUser(gameSession.getPlayer2());
+                                clientHandler.setUser(gameSession.getPlayer1());
+
+                                handler.sendMessageToClient("new-elo::" + gameSession.getPlayer2().getRating());
+                                clientHandler.sendMessageToClient("new-elo::" + gameSession.getPlayer1().getRating());
+                            }
+
+                            break;
                         }
-                        
-                        break;
                     }
+
+                    break;
+                } else {
+                    var eloChangedPlayer1 = eloService.calculateEloChange(gameSession.getPlayer1(), gameSession.getPlayer2(), playerWon);
+
+                    gameSession.getPlayer1().setRating(eloChangedPlayer1);
+
+                    var userService = new UserService();
+
+                    userService.updateRating(gameSession.getPlayer1().getId(), eloChangedPlayer1);
+
+                    clientHandler.setUser(gameSession.getPlayer1());
+
+                    clientHandler.sendMessageToClient("new-elo::" + gameSession.getPlayer1().getRating());
                 }
-                
-                break;
             }
         }
         
