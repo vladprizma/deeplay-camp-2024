@@ -3,6 +3,7 @@ package io.deeplay.camp.handlers.commands;
 import dto.BoardDTO;
 import enums.GameStatus;
 import io.deeplay.camp.board.BoardLogic;
+import io.deeplay.camp.bot.BotService;
 import io.deeplay.camp.game.GameLogic;
 import io.deeplay.camp.handlers.main.MainHandler;
 import io.deeplay.camp.managers.SessionManager;
@@ -103,13 +104,54 @@ public class MoveCommandHandler implements CommandHandler {
                 boolean playerWon = boardLogic.score()[0] > boardLogic.score()[1];
                 
                 SessionManager.getInstance().finishedSession(mainHandler, playerWon);
+                
+                return;
             }
 
             session.setCurrentPlayerId(playerNumber == 1 ? session.getPlayer2().getId() : session.getPlayer1().getId());
             
             //логика хода бота
             if (SessionManager.getInstance().getSession(mainHandler.getSession().getSessionId()).getPlayer2().getIsBot()) {
-                mainHandler.sendMessageToClient("Я бот и меня надо писать, да. Я в файле MoveCommandHandler на 112 строке. Тут я должен походить.");
+                var bot = new BotService();
+
+                var newBoardLogicForBot = new BoardLogic(session.getBoard());
+                mainHandler.setGameLogic(new GameLogic(newBoardLogic));
+                mainHandler.setBoardLogic(newBoardLogic);
+                
+                bot.makeMove(2, newBoardLogicForBot);
+
+                session.setBoard(newBoardLogicForBot.getBoard());
+                var buffBot = session.getBoard();
+                buff.setBlackChips(newBoardLogicForBot.getBlackChips());
+                buff.setWhiteChips(newBoardLogicForBot.getWhiteChips());
+                session.setBoard(buff);
+
+
+                var newCurrentPlayerBot = playerNumber == 1 ? session.getPlayer2().getId() : session.getPlayer1().getId();
+                BoardDTO boardDTOBot = new BoardDTO(session.getBoard());
+                String boardStateBot = boardDTOBot.boardToClient();
+                String scoreBot = Integer.toString(newBoardLogicForBot.score()[0]) + " " + Integer.toString(newBoardLogicForBot.score()[1]);
+                String validMovesBot = Long.toString(newBoardLogicForBot.getValidMoves(3 - playerNumber));
+                String msgBot = "board-after-move::" + userId + "::" + boardStateBot + "::" + scoreBot + "::" + validMovesBot + "::" + newCurrentPlayerBot;
+
+                mainHandler.sendMessageToClient(msgBot);
+
+                gameLogic.display(1, newBoardLogicForBot);
+
+                if (mainHandler.getGameLogic().checkForWin()) {
+                    mainHandler.getGameLogic().displayEndGame(boardLogic);
+                    session.setGameState(GameStatus.FINISHED);
+                    String msgWin = "game-status::finished";
+
+                    if (!SessionManager.getInstance().getSession(mainHandler.getSession().getSessionId()).getPlayer2().getIsBot()) SessionManager.getInstance().sendMessageToAllInSession(mainHandler, msgWin);
+                    else mainHandler.sendMessageToClient(msgWin);
+
+                    boolean playerWon = boardLogic.score()[0] > boardLogic.score()[1];
+
+                    SessionManager.getInstance().finishedSession(mainHandler, playerWon);
+                    
+                    return;
+                }
             }
         } else {
             logger.info(userId + ": Invalid move.");
