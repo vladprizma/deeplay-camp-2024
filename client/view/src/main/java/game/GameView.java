@@ -212,6 +212,7 @@ public class GameView implements Observer {
     @Override
     public void update(String newString) {
         String command = newString.split(splitRegex)[0];
+        System.out.println("rrrrrrrrrrrrrrrrr");
         switch (command) {
             case "get-board":
                 System.out.println(newString + "smth");

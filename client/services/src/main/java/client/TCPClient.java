@@ -67,9 +67,12 @@ public class TCPClient implements Client {
                     String command = serverResponse.split(splitRegex)[0];
                     switch (command) {
                         case "login":
+                        case "register":
                             String finalServerResponse = serverResponse;
                             Platform.runLater(() -> action.handleLoginActionResponse(finalServerResponse.split(splitRegex)[1], finalServerResponse.split(splitRegex)[2]));
                             break;
+                        case "User not found.":
+                        case "Not unique username.":
                         case "messages":
                         case "Please login or register":
                         case "session-start":
@@ -77,8 +80,7 @@ public class TCPClient implements Client {
                         case "session":
                             String finalServerResponse1 = serverResponse;
                             Platform.runLater(() -> action.handleResponseActionResponse(finalServerResponse1));
-                        default:
-                            logger.warn("Unknown command: " + command);
+                            break;
                     }
                 }
             } catch (IOException e) {

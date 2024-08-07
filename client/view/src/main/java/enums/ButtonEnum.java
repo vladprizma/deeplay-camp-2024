@@ -7,5 +7,7 @@ public enum ButtonEnum {
     EXIT,
     ENTER,
     REGISTER,
-    BACK
+    BACK,
+    SIGNUP,
+    BOT
 }

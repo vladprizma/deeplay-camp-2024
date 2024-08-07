@@ -10,13 +10,19 @@ public class ViewNavigator {
     private final BooleanProperty exitButtonEnabled = new SimpleBooleanProperty(true);
     private final BooleanProperty chatButtonEnabled = new SimpleBooleanProperty(true);
     private final BooleanProperty enterButtonEnabled = new SimpleBooleanProperty(true);
+    private final BooleanProperty botPlayButtonEnabled = new SimpleBooleanProperty(true);
+
 
     public void onPlayButtonClicked() {
         ScreenSwitcher.loadView(getClass().getResource("/io/deeplay/camp/view/GameView.fxml"));
     }
 
+    public void onBotPlayButtonClicked() {
+        ScreenSwitcher.loadView(getClass().getResource("/io/deeplay/camp/view/GameView.fxml"));
+    }
+
     public void onSettingsButtonClicked() {
-        ScreenSwitcher.loadView(getClass().getResource("/io/deeplay/camp/view/TestView.fxml"));
+
     }
 
     public BooleanProperty playButtonEnabledProperty() {
@@ -38,4 +44,9 @@ public class ViewNavigator {
     public BooleanProperty enterButtonEnabledProperty() {
         return enterButtonEnabled;
     }
+
+    public BooleanProperty botPlayButtonEnabledProperty() {
+        return playButtonEnabled;
+    }
+
 }

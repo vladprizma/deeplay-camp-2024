@@ -78,6 +78,15 @@ public class Action {
         }
     }
 
+    public void handleRegistertAction(String loginAndPassword) {
+        try {
+            CommandRequest registerCommandRequest = new RegisterCommandRequest(client, loginAndPassword);
+            registerCommandRequest.execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void handleLoginActionResponse(String refreshToken, String updateToken) {
         tokenStorage.saveTokens(refreshToken, updateToken);
         handleStartSessionAction();

@@ -4,6 +4,7 @@ import action.Action;
 import chat.ChatModel;
 import board.boardModel;
 import login.LoginModel;
+import login.RegisterModel;
 import login.StartGameModel;
 import login.StartSessionModel;
 
@@ -12,6 +13,7 @@ import java.io.IOException;
 public class ModelManager {
 
     private LoginModel loginModel;
+    private RegisterModel registerModel;
     private StartSessionModel startSessionModel;
     private StartGameModel startGameModel;
     private ChatModel chatModel;
@@ -27,6 +29,11 @@ public class ModelManager {
     public void loginModelMethod(String loginAndPassword) {
         this.loginAndPassword = loginAndPassword;
         loginModel = new LoginModel(action, loginAndPassword);
+    }
+
+    public void registerModelMethod(String loginAndPassword) {
+        this.loginAndPassword = loginAndPassword;
+        registerModel = new RegisterModel(action, loginAndPassword);
     }
 
     public void startSessionModelMethod() {

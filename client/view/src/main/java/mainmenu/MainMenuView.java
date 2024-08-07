@@ -1,15 +1,12 @@
 package mainmenu;
 
-import javafx.animation.PauseTransition;
+import javafx.animation.*;
 import javafx.application.Platform;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
 import sigletonobserver.ChatString;
 import enums.ButtonEnum;
 import io.deeplay.camp.ModelManager;
-import javafx.animation.Interpolator;
-import javafx.animation.Timeline;
-import javafx.animation.Transition;
 import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,8 +15,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Callback;
@@ -27,7 +22,6 @@ import javafx.util.Duration;
 import navigator.ViewNavigator;
 import observer.Observer;
 
-import java.awt.*;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -110,6 +104,12 @@ public class MainMenuView implements Observer {
     @FXML
     private ImageView registerImageBackButton;
 
+    @FXML
+    private Label errorLabel;
+
+    @FXML
+    private Button botPlayButton;
+
     private ObservableList<String> chatMessages;
 
     public static ModelManager getModelManager() {
@@ -160,6 +160,8 @@ public class MainMenuView implements Observer {
         enterButton.setOnAction(event ->    onButtonClicked(ButtonEnum.ENTER));
         registerButton.setOnAction(event -> onButtonClicked(ButtonEnum.REGISTER));
         registerBackButton.setOnAction(event -> onButtonClicked(ButtonEnum.BACK));
+        registerRegisterButton.setOnAction(event -> onButtonClicked(ButtonEnum.SIGNUP));
+        botPlayButton.setOnAction(event -> onButtonClicked(ButtonEnum.BOT));
     }
 
     @FXML
@@ -204,6 +206,12 @@ public class MainMenuView implements Observer {
             case BACK:
                 onBackButtonClicked();
                 break;
+            case SIGNUP:
+                onSignUpButtonClicked();
+                break;
+            case BOT:
+                onBotPlayButtonClicked();
+                break;
             default:
                 break;
         }
@@ -211,6 +219,12 @@ public class MainMenuView implements Observer {
 
     private void onPlayButtonClicked() {
         setupButton(playButton, viewModel::onPlayButtonClicked, viewModel.playButtonEnabledProperty());
+        viewModel.playButtonEnabledProperty().set(false);
+        modelManager.startGameModelMethod();
+    }
+
+    private void onBotPlayButtonClicked() {
+        setupButton(playButton, viewModel::onBotPlayButtonClicked, viewModel.botPlayButtonEnabledProperty());
         viewModel.playButtonEnabledProperty().set(false);
         modelManager.startGameModelMethod();
     }
@@ -330,12 +344,88 @@ public class MainMenuView implements Observer {
     private void onEnterButtonClicked() {
         String username = usernameField.getText();
         String password = passwordField.getText();
+
+        modelManager.loginModelMethod(username + " " + password);
+    }
+
+    private void enterSuccessfull() {
         blurBackground.setVisible(false);
         loginVBox.setVisible(false);
         usernameField.setVisible(false);
         passwordField.setVisible(false);
         enterButton.setVisible(false);
-        modelManager.loginModelMethod(username + " " + password);
+        registerButton.setVisible(false);
+    }
+
+    private void onSignUpButtonClicked() {
+        String username = registerUsernameField.getText();
+        String password = registerPasswordField.getText();
+        String confirmPassword = registerConfirmPasswordField.getText();
+
+        try {
+            validate(username, password, confirmPassword);
+            modelManager.registerModelMethod(username + " " + password + " " +
+                    "there could be a picture of you in here");
+        } catch (ValidationException e) {
+            showErrorMessage(e.getMessage());
+        }
+    }
+
+    private void validate(String username, String password, String confirmPassword) throws ValidationException {
+        if (username.length() < 5 || username.length() > 20) {
+            throw new ValidationException("Username must be between 5 and 20 characters.");
+        }
+
+        if (password.length() < 8 || password.length() > 20) {
+            throw new ValidationException("Password must be between 8 and 20 characters.");
+        }
+
+        if (!password.equals(confirmPassword)) {
+            throw new ValidationException("Passwords do not match.");
+        }
+
+        if (!username.matches("[a-zA-Z0-9_]+")) {
+            throw new ValidationException("Username can only contain alphanumeric characters and underscores.");
+        }
+
+        if (!password.matches(".*[A-Z].*")) {
+            throw new ValidationException("Password must contain at least one uppercase letter.");
+        }
+
+        if (!password.matches(".*[a-z].*")) {
+            throw new ValidationException("Password must contain at least one lowercase letter.");
+        }
+
+        if (!password.matches(".*\\d.*")) {
+            throw new ValidationException("Password must contain at least one digit.");
+        }
+    }
+
+    private void showErrorMessage(String message) {
+        errorLabel.setText(message);
+        errorLabel.setVisible(true);
+
+        Timeline timeline = new Timeline(new KeyFrame(
+                Duration.seconds(5),
+                ae -> errorLabel.setVisible(false)
+        ));
+        timeline.play();
+    }
+
+    public static class ValidationException extends Exception {
+        public ValidationException(String message) {
+            super(message);
+        }
+    }
+
+    private void signInSuccessfull() {
+        registerRegisterButton.setVisible(false);
+        registerBackButton.setVisible(false);
+        registerPasswordField.setVisible(false);
+        registerConfirmPasswordField.setVisible(false);
+        registerUsernameField.setVisible(false);
+        registerVBox.setVisible(false);
+        registerImageBackButton.setVisible(false);
     }
 
     private void onRegisterButtonClicked() {
@@ -391,7 +481,7 @@ public class MainMenuView implements Observer {
     private Transition createGradientAnimation(Button button) {
         Transition gradientAnimation = new Transition() {
             {
-                setCycleDuration(Duration.millis(600)); // Уменьшенная продолжительность анимации для увеличения скорости в 5 раз
+                setCycleDuration(Duration.millis(600));
                 setInterpolator(Interpolator.LINEAR);
                 setCycleCount(Timeline.INDEFINITE);
                 setAutoReverse(true);
@@ -401,7 +491,7 @@ public class MainMenuView implements Observer {
             protected void interpolate(double frac) {
                 Color color1Start = Color.web("#801db7");
                 Color color2Start = Color.web("#48b15e");
-                // Меняем цвета местами для переливания с лева на право
+
                 Color color1End = color1Start.interpolate(color2Start, frac);
                 Color color2End = color2Start.interpolate(color1Start, frac);
                 String style = String.format("-fx-background-color: linear-gradient(to right, %s, %s);",
@@ -442,11 +532,45 @@ public class MainMenuView implements Observer {
                 break;
             case "session-start":
                 isLogin = true;
+                enterSuccessfull();
+                signInSuccessfull();
                 break;
             case "session":
                 SessionSearched();
                 break;
+            case "User not found.":
+                handleLoginError();
+                break;
+            case "Not unique username.":
+                try {
+                        throw new ValidationException("Not unique username.");
+                } catch (ValidationException e) {
+                    showErrorMessage("Not unique username");
+                }
         }
+    }
+
+    public void handleLoginError() {
+        Border errorBorder = new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderStroke.THIN));
+        usernameField.setBorder(errorBorder);
+        passwordField.setBorder(errorBorder);
+
+        usernameField.setStyle("-fx-text-fill: red;");
+        passwordField.setStyle("-fx-text-fill: red;");
+
+        PauseTransition pause = new PauseTransition(Duration.seconds(1));
+        pause.setOnFinished(event -> {
+            usernameField.setBorder(null);
+            passwordField.setBorder(null);
+
+            usernameField.clear();
+            passwordField.clear();
+
+            usernameField.setStyle("-fx-text-fill: black;");
+            passwordField.setStyle("-fx-text-fill: black;");
+        });
+
+        pause.play();
     }
 
     public static List<String> parseLog(String log) {

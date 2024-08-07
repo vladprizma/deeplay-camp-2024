@@ -1,4 +1,4 @@
-#playButton, #settingsButton {
+#playButton, #settingsButton, #botPlayButton {
     -fx-background-color: linear-gradient(to right, #801db7, #48b15e);
     -fx-background-radius: 70;
     -fx-border-color: black;
@@ -111,6 +111,17 @@
      -fx-text-fill: white;
      -fx-font-family: 'Julee';
      -fx-border-insets: -5;
+}
+
+#errorLabel {
+    -fx-font-size: 40px;
+    -fx-background-color: red;
+    -fx-background-radius: 10;
+    -fx-text-fill: white;
+    -fx-padding: 10px;
+    -fx-alignment: center;
+    -fx-translate-x: -50%;
+    -fx-translate-y: -50%;
 }
 
 #registerBackButton {
