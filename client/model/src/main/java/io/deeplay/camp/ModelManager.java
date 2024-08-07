@@ -3,10 +3,7 @@ package io.deeplay.camp;
 import action.Action;
 import chat.ChatModel;
 import board.boardModel;
-import login.LoginModel;
-import login.RegisterModel;
-import login.StartGameModel;
-import login.StartSessionModel;
+import login.*;
 
 import java.io.IOException;
 
@@ -16,6 +13,7 @@ public class ModelManager {
     private RegisterModel registerModel;
     private StartSessionModel startSessionModel;
     private StartGameModel startGameModel;
+    private BotStartGameModel botStartGameModel;
     private ChatModel chatModel;
     private boardModel boardModel;
     private Action action;
@@ -44,6 +42,11 @@ public class ModelManager {
     public void startGameModelMethod() {
         startGameModel = new StartGameModel(action);
         startGameModel.startGameMethod();
+    }
+
+    public void startBotGameModelMethod() {
+        botStartGameModel = new BotStartGameModel(action);
+        botStartGameModel.startBotGameMethod();
     }
 
     public void chatModelMethod(String chatMessages) {

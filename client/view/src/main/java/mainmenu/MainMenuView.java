@@ -226,7 +226,7 @@ public class MainMenuView implements Observer {
     private void onBotPlayButtonClicked() {
         setupButton(playButton, viewModel::onBotPlayButtonClicked, viewModel.botPlayButtonEnabledProperty());
         viewModel.playButtonEnabledProperty().set(false);
-        modelManager.startGameModelMethod();
+        modelManager.startBotGameModelMethod();
     }
 
     private void SessionSearched() {
@@ -470,6 +470,7 @@ public class MainMenuView implements Observer {
     private void animation() {
         setupGradientAnimation(playButton);
         setupGradientAnimation(settingsButton);
+        setupGradientAnimation(botPlayButton);
     }
 
     private void setupGradientAnimation(Button button) {
@@ -536,6 +537,7 @@ public class MainMenuView implements Observer {
                 signInSuccessfull();
                 break;
             case "session":
+            case "session-bot":
                 SessionSearched();
                 break;
             case "User not found.":

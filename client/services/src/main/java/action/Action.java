@@ -29,9 +29,17 @@ public class Action {
 
     public void handleStartAction() {
         try {
-            System.out.println(tokenStorage.getRefreshToken() + "\n" + tokenStorage.getUpdateToken());
             CommandRequest startCommandRequest = new StartCommandRequest(client);
             startCommandRequest.execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void handleBotStartAction() {
+        try {
+            CommandRequest botStartCommandRequest = new BotStartCommandRequest(client);
+            botStartCommandRequest.execute();
         } catch (IOException e) {
             e.printStackTrace();
         }

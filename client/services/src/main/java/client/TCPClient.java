@@ -76,6 +76,7 @@ public class TCPClient implements Client {
                         case "messages":
                         case "Please login or register":
                         case "session-start":
+                        case "session-bot":
                         case "get-board":
                         case "session":
                             String finalServerResponse1 = serverResponse;
