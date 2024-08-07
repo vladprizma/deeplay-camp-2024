@@ -33,6 +33,8 @@ public class MoveCommandHandler implements CommandHandler {
         int playerNumber = getPlayerNumber(mainHandler, session);
         if (playerNumber == -1) return;
 
+        if (!isPlayerTurn(mainHandler, session, playerNumber)) return;
+
         String move = getMoveFromMessage(message);
         if (move == null) {
             mainHandler.sendMessageToClient("Invalid move format.");
@@ -83,6 +85,17 @@ public class MoveCommandHandler implements CommandHandler {
         }
     }
 
+    private boolean isPlayerTurn(MainHandler mainHandler, GameSession session, int playerNumber) throws IOException {
+        var currentPlayerId = session.getCurrentPlayerId();
+        var userId = mainHandler.getUser().getId();
+        if (currentPlayerId != userId) {
+            mainHandler.sendMessageToClient("It's not your turn.");
+            logger.warning("User " + userId + " tried to make a move out of turn.");
+            return false;
+        }
+        return true;
+    }
+
     private String getMoveFromMessage(String message) {
         String[] messageParts = message.split(" ");
         if (messageParts.length < 2) {
@@ -107,12 +120,14 @@ public class MoveCommandHandler implements CommandHandler {
         }
     }
 
-    private void updateSessionBoard(MainHandler mainHandler, GameSession session) {
+    private void updateSessionBoard(MainHandler mainHandler, GameSession session) throws IOException {
         session.setBoard(mainHandler.getBoardLogic().getBoard());
         var board = session.getBoard();
         board.setBlackChips(mainHandler.getBoardLogic().getBlackChips());
         board.setWhiteChips(mainHandler.getBoardLogic().getWhiteChips());
         session.setBoard(board);
+        
+        mainHandler.getGameLogic().display(3 - getPlayerNumber(mainHandler, session), mainHandler.getBoardLogic());
     }
 
     private void sendBoardStateToClient(MainHandler mainHandler, GameSession session, int playerNumber) throws IOException {
@@ -122,7 +137,7 @@ public class MoveCommandHandler implements CommandHandler {
         String score = mainHandler.getBoardLogic().score()[0] + " " + mainHandler.getBoardLogic().score()[1];
         String validMoves = Long.toString(mainHandler.getBoardLogic().getValidMoves(3 - playerNumber));
         var newCurrentPlayer = playerNumber == 1 ? session.getPlayer2().getId() : session.getPlayer1().getId();
-        String msg = "board-after-move::" + userId + "::" + boardState + "::" + score + "::" + validMoves + "::" + newCurrentPlayer;
+        String msg = "board-after-move::" + "::" + boardState + "::" + score + "::" + validMoves + "::" + newCurrentPlayer;
 
         mainHandler.sendMessageToClient(msg);
         if (!session.getPlayer2().getIsBot()) {
@@ -154,12 +169,12 @@ public class MoveCommandHandler implements CommandHandler {
         bot.makeMove(2, newBoardLogicForBot);
         updateSessionBoard(mainHandler, session);
 
-        sendBoardStateToClient(mainHandler, session, 1);
+        sendBoardStateToClient(mainHandler, session, 2);
 
         if (mainHandler.getGameLogic().checkForWin()) {
             handleWin(mainHandler, session);
         }
-        
+
         mainHandler.getGameLogic().display(1, newBoardLogicForBot);
     }
 }
