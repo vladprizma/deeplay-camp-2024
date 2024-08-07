@@ -109,7 +109,7 @@ public class MoveCommandHandler implements CommandHandler {
             
             //логика хода бота
             if (SessionManager.getInstance().getSession(mainHandler.getSession().getSessionId()).getPlayer2().getIsBot()) {
-                mainHandler.sendMessageToClient("я бот и меня надо писать, да.");
+                mainHandler.sendMessageToClient("Я бот и меня надо писать, да. Я в файле MoveCommandHandler на 112 строке. Тут я должен походить.");
             }
         } else {
             logger.info(userId + ": Invalid move.");
