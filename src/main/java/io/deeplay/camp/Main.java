@@ -21,6 +21,7 @@ public class Main {
     private static String serverIp;
     private static int serverPort;
     private static boolean selfPlay;
+    private static int gameCountSelfPlay;
     private static final int maxLengthQueue = 50;
     private static final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
 
@@ -39,9 +40,11 @@ public class Main {
             serverIp = properties.getProperty("server.ip");
             serverPort = Integer.parseInt(properties.getProperty("server.port"));
             selfPlay = Boolean.getBoolean(properties.getProperty("server.self-play"));
+            gameCountSelfPlay = Integer.parseInt(properties.getProperty("server.self-play.game-count"));
             
             if (selfPlay) {
-                //логика игры бот против бота
+                var botGameHandler = new BotGameHandler(gameCountSelfPlay);
+                botGameHandler.startBotGame();
             }
             else {
                 ServerSocket serverSocket = new ServerSocket(serverPort, maxLengthQueue, InetAddress.getByName(serverIp));
