@@ -72,7 +72,7 @@ public class StartCommandHandler implements CommandHandler {
         } else {
             var opponent = SessionManager.getInstance().getSession(mainHandler.getSession().getSessionId()).getPlayer2();
 
-            mainHandler.sendMessageToClient(String.format("session::%d %s %d %d %s %d",
+            mainHandler.sendMessageToClient(String.format("session-bot::%d %s %d %d %s %d",
                     opponent.getId(), opponent.getUserPhoto(), opponent.getRating(),
                     opponent.getMatches(), opponent.getUsername(), opponent.getRating()));
         }
