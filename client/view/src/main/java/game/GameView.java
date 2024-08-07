@@ -22,38 +22,23 @@ import javafx.scene.paint.Stop;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import observer.Observer;
+import sigletonobserver.ChatString;
 
 import java.util.List;
 
-public class GameView implements Observer {
-    @FXML
-    private Rectangle redScore;
-
-    @FXML
-    private Rectangle greenScore;
-
+public class GameView {
     @FXML
     private Text text1;
 
     @FXML
     private Text text2;
 
-    @FXML
-    private Text timer1;
-
-    @FXML
-    private Text timer2;
-
-    private Timeline timeline1;
-    private Timeline timeline2;
-
-    public static String splitRegex = "::";
+    private static GameView instance;
 
     private int count1 = 2;
     private int count2 = 2;
 
-    private long BlackChips;
-    private long WhiteChips;
+    private int[][] board;
 
     public static ModelManager modelManager;
 
@@ -65,30 +50,53 @@ public class GameView implements Observer {
     RadialGradient radialGradientRed = new RadialGradient(0, 0, 0.5, 0.5, 0.8, true, CycleMethod.NO_CYCLE,
             new Stop(0, Color.WHITE), new Stop(1, Color.RED));
 
+    // Создаем DropShadow
+    DropShadow dropShadow = new DropShadow();
+
     @FXML
     private GridPane gridPane; // связываем с FXML
     int player = 1;
 
+
+
+    // Конструктор GameView и ее Инстанс
+    public GameView() {}
+
+    public static synchronized GameView getInstance() {
+        if (instance == null) {
+            instance = new GameView();
+        }
+        return instance;
+    }
+
+    // Обновление фишек на доске
+
+    public void updateBoard(String newBoard) {
+        String[] boardRows = newBoard.split("\\s+"); // Разделяем строки доски по пробелам
+        int[][] stringToBoard = new int[8][8]; // Создаем массив для доски
+
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                char cell = boardRows[i * 8 + j].charAt(0); // Получаем символ из строки для каждой ячейки
+                if (cell == '.') {
+                    stringToBoard[i][j] = 0; // Если символ ".", присваиваем значение 0
+                } else if (cell == '0') {
+                    stringToBoard[i][j] = 1; // Если символ "0", присваиваем значение 1
+                } else if (cell == 'X') {
+                    stringToBoard[i][j] = -1; // Если символ "X", присваиваем значение -1
+                }
+            }
+        }
+        this.board = stringToBoard;
+        placeInitialChips();
+        //initializeButtons();
+    }
+
     // Метод для инициализации кнопок
     @FXML
     public void initialize() {
-        placeInitialChips();
-        initializeButtons();
         modelManager = MainMenuView.getModelManager();
         modelManager.boardModelMethod();
-    }
-
-    //public void receiveMessageFromServer(String message) {
-    //    GameView gameView = new GameView();
-    //    gameView.processBoardInformation(message);
-    //}
-
-    public void processBoardInformation(String message) {
-        if (message.startsWith("get-board::")) {
-            String boardNotation = message.substring("get-board::".length());
-            // Теперь у вас есть boardNotation, который можно использовать дальше
-            System.out.println("Received board notation: " + boardNotation);
-        }
     }
 
     private void initializeChips() {
@@ -173,18 +181,22 @@ public class GameView implements Observer {
         // Создаем DropShadow
         DropShadow dropShadow = new DropShadow();
         dropShadow.setColor(Color.WHITE);
+        Circle Chip = null;
 
-        // Создаем и настраиваем фишки
-        Circle greenChip1 = createChip(radialGradientGreen, dropShadow);
-        Circle greenChip2 = createChip(radialGradientGreen, dropShadow);
-        Circle redChip1 = createChip(radialGradientRed, dropShadow);
-        Circle redChip2 = createChip(radialGradientRed, dropShadow);
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++){
+                if(board[row][col] != 0){
+                    if (board[row][col] == 1){
+                        Chip = createChip(radialGradientGreen, dropShadow);
 
-        // Размещаем фишки на GridPane
-        gridPane.add(createStackPane(greenChip1), 3, 3); // (3,3)
-        gridPane.add(createStackPane(greenChip2), 4, 4); // (4,4)
-        gridPane.add(createStackPane(redChip1), 3, 4); // (3,4)
-        gridPane.add(createStackPane(redChip2), 4, 3); // (4,3)
+                    } else if (board[row][col] == -1){
+                        Chip = createChip(radialGradientGreen, dropShadow);
+                    }
+                    gridPane.add(createStackPane(Chip), col, row);
+                }
+
+            }
+        }
     }
 
     private Circle createChip(RadialGradient radialGradient, DropShadow dropShadow) {
@@ -207,15 +219,5 @@ public class GameView implements Observer {
 
     @FXML
     public void handleTimerButtonClicked() {
-    }
-
-    @Override
-    public void update(String newString) {
-        String command = newString.split(splitRegex)[0];
-        switch (command) {
-            case "get-board":
-                System.out.println(newString + "smth");
-                break;
-        }
     }
 }

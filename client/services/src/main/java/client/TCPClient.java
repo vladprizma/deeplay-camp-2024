@@ -77,8 +77,7 @@ public class TCPClient implements Client {
                         case "session":
                             String finalServerResponse1 = serverResponse;
                             Platform.runLater(() -> action.handleResponseActionResponse(finalServerResponse1));
-                        default:
-                            logger.warn("Unknown command: " + command);
+                            break;
                     }
                 }
             } catch (IOException e) {

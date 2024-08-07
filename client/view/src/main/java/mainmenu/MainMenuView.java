@@ -1,5 +1,6 @@
 package mainmenu;
 
+import game.GameView;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.scene.image.Image;
@@ -36,6 +37,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.almasb.fxgl.app.scene.GameView.*;
 
 public class MainMenuView implements Observer {
     private ViewNavigator viewModel = new ViewNavigator();
@@ -445,6 +448,12 @@ public class MainMenuView implements Observer {
                 break;
             case "session":
                 SessionSearched();
+                break;
+            case "get-board":
+                GameView gameView = GameView.getInstance();
+                String[] parts = newString.split("\\{"); // Разделяем строку по фигурной скобке
+                String boardString = parts[1].replace("}", "").trim(); // Берем вторую часть и удаляем скобки и лишние пробелы
+                gameView.updateBoard(boardString);
                 break;
         }
     }
