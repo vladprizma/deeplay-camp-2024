@@ -89,7 +89,7 @@ public class MoveCommandHandler implements CommandHandler {
 
             mainHandler.sendMessageToClient(msg);
             
-            if (!SessionManager.getInstance().getOpponent(mainHandler).getIsBot()) SessionManager.getInstance().sendMessageToOpponent(mainHandler, session, msg);
+            if (!SessionManager.getInstance().getSession(mainHandler.getSession().getSessionId()).getPlayer2().getIsBot()) SessionManager.getInstance().sendMessageToOpponent(mainHandler, session, msg);
 
             gameLogic.display(playerNumber == 1 ? 2 : 1, boardLogic);
             if (gameLogic.checkForWin()) {
@@ -97,7 +97,7 @@ public class MoveCommandHandler implements CommandHandler {
                 session.setGameState(GameStatus.FINISHED);
                 String msgWin = "game-status::finished";
 
-                if (!SessionManager.getInstance().getOpponent(mainHandler).getIsBot()) SessionManager.getInstance().sendMessageToAllInSession(mainHandler, msgWin);
+                if (!SessionManager.getInstance().getSession(mainHandler.getSession().getSessionId()).getPlayer2().getIsBot()) SessionManager.getInstance().sendMessageToAllInSession(mainHandler, msgWin);
                 else mainHandler.sendMessageToClient(msgWin);
                 
                 boolean playerWon = boardLogic.score()[0] > boardLogic.score()[1];
@@ -109,7 +109,7 @@ public class MoveCommandHandler implements CommandHandler {
             
             //логика хода бота
             if (SessionManager.getInstance().getSession(mainHandler.getSession().getSessionId()).getPlayer2().getIsBot()) {
-                
+                mainHandler.sendMessageToClient("я бот и меня надо писать, да.");
             }
         } else {
             logger.info(userId + ": Invalid move.");

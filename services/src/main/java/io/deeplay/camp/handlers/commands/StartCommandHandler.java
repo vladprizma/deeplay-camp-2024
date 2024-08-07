@@ -39,8 +39,9 @@ public class StartCommandHandler implements CommandHandler {
         logger.info("User {} is attempting to start a game.", mainHandler.getUser().getId());
         var msg = message.split(" ");
         var isBot = false;
-        
-        if (Objects.equals(msg[1], "--bot")) isBot = true;
+        if (msg.length > 1) {
+            if (Objects.equals(msg[1], "--bot")) isBot = true;
+        }
         
         var result = SessionManager.getInstance().findOrCreateSession(mainHandler, mainHandler.getUser(), isBot);
         mainHandler.setSession(result.getGameSession());
@@ -62,12 +63,20 @@ public class StartCommandHandler implements CommandHandler {
 
         logger.info("User {}: The enemy was found. The game begins...", mainHandler.getUser().getId());
 
-        var opponent = SessionManager.getInstance().getOpponent(mainHandler);
+        if (!SessionManager.getInstance().getSession(mainHandler.getSession().getSessionId()).getPlayer2().getIsBot()) {
+            var opponent = SessionManager.getInstance().getOpponent(mainHandler);
 
-        mainHandler.sendMessageToClient(String.format("session::%d %s %d %d %s %d",
-                opponent.getId(), opponent.getUserPhoto(), opponent.getRating(),
-                opponent.getMatches(), opponent.getUsername(), opponent.getRating()));
+            mainHandler.sendMessageToClient(String.format("session::%d %s %d %d %s %d",
+                    opponent.getId(), opponent.getUserPhoto(), opponent.getRating(),
+                    opponent.getMatches(), opponent.getUsername(), opponent.getRating()));
+        } else {
+            var opponent = SessionManager.getInstance().getSession(mainHandler.getSession().getSessionId()).getPlayer2();
 
+            mainHandler.sendMessageToClient(String.format("session::%d %s %d %d %s %d",
+                    opponent.getId(), opponent.getUserPhoto(), opponent.getRating(),
+                    opponent.getMatches(), opponent.getUsername(), opponent.getRating()));
+        }
+        
         var userId = mainHandler.getUser().getId();
         int playerNumber = (userId == mainHandler.getSession().getPlayer1().getId()) ? 1 : 2;
 
