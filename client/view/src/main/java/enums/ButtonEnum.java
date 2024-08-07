@@ -5,5 +5,7 @@ public enum ButtonEnum {
     SETTINGS,
     CHAT,
     EXIT,
-    ENTER
+    ENTER,
+    REGISTER,
+    BACK
 }

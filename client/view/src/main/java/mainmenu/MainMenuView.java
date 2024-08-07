@@ -2,6 +2,8 @@ package mainmenu;
 
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import sigletonobserver.ChatString;
 import enums.ButtonEnum;
 import io.deeplay.camp.ModelManager;
@@ -25,6 +27,7 @@ import javafx.util.Duration;
 import navigator.ViewNavigator;
 import observer.Observer;
 
+import java.awt.*;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -83,6 +86,30 @@ public class MainMenuView implements Observer {
     @FXML
     private VBox loginVBox;
 
+    @FXML
+    private Button registerButton;
+
+    @FXML
+    private Button registerRegisterButton;
+
+    @FXML
+    private Button registerBackButton;
+
+    @FXML
+    private PasswordField registerConfirmPasswordField;
+
+    @FXML
+    private PasswordField registerPasswordField;
+
+    @FXML
+    private TextField registerUsernameField;
+
+    @FXML
+    private VBox registerVBox;
+
+    @FXML
+    private ImageView registerImageBackButton;
+
     private ObservableList<String> chatMessages;
 
     public static ModelManager getModelManager() {
@@ -131,6 +158,8 @@ public class MainMenuView implements Observer {
         exitButton.setOnAction(event -> onButtonClicked(ButtonEnum.EXIT));
         chatButton.setOnAction(event -> onButtonClicked(ButtonEnum.CHAT));
         enterButton.setOnAction(event ->    onButtonClicked(ButtonEnum.ENTER));
+        registerButton.setOnAction(event -> onButtonClicked(ButtonEnum.REGISTER));
+        registerBackButton.setOnAction(event -> onButtonClicked(ButtonEnum.BACK));
     }
 
     @FXML
@@ -169,6 +198,12 @@ public class MainMenuView implements Observer {
             case ENTER:
                 onEnterButtonClicked();
                 break;
+            case REGISTER:
+                onRegisterButtonClicked();
+                break;
+            case BACK:
+                onBackButtonClicked();
+                break;
             default:
                 break;
         }
@@ -176,16 +211,17 @@ public class MainMenuView implements Observer {
 
     private void onPlayButtonClicked() {
         setupButton(playButton, viewModel::onPlayButtonClicked, viewModel.playButtonEnabledProperty());
+        viewModel.playButtonEnabledProperty().set(false);
         modelManager.startGameModelMethod();
     }
 
     private void SessionSearched() {
+        viewModel.playButtonEnabledProperty().set(true);
         playButton.fire();
         viewModel.playButtonEnabledProperty().set(false);
         viewModel.settingsButtonEnabledProperty().set(false);
         viewModel.exitButtonEnabledProperty().set(false);
     }
-
 
     private void onSettingsButtonClicked() {
         setupButton(settingsButton, viewModel::onSettingsButtonClicked, viewModel.settingsButtonEnabledProperty());
@@ -267,7 +303,6 @@ public class MainMenuView implements Observer {
         openChat();
     }
 
-
     public static boolean isValidDate(String dateStr) {
         DateTimeFormatter formatter = INPUT_FORMATTER;
         try {
@@ -301,6 +336,40 @@ public class MainMenuView implements Observer {
         passwordField.setVisible(false);
         enterButton.setVisible(false);
         modelManager.loginModelMethod(username + " " + password);
+    }
+
+    private void onRegisterButtonClicked() {
+        blurBackground.setVisible(false);
+        loginVBox.setVisible(false);
+        usernameField.setVisible(false);
+        passwordField.setVisible(false);
+        enterButton.setVisible(false);
+        registerButton.setVisible(false);
+
+        registerRegisterButton.setVisible(true);
+        registerBackButton.setVisible(true);
+        registerPasswordField.setVisible(true);
+        registerConfirmPasswordField.setVisible(true);
+        registerUsernameField.setVisible(true);
+        registerVBox.setVisible(true);
+        registerImageBackButton.setVisible(true);
+    }
+
+    private void onBackButtonClicked() {
+        blurBackground.setVisible(true);
+        loginVBox.setVisible(true);
+        usernameField.setVisible(true);
+        passwordField.setVisible(true);
+        enterButton.setVisible(true);
+        registerButton.setVisible(true);
+
+        registerRegisterButton.setVisible(false);
+        registerBackButton.setVisible(false);
+        registerPasswordField.setVisible(false);
+        registerConfirmPasswordField.setVisible(false);
+        registerUsernameField.setVisible(false);
+        registerVBox.setVisible(false);
+        registerImageBackButton.setVisible(false);
     }
 
     private void setupButton(Button button, Runnable actionOnClick, BooleanProperty enabledProperty) {
