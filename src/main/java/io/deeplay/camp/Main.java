@@ -39,14 +39,14 @@ public class Main {
 
             serverIp = properties.getProperty("server.ip");
             serverPort = Integer.parseInt(properties.getProperty("server.port"));
-            selfPlay = Boolean.getBoolean(properties.getProperty("server.self-play"));
-            gameCountSelfPlay = Integer.parseInt(properties.getProperty("server.self-play.game-count"));
+            var de = (properties.getProperty("server.self-play"));
+            selfPlay = Boolean.parseBoolean(properties.getProperty("server.self-play"));
+            gameCountSelfPlay = Integer.parseInt(properties.getProperty("server.game-count"));
             
             if (selfPlay) {
                 var botGameHandler = new BotGameHandler(gameCountSelfPlay);
                 botGameHandler.startBotGame();
-            }
-            else {
+            } else {
                 ServerSocket serverSocket = new ServerSocket(serverPort, maxLengthQueue, InetAddress.getByName(serverIp));
                 logger.info("Server started on IP: " + serverIp + ", Port: " + serverPort);
 
