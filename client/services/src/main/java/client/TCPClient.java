@@ -75,9 +75,11 @@ public class TCPClient implements Client {
                         case "session-start":
                         case "get-board":
                         case "session":
+                        case "move":
                             String finalServerResponse1 = serverResponse;
-                            Platform.runLater(() -> action.handleResponseActionResponse(finalServerResponse1));
+                            Platform.runLater(() -> action.handleBoardActionResponse(finalServerResponse1));
                             break;
+
                     }
                 }
             } catch (IOException e) {

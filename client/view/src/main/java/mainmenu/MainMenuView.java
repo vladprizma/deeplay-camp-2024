@@ -455,6 +455,8 @@ public class MainMenuView implements Observer {
                 String boardString = parts[1].replace("}", "").trim(); // Берем вторую часть и удаляем скобки и лишние пробелы
                 gameView.updateBoard(boardString);
                 break;
+            case "move":
+                System.out.println(newString + "&move&");
         }
     }
 

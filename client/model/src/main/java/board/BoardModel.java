@@ -2,10 +2,10 @@ package board;
 
 import action.Action;
 
-public class boardModel {
+public class BoardModel {
     private Action action;
 
-    public boardModel(Action action) {
+    public BoardModel(Action action) {
         this.action = action;
         boardModelMethod();
     }

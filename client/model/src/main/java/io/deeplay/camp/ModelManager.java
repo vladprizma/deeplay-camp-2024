@@ -1,8 +1,9 @@
 package io.deeplay.camp;
 
 import action.Action;
+import board.MoveModel;
 import chat.ChatModel;
-import board.boardModel;
+import board.BoardModel;
 import login.LoginModel;
 import login.StartGameModel;
 import login.StartSessionModel;
@@ -15,10 +16,12 @@ public class ModelManager {
     private StartSessionModel startSessionModel;
     private StartGameModel startGameModel;
     private ChatModel chatModel;
-    private boardModel boardModel;
+    private BoardModel boardModel;
+    private MoveModel moveModel;
     private Action action;
     private String loginAndPassword;
     private String chatMessages;
+    private String move;
 
     public ModelManager() throws IOException {
         action = new Action();
@@ -45,6 +48,11 @@ public class ModelManager {
     }
 
     public void boardModelMethod() {
-        boardModel = new boardModel(action);
+        boardModel = new BoardModel(action);
+    }
+
+    public void moveModelMethod(String move){
+        this.move = move;
+        moveModel = new MoveModel(action, move);
     }
 }

@@ -18,9 +18,9 @@ public class Action {
         ((TCPClient)client).setAction(this);
     }
 
-    public void handleMoveAction(int x, int y) {
+    public void handleMoveAction(String move) {
         try {
-            CommandRequest moveCommandRequest = new MoveCommandRequest(client, x, y);
+            CommandRequest moveCommandRequest = new MoveCommandRequest(client, move);
             moveCommandRequest.execute();
         } catch (IOException e) {
             e.printStackTrace();
@@ -106,7 +106,21 @@ public class Action {
         }
     }
 
-    public void handleResponseActionResponse(String chatMessages) {
+    public void handleBoardActionResponse(String chatMessages) {
+        ChatString singleton = ChatString.getInstance();
+        singleton.setString(chatMessages);
+    }
+
+    public void handleMoveActionRequest() {
+        try {
+            CommandRequest boardCommandRequest = new BoardCommandRequest(client);
+            boardCommandRequest.execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void handleMoveActionResponse(String chatMessages) {
         ChatString singleton = ChatString.getInstance();
         singleton.setString(chatMessages);
     }
