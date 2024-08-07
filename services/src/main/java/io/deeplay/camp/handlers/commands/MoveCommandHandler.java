@@ -4,7 +4,7 @@ import dto.BoardDTO;
 import entity.GameSession;
 import enums.GameStatus;
 import io.deeplay.camp.board.BoardLogic;
-import io.deeplay.camp.bot.BotService;
+import io.deeplay.camp.bot.RandomBot;
 import io.deeplay.camp.game.GameLogic;
 import io.deeplay.camp.handlers.main.MainHandler;
 import io.deeplay.camp.managers.SessionManager;
@@ -161,7 +161,7 @@ public class MoveCommandHandler implements CommandHandler {
     }
 
     private void handleBotMove(MainHandler mainHandler, GameSession session) throws IOException, SQLException {
-        var bot = new BotService();
+        var bot = new RandomBot();
         var newBoardLogicForBot = new BoardLogic(session.getBoard());
         mainHandler.setGameLogic(new GameLogic(newBoardLogicForBot));
         mainHandler.setBoardLogic(newBoardLogicForBot);

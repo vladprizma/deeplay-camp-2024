@@ -2,7 +2,7 @@ package io.deeplay.camp;
 
 import entity.Board;
 import io.deeplay.camp.board.BoardLogic;
-import io.deeplay.camp.bot.BotService;
+import io.deeplay.camp.bot.RandomBot;
 import io.deeplay.camp.game.GameLogic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,8 +57,10 @@ public class BotGameHandler {
     }
 
     private Void playSingleGame(boolean firstBotStarts) {
-        BotService firstRandomBot = new BotService();
-        BotService secondRandomBot = new BotService();
+        // u can change bot type with BotStrategy
+        RandomBot firstRandomBot = new RandomBot();
+        RandomBot secondRandomBot = new RandomBot();
+        // 
         Board board = new Board();
         BoardLogic boardLogic = new BoardLogic(board);
         GameLogic gameLogic = new GameLogic(boardLogic);
@@ -85,7 +87,7 @@ public class BotGameHandler {
         return null;
     }
 
-    private boolean executeBotMove(BotService botService, int botNumber, BoardLogic boardLogic, GameLogic gameLogic) {
+    private boolean executeBotMove(RandomBot botService, int botNumber, BoardLogic boardLogic, GameLogic gameLogic) {
         Callable<Boolean> botMoveTask = () -> botService.makeMove(botNumber, boardLogic);
         Future<Boolean> futureMove = scheduler.schedule(botMoveTask, 0, TimeUnit.SECONDS);
 

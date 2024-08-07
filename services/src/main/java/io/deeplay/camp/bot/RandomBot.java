@@ -3,8 +3,9 @@ package io.deeplay.camp.bot;
 import io.deeplay.camp.board.BoardLogic;
 import entity.Tile;
 
-public class BotService {
+public class RandomBot implements BotStrategy {
 
+    @Override
     public boolean makeMove(int currentPlayerId, BoardLogic boardLogic) {
         int[] move = getCurrentPlayerMove(currentPlayerId, boardLogic);
         if (move != null) {
@@ -17,7 +18,7 @@ public class BotService {
         }
     }
 
-    public int[] getCurrentPlayerMove(int currentPlayerId, BoardLogic boardLogic) {
+    private int[] getCurrentPlayerMove(int currentPlayerId, BoardLogic boardLogic) {
         int[] move;
         move = getBotMove(currentPlayerId, boardLogic);
 
@@ -28,7 +29,7 @@ public class BotService {
         }
     }
 
-    public int[] getBotMove(int currentPlayerId, BoardLogic boardLogic) {
+    private int[] getBotMove(int currentPlayerId, BoardLogic boardLogic) {
         Tile[] tiles = new Tile[64];
         short tileCount = 0;
         long blackValidMoves = boardLogic.getBlackValidMoves();
