@@ -45,7 +45,7 @@ public class SessionStartCommandHandler implements CommandHandler {
                 mainHandler.sendMessageToClient("Invalid or expired JWT token. Please login again.");
             }
         } else {
-            mainHandler.sendMessageToClient("User not found.");
+            mainHandler.sendMessageToClient("User not found with jwt token.");
         }
     }
 }
