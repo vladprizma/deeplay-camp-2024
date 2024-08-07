@@ -19,6 +19,7 @@ public class ConnectionManager {
 
     public void sendMessageToClient(String msg) {
         out.println(msg);
+        out.flush();
     }
 
     public BufferedReader getInputReader() {
