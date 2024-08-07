@@ -40,6 +40,13 @@ public class RegisterCommandHandler implements CommandHandler {
             mainHandler.sendMessageToClient(errorMsg);
             return;
         }
+        
+        if (!userService.isUsernameUnique(parts[1])) {
+            String errorMsg = "Not unique username.";
+            logger.warning(errorMsg);
+            mainHandler.sendMessageToClient(errorMsg);
+            return;
+        }
 
         try {
             String username = parts[1];
