@@ -90,7 +90,7 @@ public class BotGameHandler {
         Future<Boolean> futureMove = scheduler.schedule(botMoveTask, 0, TimeUnit.SECONDS);
 
         try {
-            if (futureMove.get(10, TimeUnit.SECONDS)) {
+            if (futureMove.get(5, TimeUnit.SECONDS)) {
                 return checkWin(boardLogic, gameLogic);
             }
         } catch (TimeoutException e) {
