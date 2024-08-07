@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * CommandHandler для начала игры.
@@ -36,8 +37,12 @@ public class StartCommandHandler implements CommandHandler {
         }
 
         logger.info("User {} is attempting to start a game.", mainHandler.getUser().getId());
-
-        var result = SessionManager.getInstance().findOrCreateSession(mainHandler, mainHandler.getUser());
+        var msg = message.split(" ");
+        var isBot = false;
+        
+        if (Objects.equals(msg[1], "--bot")) isBot = true;
+        
+        var result = SessionManager.getInstance().findOrCreateSession(mainHandler, mainHandler.getUser(), isBot);
         mainHandler.setSession(result.getGameSession());
 
         int waitTime = 0;
@@ -51,19 +56,17 @@ public class StartCommandHandler implements CommandHandler {
             logger.info("User {}: Game start failed due to timeout.", mainHandler.getUser().getId());
             return;
         }
-
+            
         mainHandler.setBoardLogic(new BoardLogic(result.getGameSession().getBoard()));
         mainHandler.setGameLogic(new GameLogic(mainHandler.getBoardLogic()));
 
         logger.info("User {}: The enemy was found. The game begins...", mainHandler.getUser().getId());
 
         var opponent = SessionManager.getInstance().getOpponent(mainHandler);
-        logger.info("efreferfer" + String.format("session::%d %s %d %d %s %d",
-                opponent.getId(), opponent.getUserPhoto(), opponent.getRating(),
-                opponent.getMatches(), opponent.getUsername(), opponent.getElo()));
+
         mainHandler.sendMessageToClient(String.format("session::%d %s %d %d %s %d",
                 opponent.getId(), opponent.getUserPhoto(), opponent.getRating(),
-                opponent.getMatches(), opponent.getUsername(), opponent.getElo()));
+                opponent.getMatches(), opponent.getUsername(), opponent.getRating()));
 
         var userId = mainHandler.getUser().getId();
         int playerNumber = (userId == mainHandler.getSession().getPlayer1().getId()) ? 1 : 2;
