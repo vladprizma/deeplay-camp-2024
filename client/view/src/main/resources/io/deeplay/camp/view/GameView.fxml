@@ -12,6 +12,7 @@
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.HBox?>
 <AnchorPane id="mainWindow" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="game.GameView" stylesheets="@style/style.css">
     <children>
         <ImageView fitHeight="1020.0" fitWidth="1860.0" layoutX="30.0" layoutY="30.0" pickOnBounds="true" preserveRatio="false">
@@ -32,114 +33,111 @@
             </effect>
         </Rectangle>
 
-        <GridPane fx:id="gridPane" layoutX="560.0" layoutY="105" xmlns:fx="http://javafx.com/fxml" alignment="CENTER" hgap="0" vgap="0" style="-fx-background-color: linear-gradient(to bottom, #4D285A, #3C7747); -fx-border-width: 5px; -fx-border-color: black">
+        <GridPane fx:id="mainBoard" layoutX="560.0" layoutY="105" xmlns:fx="http://javafx.com/fxml" alignment="CENTER" hgap="0" vgap="0" style="-fx-background-color: linear-gradient(to bottom, #4D285A, #3C7747); -fx-border-width: 5px; -fx-border-color: black">
             <children>
                 <!-- Добавление кнопок в GridPane -->
-                <Button styleClass="tile" GridPane.rowIndex="0" GridPane.columnIndex="0" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="0" GridPane.columnIndex="1" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="0" GridPane.columnIndex="2" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="0" GridPane.columnIndex="3" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="0" GridPane.columnIndex="4" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="0" GridPane.columnIndex="5" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="0" GridPane.columnIndex="6" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="0" GridPane.columnIndex="7" onAction="#increaseRectangles"/>
+                <Button styleClass="tile" GridPane.rowIndex="0" GridPane.columnIndex="0" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="0" GridPane.columnIndex="1" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="0" GridPane.columnIndex="2" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="0" GridPane.columnIndex="3" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="0" GridPane.columnIndex="4" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="0" GridPane.columnIndex="5" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="0" GridPane.columnIndex="6" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="0" GridPane.columnIndex="7" onAction="#tileClick"/>
 
-                <Button styleClass="tile" GridPane.rowIndex="1" GridPane.columnIndex="0" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="1" GridPane.columnIndex="1" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="1" GridPane.columnIndex="2" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="1" GridPane.columnIndex="3" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="1" GridPane.columnIndex="4" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="1" GridPane.columnIndex="5" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="1" GridPane.columnIndex="6" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="1" GridPane.columnIndex="7" onAction="#increaseRectangles"/>
+                <Button styleClass="tile" GridPane.rowIndex="1" GridPane.columnIndex="0" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="1" GridPane.columnIndex="1" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="1" GridPane.columnIndex="2" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="1" GridPane.columnIndex="3" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="1" GridPane.columnIndex="4" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="1" GridPane.columnIndex="5" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="1" GridPane.columnIndex="6" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="1" GridPane.columnIndex="7" onAction="#tileClick"/>
 
-                <Button styleClass="tile" GridPane.rowIndex="2" GridPane.columnIndex="0" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="2" GridPane.columnIndex="1" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="2" GridPane.columnIndex="2" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="2" GridPane.columnIndex="3" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="2" GridPane.columnIndex="4" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="2" GridPane.columnIndex="5" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="2" GridPane.columnIndex="6" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="2" GridPane.columnIndex="7" onAction="#increaseRectangles"/>
+                <Button styleClass="tile" GridPane.rowIndex="2" GridPane.columnIndex="0" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="2" GridPane.columnIndex="1" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="2" GridPane.columnIndex="2" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="2" GridPane.columnIndex="3" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="2" GridPane.columnIndex="4" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="2" GridPane.columnIndex="5" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="2" GridPane.columnIndex="6" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="2" GridPane.columnIndex="7" onAction="#tileClick"/>
 
-                <Button styleClass="tile" GridPane.rowIndex="3" GridPane.columnIndex="0" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="3" GridPane.columnIndex="1" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="3" GridPane.columnIndex="2" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="3" GridPane.columnIndex="3" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="3" GridPane.columnIndex="4" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="3" GridPane.columnIndex="5" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="3" GridPane.columnIndex="6" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="3" GridPane.columnIndex="7" onAction="#increaseRectangles"/>
+                <Button styleClass="tile" GridPane.rowIndex="3" GridPane.columnIndex="0" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="3" GridPane.columnIndex="1" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="3" GridPane.columnIndex="2" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="3" GridPane.columnIndex="3" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="3" GridPane.columnIndex="4" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="3" GridPane.columnIndex="5" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="3" GridPane.columnIndex="6" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="3" GridPane.columnIndex="7" onAction="#tileClick"/>
 
-                <Button styleClass="tile" GridPane.rowIndex="4" GridPane.columnIndex="0" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="4" GridPane.columnIndex="1" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="4" GridPane.columnIndex="2" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="4" GridPane.columnIndex="3" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="4" GridPane.columnIndex="4" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="4" GridPane.columnIndex="5" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="4" GridPane.columnIndex="6" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="4" GridPane.columnIndex="7" onAction="#increaseRectangles"/>
+                <Button styleClass="tile" GridPane.rowIndex="4" GridPane.columnIndex="0" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="4" GridPane.columnIndex="1" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="4" GridPane.columnIndex="2" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="4" GridPane.columnIndex="3" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="4" GridPane.columnIndex="4" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="4" GridPane.columnIndex="5" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="4" GridPane.columnIndex="6" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="4" GridPane.columnIndex="7" onAction="#tileClick"/>
 
-                <Button styleClass="tile" GridPane.rowIndex="5" GridPane.columnIndex="0" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="5" GridPane.columnIndex="1" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="5" GridPane.columnIndex="2" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="5" GridPane.columnIndex="3" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="5" GridPane.columnIndex="4" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="5" GridPane.columnIndex="5" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="5" GridPane.columnIndex="6" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="5" GridPane.columnIndex="7" onAction="#increaseRectangles"/>
+                <Button styleClass="tile" GridPane.rowIndex="5" GridPane.columnIndex="0" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="5" GridPane.columnIndex="1" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="5" GridPane.columnIndex="2" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="5" GridPane.columnIndex="3" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="5" GridPane.columnIndex="4" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="5" GridPane.columnIndex="5" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="5" GridPane.columnIndex="6" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="5" GridPane.columnIndex="7" onAction="#tileClick"/>
 
-                <Button styleClass="tile" GridPane.rowIndex="6" GridPane.columnIndex="0" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="6" GridPane.columnIndex="1" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="6" GridPane.columnIndex="2" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="6" GridPane.columnIndex="3" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="6" GridPane.columnIndex="4" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="6" GridPane.columnIndex="5" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="6" GridPane.columnIndex="6" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="6" GridPane.columnIndex="7" onAction="#increaseRectangles"/>
+                <Button styleClass="tile" GridPane.rowIndex="6" GridPane.columnIndex="0" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="6" GridPane.columnIndex="1" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="6" GridPane.columnIndex="2" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="6" GridPane.columnIndex="3" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="6" GridPane.columnIndex="4" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="6" GridPane.columnIndex="5" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="6" GridPane.columnIndex="6" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="6" GridPane.columnIndex="7" onAction="#tileClick"/>
 
-                <Button styleClass="tile" GridPane.rowIndex="7" GridPane.columnIndex="0" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="7" GridPane.columnIndex="1" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="7" GridPane.columnIndex="2" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="7" GridPane.columnIndex="3" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="7" GridPane.columnIndex="4" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="7" GridPane.columnIndex="5" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="7" GridPane.columnIndex="6" onAction="#increaseRectangles"/>
-                <Button styleClass="tile" GridPane.rowIndex="7" GridPane.columnIndex="7" onAction="#increaseRectangles"/>
+                <Button styleClass="tile" GridPane.rowIndex="7" GridPane.columnIndex="0" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="7" GridPane.columnIndex="1" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="7" GridPane.columnIndex="2" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="7" GridPane.columnIndex="3" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="7" GridPane.columnIndex="4" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="7" GridPane.columnIndex="5" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="7" GridPane.columnIndex="6" onAction="#tileClick"/>
+                <Button styleClass="tile" GridPane.rowIndex="7" GridPane.columnIndex="7" onAction="#tileClick"/>
             </children>
         </GridPane>
 
 
+        <GridPane layoutY="938" layoutX="343" hgap="80">
+            <StackPane GridPane.rowIndex="1" GridPane.columnIndex="1" >
+                <Rectangle width="200" height="100" fill="#EE454580" stroke="BLACK" strokeWidth="10" arcWidth="30" arcHeight="30">
+                    <effect>
+                        <DropShadow color = "#FFFFFF80" offsetY="5"/>
+                    </effect>
+                </Rectangle>
+                <Text fx:id="redScoreText" text="2" fill="BLACK" style="-fx-font-size: 64; -fx-font-family: 'Josefin Slab SemiBold'" textAlignment="CENTER"/>
+            </StackPane>
 
-        <StackPane layoutX="450.0" layoutY="938.0">
-            <Rectangle fx:id="redScore" width="200" height="100" fill="#EE454580" stroke="BLACK" strokeWidth="10" arcWidth="30" arcHeight="30">
-                <effect>
-                    <DropShadow color = "#FFFFFF80" offsetY="5"/>
-                </effect>
-            </Rectangle>
-            <Text fx:id="text1" text="2" fill="BLACK" style="-fx-font-size: 64" textAlignment="CENTER"/>
-        </StackPane>
+            <Text text="2:00" GridPane.rowIndex="1" GridPane.columnIndex="2" style="-fx-font-size: 64; -fx-font-family: 'Josefin Slab SemiBold'"/>
 
-        <StackPane layoutX="1280.0" layoutY="938.0">
-            <Rectangle fx:id="greenScore" width="200" height="100" fill="#18800E80" stroke="BLACK" strokeWidth="10" arcWidth="30" arcHeight="30">
-                <effect>
-                    <DropShadow color = "#FFFFFF80"  offsetY="5"/>
-                </effect>
-            </Rectangle>
-            <Text fx:id="text2" text="2" fill="BLACK" style="-fx-font-size: 64" textAlignment="CENTER"/>
-        </StackPane>
+            <Button GridPane.rowIndex="1" GridPane.columnIndex="3" style="-fx-background-radius: 50; -fx-background-color: green; -fx-pref-width: 100; -fx-pref-height: 100; -fx-border-width: 10px; -fx-border-color: black; -fx-border-radius: 50px; -fx-font-size: 35; -fx-text-fill: black; -fx-font-weight: bold" text="| |"/>
 
-        <GridPane layoutY="450" layoutX="50">
-            <Text text="Timer 1:" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-size: 40;"/>
-            <Text fx:id="timer1" text="2:00" GridPane.rowIndex="0" GridPane.columnIndex="1" style="-fx-font-size: 40;"/>
+            <Text text="2:00" GridPane.rowIndex="1" GridPane.columnIndex="4" style="-fx-font-size: 64; -fx-font-family: 'Josefin Slab SemiBold'"/>
 
-            <Button text="Change Timer" onAction="#handleTimerButtonClicked" GridPane.rowIndex="0" GridPane.columnIndex="2" style="-fx-font-size: 40;"/>
-
-            <Text text="Timer 2:" GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-font-size: 40;"/>
-            <Text fx:id="timer2" text="2:00" GridPane.rowIndex="1" GridPane.columnIndex="1" style="-fx-font-size: 40;"/>
+            <StackPane GridPane.rowIndex="1" GridPane.columnIndex="5">
+                <Rectangle width="200" height="100" fill="#18800E80" stroke="BLACK" strokeWidth="10" arcWidth="30" arcHeight="30">
+                    <effect>
+                        <DropShadow color = "#FFFFFF80"  offsetY="5"/>
+                    </effect>
+                </Rectangle>
+                <Text fx:id="greenScoreText" text="2" fill="BLACK" style="-fx-font-size: 64; -fx-font-family: 'Josefin Slab SemiBold'" textAlignment="CENTER"/>
+            </StackPane>
         </GridPane>
 
-        <Button layoutX="915" layoutY="938.0" style="-fx-background-radius: 50; -fx-background-color: green; -fx-pref-width: 100; -fx-pref-height: 100; -fx-border-width: 10px; -fx-border-color: black; -fx-border-radius: 50px; -fx-font-size: 35" text="| |"/>
+
 
         <Text layoutX="115.0" layoutY="104.0" text="Ka_Chan_666" fill="white" style="-fx-font-size: 40; -fx-font-family: 'Josefin Slab SemiBold';"/>
         <Text layoutX="1568.0" layoutY="104.0" text="Deku_Might" fill="white" style="-fx-font-size: 40; -fx-font-family: 'Josefin Slab SemiBold';"/>

@@ -11,10 +11,10 @@ public class MoveCommandRequest implements CommandRequest {
     private final Client client;
     private final RequestResponse requestResponse;
 
-    public MoveCommandRequest(Client client, int x, int y) {
+    public MoveCommandRequest(Client client, String move) {
         this.client = client;
-        List<String> parameters = Arrays.asList(String.valueOf(x), String.valueOf(y));
-        this.requestResponse = new RequestResponse("move", parameters);
+        List<String> parameters = Arrays.asList(move);
+        this.requestResponse = new RequestResponse("game-move", parameters);
     }
 
     @Override
