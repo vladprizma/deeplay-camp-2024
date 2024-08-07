@@ -49,4 +49,8 @@ public class UserService {
         user.setUserPhoto(newUserPhoto);
         userDAO.updateUser(user);
     }
+
+    public boolean isUsernameUnique(String username) throws SQLException {
+        return userDAO.getUserByUsername(username).isEmpty();
+    }
 }
