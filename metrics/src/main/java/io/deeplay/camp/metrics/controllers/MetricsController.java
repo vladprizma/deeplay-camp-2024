@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class MetricsController {
-    public class GameResult {
+    public static class GameResult {
         private String bot1;
         private String bot2;
         private String result;
@@ -42,25 +42,25 @@ public class MetricsController {
         this.meterRegistry = meterRegistry;
     }
 
-    @GetMapping("/record-game")
-    public String recordGame(@RequestParam String bot1, @RequestParam String bot2, @RequestParam String result) {
-        String metricName = "games_" + bot1 + "_vs_" + bot2;
-
-        switch (result) {
-            case "bot1":
-                meterRegistry.counter(metricName + "_bot1_wins").increment();
-                break;
-            case "bot2":
-                meterRegistry.counter(metricName + "_bot2_wins").increment();
-                break;
-            case "draw":
-                meterRegistry.counter(metricName + "_draws").increment();
-                break;
-            default:
-                return "Invalid result";
-        }
-        return "Game recorded";
-    }
+//    @GetMapping("/record-game")
+//    public String recordGame(@RequestParam String bot1, @RequestParam String bot2, @RequestParam String result) {
+//        String metricName = "games_" + bot1 + "_vs_" + bot2;
+//
+//        switch (result) {
+//            case "bot1":
+//                meterRegistry.counter(metricName + "_bot1_wins").increment();
+//                break;
+//            case "bot2":
+//                meterRegistry.counter(metricName + "_bot2_wins").increment();
+//                break;
+//            case "draw":
+//                meterRegistry.counter(metricName + "_draws").increment();
+//                break;
+//            default:
+//                return "Invalid result";
+//        }
+//        return "Game recorded";
+//    }
 
     @PostMapping("/record-game-add")
     public String recordGame(@RequestBody GameResult gameResult) {
