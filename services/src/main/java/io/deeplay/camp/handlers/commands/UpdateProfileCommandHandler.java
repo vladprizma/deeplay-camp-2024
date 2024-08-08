@@ -1,9 +1,8 @@
 package io.deeplay.camp.handlers.commands;
 
-import entity.User;
+import io.deeplay.camp.entity.User;
 import io.deeplay.camp.handlers.main.MainHandler;
 import io.deeplay.camp.password.PasswordService;
-import io.deeplay.camp.repository.CommandHandler;
 import io.deeplay.camp.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

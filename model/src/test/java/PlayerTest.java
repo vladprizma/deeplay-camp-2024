@@ -1,5 +1,5 @@
-import entity.User;
-import enums.Color;
+import io.deeplay.camp.entity.User;
+import io.deeplay.camp.enums.Color;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

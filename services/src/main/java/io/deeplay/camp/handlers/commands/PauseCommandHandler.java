@@ -1,11 +1,10 @@
 package io.deeplay.camp.handlers.commands;
 
-import entity.GameSession;
-import entity.User;
-import enums.GameStatus;
+import io.deeplay.camp.entity.GameSession;
+import io.deeplay.camp.entity.User;
+import io.deeplay.camp.enums.GameStatus;
 import io.deeplay.camp.handlers.main.MainHandler;
 import io.deeplay.camp.managers.SessionManager;
-import io.deeplay.camp.repository.CommandHandler;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

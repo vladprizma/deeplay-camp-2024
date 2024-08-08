@@ -1,15 +1,13 @@
 package io.deeplay.camp.handlers.commands;
 
-import entity.User;
+import io.deeplay.camp.entity.User;
 import io.deeplay.camp.handlers.main.MainHandler;
-import io.deeplay.camp.repository.CommandHandler;
 import io.deeplay.camp.token.JwtService;
 import io.deeplay.camp.user.UserService;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Optional;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**

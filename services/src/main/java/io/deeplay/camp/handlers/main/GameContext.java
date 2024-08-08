@@ -1,10 +1,10 @@
 package io.deeplay.camp.handlers.main;
 
-import entity.Board;
-import entity.GameSession;
-import entity.User;
-import io.deeplay.camp.board.BoardLogic;
-import io.deeplay.camp.game.GameLogic;
+import io.deeplay.camp.entity.Board;
+import io.deeplay.camp.entity.GameSession;
+import io.deeplay.camp.entity.User;
+import io.deeplay.camp.board.BoardService;
+import io.deeplay.camp.game.GameService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,8 +21,8 @@ public class GameContext {
     private GameSession session;
     private User user;
     private boolean isLogin = false;
-    private GameLogic gameLogic;
-    private BoardLogic boardLogic;
+    private GameService gameLogic;
+    private BoardService boardLogic;
 
     /**
      * Retrieves the current game session.
@@ -86,7 +86,7 @@ public class GameContext {
      *
      * @return The current game logic.
      */
-    public GameLogic getGameLogic() {
+    public GameService getGameLogic() {
         return gameLogic;
     }
 
@@ -95,7 +95,7 @@ public class GameContext {
      *
      * @param gameLogic The game logic to be set.
      */
-    public void setGameLogic(GameLogic gameLogic) {
+    public void setGameLogic(GameService gameLogic) {
         this.gameLogic = gameLogic;
         logger.info("Game logic set: {}", gameLogic);
     }
@@ -105,7 +105,7 @@ public class GameContext {
      *
      * @return The current board logic.
      */
-    public BoardLogic getBoardLogic() {
+    public BoardService getBoardLogic() {
         return boardLogic;
     }
 
@@ -114,7 +114,7 @@ public class GameContext {
      *
      * @param boardLogic The board logic to be set.
      */
-    public void setBoardLogic(BoardLogic boardLogic) {
+    public void setBoardLogic(BoardService boardLogic) {
         this.boardLogic = boardLogic;
         logger.info("Board logic set: {}", boardLogic);
     }

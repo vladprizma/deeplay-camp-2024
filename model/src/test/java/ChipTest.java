@@ -1,8 +1,8 @@
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import entity.Chip;
-import entity.Tile;
+import io.deeplay.camp.entity.Chip;
+import io.deeplay.camp.entity.Tile;
 
 public class ChipTest {
 

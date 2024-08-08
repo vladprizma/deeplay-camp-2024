@@ -1,7 +1,7 @@
 //import io.deeplay.camp.board.BoardLogic;
 //import io.deeplay.camp.bot.BotService;
-//import entity.Board;
-//import entity.User;
+//import io.deeplay.camp.entity.Board;
+//import io.deeplay.camp.entity.User;
 //import io.deeplay.camp.game.GameLogic;
 //
 //import java.util.Map;

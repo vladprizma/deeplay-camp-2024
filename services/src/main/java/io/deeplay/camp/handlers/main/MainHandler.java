@@ -1,11 +1,11 @@
 package io.deeplay.camp.handlers.main;
 
-import entity.Board;
-import entity.GameSession;
-import entity.User;
+import io.deeplay.camp.entity.Board;
+import io.deeplay.camp.entity.GameSession;
+import io.deeplay.camp.entity.User;
 import io.deeplay.camp.Main;
-import io.deeplay.camp.board.BoardLogic;
-import io.deeplay.camp.game.GameLogic;
+import io.deeplay.camp.board.BoardService;
+import io.deeplay.camp.game.GameService;
 import io.deeplay.camp.handlers.commands.*;
 import io.deeplay.camp.managers.SessionManager;
 import org.slf4j.Logger;
@@ -162,7 +162,7 @@ public class MainHandler implements Runnable {
      *
      * @return The current game logic.
      */
-    public GameLogic getGameLogic() {
+    public GameService getGameLogic() {
         return gameContext.getGameLogic();
     }
 
@@ -171,7 +171,7 @@ public class MainHandler implements Runnable {
      *
      * @param gameLogic The game logic to be set.
      */
-    public void setGameLogic(GameLogic gameLogic) {
+    public void setGameLogic(GameService gameLogic) {
         gameContext.setGameLogic(gameLogic);
         logger.info("Game logic set: {}", gameLogic);
     }
@@ -181,7 +181,7 @@ public class MainHandler implements Runnable {
      *
      * @return The current board logic.
      */
-    public BoardLogic getBoardLogic() {
+    public BoardService getBoardLogic() {
         return gameContext.getBoardLogic();
     }
 
@@ -190,7 +190,7 @@ public class MainHandler implements Runnable {
      *
      * @param boardLogic The board logic to be set.
      */
-    public void setBoardLogic(BoardLogic boardLogic) {
+    public void setBoardLogic(BoardService boardLogic) {
         gameContext.setBoardLogic(boardLogic);
         logger.info("Board logic set: {}", boardLogic);
     }

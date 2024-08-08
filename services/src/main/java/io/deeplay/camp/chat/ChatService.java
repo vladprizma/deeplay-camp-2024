@@ -1,7 +1,7 @@
 package io.deeplay.camp.chat;
 
-import entity.ChatMessage;
-import entity.User;
+import io.deeplay.camp.entity.ChatMessage;
+import io.deeplay.camp.entity.User;
 import io.deeplay.camp.dao.ChatMessageDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

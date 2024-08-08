@@ -1,7 +1,7 @@
 package io.deeplay.camp.dao;
 
-import entity.ChatMessage;
-import entity.User;
+import io.deeplay.camp.entity.ChatMessage;
+import io.deeplay.camp.entity.User;
 
 import java.sql.*;
 import java.util.ArrayList;

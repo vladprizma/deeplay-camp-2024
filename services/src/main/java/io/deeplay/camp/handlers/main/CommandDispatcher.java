@@ -1,6 +1,6 @@
 package io.deeplay.camp.handlers.main;
 
-import io.deeplay.camp.repository.CommandHandler;
+import io.deeplay.camp.handlers.commands.CommandHandler;
 
 import java.io.IOException;
 import java.sql.SQLException;

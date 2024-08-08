@@ -1,15 +1,14 @@
 package io.deeplay.camp.handlers.commands;
 
-import dto.BoardDTO;
-import entity.GameSession;
-import enums.GameStatus;
-import io.deeplay.camp.board.BoardLogic;
+import io.deeplay.camp.dto.BoardDTO;
+import io.deeplay.camp.entity.GameSession;
+import io.deeplay.camp.enums.GameStatus;
+import io.deeplay.camp.board.BoardService;
 import io.deeplay.camp.bot.BotStrategy;
 import io.deeplay.camp.bot.RandomBot;
-import io.deeplay.camp.game.GameLogic;
+import io.deeplay.camp.game.GameService;
 import io.deeplay.camp.handlers.main.MainHandler;
 import io.deeplay.camp.managers.SessionManager;
-import io.deeplay.camp.repository.CommandHandler;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -105,8 +104,8 @@ public class MoveCommandHandler implements CommandHandler {
      * @param session     the game session, should not be null
      */
     private void initializeGameLogic(MainHandler mainHandler, GameSession session) {
-        var newBoardLogic = new BoardLogic(session.getBoard());
-        mainHandler.setGameLogic(new GameLogic(newBoardLogic));
+        var newBoardLogic = new BoardService(session.getBoard());
+        mainHandler.setGameLogic(new GameService(newBoardLogic));
         mainHandler.setBoardLogic(newBoardLogic);
     }
 
@@ -303,8 +302,8 @@ public class MoveCommandHandler implements CommandHandler {
      */
     private void handleBotMove(MainHandler mainHandler, GameSession session) throws IOException, SQLException {
         BotStrategy bot = new RandomBot(2, "Bot");
-        var newBoardLogicForBot = new BoardLogic(session.getBoard());
-        mainHandler.setGameLogic(new GameLogic(newBoardLogicForBot));
+        var newBoardLogicForBot = new BoardService(session.getBoard());
+        mainHandler.setGameLogic(new GameService(newBoardLogicForBot));
         mainHandler.setBoardLogic(newBoardLogicForBot);
 
         newBoardLogicForBot.makeMove(bot.id, bot.getMakeMove(bot.id, newBoardLogicForBot));

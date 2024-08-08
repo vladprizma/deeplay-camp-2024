@@ -3,12 +3,11 @@ package io.deeplay.camp;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import entity.Board;
-import entity.Tile;
-import io.deeplay.camp.board.BoardLogic;
+import io.deeplay.camp.entity.Board;
+import io.deeplay.camp.entity.Tile;
+import io.deeplay.camp.board.BoardService;
 import io.deeplay.camp.bot.BotStrategy;
 import io.deeplay.camp.bot.RandomBot;
-import io.deeplay.camp.game.GameLogic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -96,7 +95,7 @@ public class SelfPlay {
         BotStrategy firstRandomBot = new RandomBot(1, "DarlingBot");
         BotStrategy secondRandomBot = new RandomBot(2, "ViolaBot");
         Board board = new Board();
-        BoardLogic boardLogic = new BoardLogic(board);
+        BoardService boardLogic = new BoardService(board);
         BotStrategy currentBot = firstBotStarts ? firstRandomBot : secondRandomBot;
 
         while (!boardLogic.checkForWin().isGameFinished()) {
@@ -125,7 +124,7 @@ public class SelfPlay {
      * @param botService The bot making the move.
      * @param boardLogic The board logic to be used for making the move.
      */
-    private void executeBotMove(BotStrategy botService, BoardLogic boardLogic) {
+    private void executeBotMove(BotStrategy botService, BoardService boardLogic) {
         Callable<Tile> botMoveTask = () -> botService.getMakeMove(botService.id, boardLogic);
         Future<Tile> futureMove = scheduler.schedule(botMoveTask, 0, TimeUnit.SECONDS);
 

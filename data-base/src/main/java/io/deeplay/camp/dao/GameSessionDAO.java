@@ -1,8 +1,7 @@
 package io.deeplay.camp.dao;
 
-import entity.GameSession;
-import entity.SessionMessage;
-import entity.User;
+import io.deeplay.camp.entity.GameSession;
+import io.deeplay.camp.entity.SessionMessage;
 
 import java.sql.*;
 import java.util.ArrayList;

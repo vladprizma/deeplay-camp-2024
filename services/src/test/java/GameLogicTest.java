@@ -1,6 +1,6 @@
 //import io.deeplay.camp.board.BoardLogic;
-//import entity.Board;
-//import enums.GameStatus;
+//import io.deeplay.camp.entity.Board;
+//import io.deeplay.camp.enums.GameStatus;
 //import io.deeplay.camp.game.GameLogic;
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;

@@ -1,6 +1,6 @@
 package io.deeplay.camp.user;
 
-import entity.User;
+import io.deeplay.camp.entity.User;
 import io.deeplay.camp.dao.UserDAO;
 import io.deeplay.camp.password.PasswordService;
 import org.slf4j.Logger;

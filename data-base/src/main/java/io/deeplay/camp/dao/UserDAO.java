@@ -1,6 +1,6 @@
 package io.deeplay.camp.dao;
 
-import entity.User;
+import io.deeplay.camp.entity.User;
 
 import java.sql.*;
 import java.util.Optional;

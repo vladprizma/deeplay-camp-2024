@@ -1,7 +1,6 @@
 package io.deeplay.camp.handlers.commands;
 
 import io.deeplay.camp.handlers.main.MainHandler;
-import io.deeplay.camp.repository.CommandHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

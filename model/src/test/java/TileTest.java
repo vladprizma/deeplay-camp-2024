@@ -1,5 +1,4 @@
-import enums.Color;
-import entity.Tile;
+import io.deeplay.camp.entity.Tile;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

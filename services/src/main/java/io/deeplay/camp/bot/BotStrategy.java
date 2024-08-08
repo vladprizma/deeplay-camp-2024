@@ -1,7 +1,7 @@
 package io.deeplay.camp.bot;
 
-import entity.Tile;
-import io.deeplay.camp.board.BoardLogic;
+import io.deeplay.camp.entity.Tile;
+import io.deeplay.camp.board.BoardService;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -15,7 +15,7 @@ public abstract class BotStrategy {
         this.name = name;
     }
 
-    public abstract Tile getMakeMove(int currentPlayerId, @NotNull BoardLogic boardLogic);
+    public abstract Tile getMakeMove(int currentPlayerId, @NotNull BoardService boardLogic);
 
-    abstract List<Tile> getAllValidMoves(int currentPlayerId, @NotNull BoardLogic boardLogic);
+    abstract List<Tile> getAllValidMoves(int currentPlayerId, @NotNull BoardService boardLogic);
 }

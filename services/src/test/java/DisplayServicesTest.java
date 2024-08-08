@@ -1,6 +1,6 @@
 //import io.deeplay.camp.board.BoardLogic;
 //import io.deeplay.camp.display.DisplayServices;
-//import entity.Board;
+//import io.deeplay.camp.entity.Board;
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;
 //import org.junit.jupiter.api.AfterEach;

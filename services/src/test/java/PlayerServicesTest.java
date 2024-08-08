@@ -1,7 +1,7 @@
 //import io.deeplay.camp.board.BoardLogic;
-//import entity.Board;
-//import entity.User;
-//import enums.Color;
+//import io.deeplay.camp.entity.Board;
+//import io.deeplay.camp.entity.User;
+//import io.deeplay.camp.enums.Color;
 //import io.deeplay.camp.game.GameLogic;
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;

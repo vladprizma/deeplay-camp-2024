@@ -1,5 +1,5 @@
-import dto.BoardDTO;
-import entity.Board;
+import io.deeplay.camp.dto.BoardDTO;
+import io.deeplay.camp.entity.Board;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

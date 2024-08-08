@@ -1,11 +1,10 @@
 package io.deeplay.camp.handlers.commands;
 
-import enums.GameStatus;
-import io.deeplay.camp.board.BoardLogic;
-import io.deeplay.camp.game.GameLogic;
+import io.deeplay.camp.enums.GameStatus;
+import io.deeplay.camp.board.BoardService;
+import io.deeplay.camp.game.GameService;
 import io.deeplay.camp.handlers.main.MainHandler;
 import io.deeplay.camp.managers.SessionManager;
-import io.deeplay.camp.repository.CommandHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,8 +66,8 @@ public class StartCommandHandler implements CommandHandler {
             return;
         }
 
-        mainHandler.setBoardLogic(new BoardLogic(result.getGameSession().getBoard()));
-        mainHandler.setGameLogic(new GameLogic(mainHandler.getBoardLogic()));
+        mainHandler.setBoardLogic(new BoardService(result.getGameSession().getBoard()));
+        mainHandler.setGameLogic(new GameService(mainHandler.getBoardLogic()));
 
         logger.info("User {}: The enemy was found. The game begins...", mainHandler.getUser().getId());
 

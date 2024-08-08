@@ -1,9 +1,8 @@
 package io.deeplay.camp.handlers.commands;
 
-import dto.BoardDTO;
+import io.deeplay.camp.dto.BoardDTO;
 import io.deeplay.camp.handlers.main.MainHandler;
 import io.deeplay.camp.managers.SessionManager;
-import io.deeplay.camp.repository.CommandHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

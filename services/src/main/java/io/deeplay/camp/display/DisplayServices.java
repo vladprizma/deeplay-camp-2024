@@ -1,6 +1,6 @@
 package io.deeplay.camp.display;
 
-import io.deeplay.camp.board.BoardLogic;
+import io.deeplay.camp.board.BoardService;
 import io.deeplay.camp.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,16 +8,16 @@ import org.slf4j.LoggerFactory;
 public class DisplayServices {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
-    public void display(int currentPlayerId, BoardLogic boardLogic) {
+    public void display(int currentPlayerId, BoardService boardLogic) {
         displayBoard(currentPlayerId, boardLogic);
 //        displayScore(boardLogic);
     }
 
-    public void displayBoard(int currentPlayerId, BoardLogic boardLogic) {
+    public void displayBoard(int currentPlayerId, BoardService boardLogic) {
         logger.info((boardLogic.getBoardState(currentPlayerId)).toString());
     }
 
-    public void displayScore(BoardLogic boardLogic) {
+    public void displayScore(BoardService boardLogic) {
         int[] score = boardLogic.score();
         String scoreText = " Score: " + score[0] + " : " + score[1] + " ";
         int textLength = scoreText.length();
@@ -42,7 +42,7 @@ public class DisplayServices {
         logger.info("]");
     }
 
-    public void displayEndGame(BoardLogic boardLogic) {
+    public void displayEndGame(BoardService boardLogic) {
         int[] score = boardLogic.score();
         String scoreText;
 

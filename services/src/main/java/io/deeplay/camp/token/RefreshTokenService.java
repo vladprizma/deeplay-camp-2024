@@ -1,6 +1,7 @@
 package io.deeplay.camp.token;
 
-import entity.User;
+import io.deeplay.camp.entity.TokensRequest;
+import io.deeplay.camp.entity.User;
 import io.deeplay.camp.dao.TokenDAO;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

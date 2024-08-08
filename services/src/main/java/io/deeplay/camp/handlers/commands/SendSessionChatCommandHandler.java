@@ -1,14 +1,12 @@
 package io.deeplay.camp.handlers.commands;
 
-import entity.SessionMessage;
+import io.deeplay.camp.entity.SessionMessage;
 import io.deeplay.camp.handlers.main.MainHandler;
 import io.deeplay.camp.managers.SessionManager;
-import io.deeplay.camp.repository.CommandHandler;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**

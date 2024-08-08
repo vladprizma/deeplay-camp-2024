@@ -1,8 +1,8 @@
 package io.deeplay.camp.managers;
 
-import TokenGenerator.TokenGenerator;
-import entity.*;
-import enums.GameStatus;
+import io.deeplay.camp.TokenGenerator.TokenGenerator;
+import io.deeplay.camp.entity.*;
+import io.deeplay.camp.enums.GameStatus;
 import io.deeplay.camp.elo.EloService;
 import io.deeplay.camp.handlers.main.MainHandler;
 import io.deeplay.camp.user.UserService;

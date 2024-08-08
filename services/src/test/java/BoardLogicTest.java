@@ -1,4 +1,4 @@
-//import entity.Board;
+//import io.deeplay.camp.entity.Board;
 //import io.deeplay.camp.board.BoardLogic;
 //import org.junit.jupiter.api.Test;
 //import static org.junit.jupiter.api.Assertions.*;
