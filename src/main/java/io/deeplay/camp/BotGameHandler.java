@@ -1,5 +1,8 @@
 package io.deeplay.camp;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import entity.Board;
 import io.deeplay.camp.board.BoardLogic;
 import io.deeplay.camp.bot.RandomBot;
@@ -7,6 +10,8 @@ import io.deeplay.camp.game.GameLogic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
@@ -54,13 +59,13 @@ public class BotGameHandler {
         logger.info("Total games: {}. Bot 1 wins: {}. Bot 2 wins: {}. Draws: {}", gameCount, firstBotWins.get(), secondBotWins.get(), draws.get());
         gameExecutor.shutdown();
         scheduler.shutdown();
+
+        saveResultsToJson();
     }
 
     private Void playSingleGame(boolean firstBotStarts) {
-        // u can change bot type with BotStrategy
         RandomBot firstRandomBot = new RandomBot();
         RandomBot secondRandomBot = new RandomBot();
-        // 
         Board board = new Board();
         BoardLogic boardLogic = new BoardLogic(board);
         GameLogic gameLogic = new GameLogic(boardLogic);
@@ -128,5 +133,82 @@ public class BotGameHandler {
             firstBotWins.incrementAndGet();
         }
         totalGamesCompleted.incrementAndGet();
+    }
+
+    private void saveResultsToJson() {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
+        File file = new File("game_results.json");
+
+        List<Results> resultsList;
+
+        if (file.exists()) {
+            try {
+                resultsList = mapper.readValue(file, new TypeReference<List<Results>>() {});
+            } catch (IOException e) {
+                logger.error("Error reading existing game results from JSON", e);
+                resultsList = new ArrayList<>();
+            }
+        } else {
+            resultsList = new ArrayList<>();
+        }
+
+        Results newResults = new Results(gameCount, firstBotWins.get(), secondBotWins.get(), draws.get());
+        resultsList.add(newResults);
+
+        try {
+            writer.writeValue(file, resultsList);
+            logger.info("Game results saved to game_results.json");
+        } catch (IOException e) {
+            logger.error("Error saving game results to JSON", e);
+        }
+    }
+
+    private static class Results {
+        public int totalGames;
+        public int firstBotWins;
+        public int secondBotWins;
+        public int draws;
+
+        public Results() {}
+
+        public Results(int totalGames, int firstBotWins, int secondBotWins, int draws) {
+            this.totalGames = totalGames;
+            this.firstBotWins = firstBotWins;
+            this.secondBotWins = secondBotWins;
+            this.draws = draws;
+        }
+
+        public int getTotalGames() {
+            return totalGames;
+        }
+
+        public void setTotalGames(int totalGames) {
+            this.totalGames = totalGames;
+        }
+
+        public int getFirstBotWins() {
+            return firstBotWins;
+        }
+
+        public void setFirstBotWins(int firstBotWins) {
+            this.firstBotWins = firstBotWins;
+        }
+
+        public int getSecondBotWins() {
+            return secondBotWins;
+        }
+
+        public void setSecondBotWins(int secondBotWins) {
+            this.secondBotWins = secondBotWins;
+        }
+
+        public int getDraws() {
+            return draws;
+        }
+
+        public void setDraws(int draws) {
+            this.draws = draws;
+        }
     }
 }
