@@ -12,6 +12,8 @@ import io.deeplay.camp.managers.SessionManager;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -25,6 +27,7 @@ import java.util.logging.Logger;
 public class MoveCommandHandler implements CommandHandler {
 
     private static final Logger logger = Logger.getLogger(MoveCommandHandler.class.getName());
+    private List<String> gameLogs = new ArrayList<>();
 
     /**
      * Handles the move command.
@@ -250,13 +253,16 @@ public class MoveCommandHandler implements CommandHandler {
 
         String msg;
         if (!session.getPlayer2().getIsBot()) {
+            gameLogs.add("board-after-move::" + boardDTOState + "::" + score + "::" + validMoves + "::" + newCurrentPlayer);
             msg = "board-after-move::" + boardDTOState + "::" + score + "::" + validMoves + "::" + newCurrentPlayer;
         } else {
+            gameLogs.add("board-after-move::" + boardState + "::" + score + "::" + validMoves + "::" + newCurrentPlayer);
             msg = "board-after-move::" + boardState + "::" + score + "::" + validMoves + "::" + newCurrentPlayer;
         }
 
         mainHandler.sendMessageToClient(msg);
         if (!session.getPlayer2().getIsBot()) {
+            gameLogs.add("board-after-move::" + boardState + "::" + score + "::" + validMoves + "::" + newCurrentPlayer);
             msg = "board-after-move::" + boardState + "::" + score + "::" + validMoves + "::" + newCurrentPlayer;
             SessionManager.getInstance().sendMessageToOpponent(mainHandler, session, msg);
         }
@@ -286,6 +292,7 @@ public class MoveCommandHandler implements CommandHandler {
         }
 
         boolean playerWon = getPlayerNumber(mainHandler, session) == mainHandler.getBoardLogic().checkForWin().getUserIdWinner();
+        mainHandler.getSession().setLog(gameLogs);
         SessionManager.getInstance().finishedSession(mainHandler, playerWon);
     }
 

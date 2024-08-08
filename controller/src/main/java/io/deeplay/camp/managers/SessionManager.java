@@ -4,6 +4,7 @@ import io.deeplay.camp.TokenGenerator.TokenGenerator;
 import io.deeplay.camp.entity.*;
 import io.deeplay.camp.enums.GameStatus;
 import io.deeplay.camp.elo.EloService;
+import io.deeplay.camp.gameSession.GameSessionService;
 import io.deeplay.camp.handlers.main.MainHandler;
 import io.deeplay.camp.user.UserService;
 
@@ -201,6 +202,13 @@ public class SessionManager {
         } else {
             updateEloForPlayerVsBot(gameSession, playerWon, eloService, userService, clientHandler);
         }
+        
+        var gameSessionService = new GameSessionService();
+        
+        gameSession.setResult(playerWon ? clientHandler.getUser().getId() + " win" : clientHandler.getUser().getId() + " lose");
+        gameSession.setGameState(GameStatus.FINISHED);
+        
+        gameSessionService.addGameSession(gameSession, gameSession.getLog());
 
         sessions.remove(gameSession);
     }

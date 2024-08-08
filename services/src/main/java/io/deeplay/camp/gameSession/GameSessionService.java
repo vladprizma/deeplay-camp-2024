@@ -12,8 +12,10 @@ public class GameSessionService {
         this.gameSessionDAO = new GameSessionDAO();
     }
 
-    public void addGameSession(GameSession gameSession, String log) throws SQLException {
-        gameSessionDAO.addGameSession(gameSession, log);
+    public void addGameSession(GameSession gameSession, List<String> log) throws SQLException {
+        var stringLog = convertLogToString(log);
+        
+        gameSessionDAO.addGameSession(gameSession, stringLog);
     }
 
     public void updateGameSession(GameSession gameSession, String log) throws SQLException {
@@ -30,5 +32,9 @@ public class GameSessionService {
 
     public void deleteGameSession(int id) throws SQLException {
         gameSessionDAO.deleteGameSession(id);
+    }
+    
+    private String convertLogToString(List<String> log) {
+        return String.join("\n", log);
     }
 }

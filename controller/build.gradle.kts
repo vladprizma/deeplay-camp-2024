@@ -10,6 +10,10 @@ repositories {
 }
 
 dependencies {
+    implementation(project(":model"))
+    implementation(project(":utilities"))
+    implementation(project(":services"))
+    
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     implementation("ch.qos.logback:logback-classic:1.4.12")

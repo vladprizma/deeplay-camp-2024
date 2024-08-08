@@ -5,6 +5,7 @@ import io.deeplay.camp.entity.SessionMessage;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -86,7 +87,7 @@ public class GameSessionDAO {
                     var player1 = USER_DAO.getUserById(player1Id);
                     var player2 = USER_DAO.getUserById(player2Id);
 
-                    GameSession gameSession = new GameSession(id, player1.get(), result, player2.get(), log);
+                    GameSession gameSession = new GameSession(id, player1.get(), result, player2.get(), Arrays.stream(log.split("\n")).toList());
                     gameSession.setSessionChat(convertStringToChat(sessionChat));
 
                     return gameSession;
@@ -122,7 +123,7 @@ public class GameSessionDAO {
                 var player1 = USER_DAO.getUserById(player1Id);
                 var player2 = USER_DAO.getUserById(player2Id);
 
-                GameSession gameSession = new GameSession(id, player1.get(), result, player2.get(), log);
+                GameSession gameSession = new GameSession(id, player1.get(), result, player2.get(),  Arrays.stream(log.split("\n")).toList());
                 gameSession.setSessionChat(convertStringToChat(sessionChat));
 
                 gameSessions.add(gameSession);

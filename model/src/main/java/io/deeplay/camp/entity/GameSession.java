@@ -20,7 +20,7 @@ public class GameSession {
     private GameStatus gameState = GameStatus.NOT_STARTED;
     private int sessionId;
     private String result;
-    private String log;
+    private List<String> log;
     private List<SessionMessage> sessionChat;
 
     /**
@@ -39,7 +39,7 @@ public class GameSession {
      * @param player2 The second player.
      * @param log     The game log.
      */
-    public GameSession(int id, User player1, String result, User player2, String log) {
+    public GameSession(int id, User player1, String result, User player2, List<String> log) {
         this.sessionId = id;
         this.result = result;
         this.player1 = player1;
@@ -65,7 +65,7 @@ public class GameSession {
      *
      * @return The game log.
      */
-    public String getLog() {
+    public List<String> getLog() {
         return log;
     }
 
@@ -74,7 +74,7 @@ public class GameSession {
      *
      * @param log The new game log.
      */
-    public void setLog(String log) {
+    public void setLog(List<String> log) {
         this.log = log;
     }
 
