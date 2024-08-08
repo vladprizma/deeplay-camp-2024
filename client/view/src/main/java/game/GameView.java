@@ -6,6 +6,7 @@ import javafx.animation.Timeline;
 import javafx.animation.Transition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -23,6 +24,7 @@ import observer.Observer;
 import sigletonobserver.ChatString;
 
 import java.util.List;
+import java.util.Random;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -113,11 +115,23 @@ public class GameView implements Observer {
         }
     }
 
-    private void startRedTimer() {
+    EventHandler<ActionEvent> timerFinishedHandler = new EventHandler<ActionEvent>() {
+        @Override
+        public void handle(ActionEvent event) {
+            stopRedTimer(); // Остановка таймера
+            makeRandomMove(); // Выполнение случайного хода
+        }
+    };
+
+    private void startRedTimer(){
         if (redTimer.getStatus() == Timeline.Status.STOPPED) {
             redTimer.setCycleCount(Timeline.INDEFINITE);
             redTimer.play();
         }
+        redTimer.setOnFinished(event -> {
+            stopRedTimer();
+            makeRandomMove();
+        });
     }
 
     private void stopRedTimer() {
@@ -131,6 +145,10 @@ public class GameView implements Observer {
             greenTimer.setCycleCount(Timeline.INDEFINITE);
             greenTimer.play();
         }
+        redTimer.setOnFinished(event -> {
+            stopRedTimer();
+            makeRandomMove();
+        });
     }
 
     private void stopGreenTimer() {
@@ -303,5 +321,15 @@ public class GameView implements Observer {
             }
         };
         return gradientAnimation;
+    }
+
+    private void makeRandomMove() {
+        Random random = new Random();
+        int randomRow = random.nextInt(8);
+        int randomCol = random.nextInt(8);
+
+        String tileId = "button_" + randomRow + "_" + randomCol;
+
+        modelManager.moveModelMethod(tileId);
     }
 }

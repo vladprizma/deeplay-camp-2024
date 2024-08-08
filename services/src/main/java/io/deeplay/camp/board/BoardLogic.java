@@ -1,11 +1,6 @@
 package io.deeplay.camp.board;
 
 import entity.Board;
-import entity.Tile;
-import enums.GameStatus;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class BoardLogic {
 
@@ -119,13 +114,9 @@ public class BoardLogic {
             if (player == 1) {
                 blackChips = currentChips;
                 whiteChips = invertedChips;
-                board.setWhiteChips(whiteChips);
-                board.setBlackChips(blackChips);
             } else {
                 whiteChips = currentChips;
                 blackChips = invertedChips;
-                board.setWhiteChips(whiteChips);
-                board.setBlackChips(blackChips);
             }
         }
     }
@@ -333,69 +324,6 @@ public class BoardLogic {
     public long getWhiteValidMoves() {
         createValidMoves();
         return whiteValidMoves;
-    }
-
-    public List<Tile> getAllValidTiles(int playerId) {
-        List<Tile> validTiles = new ArrayList<>();
-        long validMoves = getValidMoves(playerId);
-        for (int i = 0; i < 64; i++) {
-            long mask = 1L << i;
-            if ((validMoves & mask) != 0) {
-                int x = i % 8;
-                int y = i / 8;
-                validTiles.add(new Tile(x, y));
-            }
-        }
-        return validTiles;
-    }
-
-    public boolean makeMove(int playerId, Tile tile) {
-        int x = tile.getX();
-        int y = tile.getY();
-        setPiece(x, y, playerId);
-                
-        return true;
-    }
-
-    public List<Tile> getChips(int playerId) {
-        List<Tile> playerChips = new ArrayList<>();
-        long chips;
-        if(playerId == 1) {
-            chips = blackChips;
-        } else chips = whiteChips;
-        for (int i = 0; i < 64; i++) {
-            long mask = 1L << i;
-            if ((chips & mask) != 0) {
-                int x = i % 8;
-                int y = i / 8;
-                playerChips.add(new Tile(x, y));
-            }
-        }
-        return playerChips;
-    }
-
-    public GameFinished checkForWin() {
-        GameFinished gameFinished;
-        int winner = 0;
-
-        long blackValidMoves = getValidMoves(1);
-        long whiteValidMoves = getValidMoves(2);
-        
-        
-        //TODO переделать на && после починки логики игры
-        if (blackValidMoves == 0 || whiteValidMoves == 0) {
-            if (getChips(1).size() > getChips(2).size()) {
-                winner = 1;
-                return gameFinished = new GameFinished(true, winner);
-            } else if (getChips(2).size() > getChips(1).size()) {
-                winner = 2;
-                return gameFinished = new GameFinished(true, winner);
-            } else {
-                winner = 3;
-                return gameFinished = new GameFinished(true, winner);
-            }
-        }
-        return new GameFinished(false, -1);
     }
 
     public void setBlackValidMoves(long blackValidMoves) {
