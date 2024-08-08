@@ -1,5 +1,6 @@
 package mainmenu;
 
+import game.GameView;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.scene.image.ImageView;

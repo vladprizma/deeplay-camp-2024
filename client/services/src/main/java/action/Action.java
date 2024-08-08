@@ -128,16 +128,7 @@ public class Action {
         singleton.setString(chatMessages);
     }
 
-    public void handleMoveActionRequest() {
-        try {
-            CommandRequest boardCommandRequest = new BoardCommandRequest(client);
-            boardCommandRequest.execute();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void handleMoveActionResponse(String chatMessages) {
+    public void handleResponseActionResponse(String chatMessages) {
         ChatString singleton = ChatString.getInstance();
         singleton.setString(chatMessages);
     }

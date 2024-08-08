@@ -291,6 +291,31 @@ public class BoardLogic {
         return state;
     }
 
+    public String getBoardStateDTO(int player){
+        StringBuilder state = new StringBuilder("");
+        for (int y = 0; y < 8; y++) {
+            for (int x = 0; x < 8; x++) {
+                if (hasPiece(x, y)) {
+                    if ((blackChips & (1L << (x + 8 * y))) != 0) {
+                        state.append("X ");
+                    } else {
+                        state.append("0 ");
+                    }
+                } else {
+                    long validMoves = (player == 1) ? blackValidMoves : whiteValidMoves;
+                    long mask = 1L << (x + 8 * y);
+                    if ((validMoves & mask) != 0) {
+                        state.append("* ");
+                    } else {
+                        state.append(". ");
+                    }
+                }
+            }
+        }
+
+        return "Board{" + state + '}';
+    }
+
     public long getBlackValidMoves() {
         createValidMoves();
         return blackValidMoves;

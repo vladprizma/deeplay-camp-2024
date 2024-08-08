@@ -37,7 +37,24 @@ public class GetBoardCommandHandler implements CommandHandler {
         String boardNotation = boardDTO.boardToClient();
 
         // Send the board notation to the client
-        mainHandler.sendMessageToClient("get-board::" + boardNotation);
+        var userId = mainHandler.getUser().getId();
+
+        var currentPlayerId = session.getCurrentPlayerId();
+        if (currentPlayerId != userId) {
+            mainHandler.sendMessageToClient("get-board::" + boardNotation + "::2" + "::2");
+        } else {
+            if (userId == session.getPlayer1().getId()) {
+                userId = 1;
+            } else if (userId == session.getPlayer2().getId()) {
+                userId = 2;
+            } else {
+                mainHandler.sendMessageToClient("You are not a player in this session.");
+            }
+            String boardState = mainHandler.getBoardLogic().getBoardStateDTO(userId);
+
+            mainHandler.sendMessageToClient("get-board::" + boardState + "::2" + "::2");
+        }
+
         logger.info("Board information sent to client successfully");
     }
 }

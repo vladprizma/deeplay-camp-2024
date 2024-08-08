@@ -133,14 +133,28 @@ public class MoveCommandHandler implements CommandHandler {
     private void sendBoardStateToClient(MainHandler mainHandler, GameSession session, int playerNumber) throws IOException {
         var userId = mainHandler.getUser().getId();
         var boardDTO = new BoardDTO(session.getBoard());
-        String boardState = boardDTO.boardToClient();
+        String boardDTOState = boardDTO.boardToClient();
         String score = mainHandler.getBoardLogic().score()[0] + " " + mainHandler.getBoardLogic().score()[1];
         String validMoves = Long.toString(mainHandler.getBoardLogic().getValidMoves(3 - playerNumber));
         var newCurrentPlayer = playerNumber == 1 ? session.getPlayer2().getId() : session.getPlayer1().getId();
-        String msg = "board-after-move::" + "::" + boardState + "::" + score + "::" + validMoves + "::" + newCurrentPlayer;
+        String boardState;
+        if (session.getPlayer2().getIsBot()) {
+            SessionManager.getInstance().getSession(session.getSessionId()).setCurrentPlayerId(newCurrentPlayer);
+            boardState = mainHandler.getBoardLogic().getBoardStateDTO(getPlayerNumber(mainHandler, session));
+        } else {
+            boardState = mainHandler.getBoardLogic().getBoardStateDTO( 3 - getPlayerNumber(mainHandler, session));
+        }
+
+        String msg;
+        if (!session.getPlayer2().getIsBot()) {
+            msg = "board-after-move::" + boardDTOState + "::" + score + "::" + validMoves + "::" + newCurrentPlayer;
+        } else {
+            msg = "board-after-move::" + boardState + "::" + score + "::" + validMoves + "::" + newCurrentPlayer;
+        }
 
         mainHandler.sendMessageToClient(msg);
         if (!session.getPlayer2().getIsBot()) {
+            msg = "board-after-move::" + boardState + "::" + score + "::" + validMoves + "::" + newCurrentPlayer;
             SessionManager.getInstance().sendMessageToOpponent(mainHandler, session, msg);
         }
     }
@@ -167,6 +181,7 @@ public class MoveCommandHandler implements CommandHandler {
         mainHandler.setBoardLogic(newBoardLogicForBot);
 
         bot.makeMove(2, newBoardLogicForBot);
+
         updateSessionBoard(mainHandler, session);
 
         sendBoardStateToClient(mainHandler, session, 2);

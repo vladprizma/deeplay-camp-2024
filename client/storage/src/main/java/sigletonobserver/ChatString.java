@@ -4,12 +4,13 @@ import observer.Observer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ChatString {
     private static ChatString instance;
     private String storedString;
 
-    private List<Observer> observers = new ArrayList<>();
+    private final List<Observer> observers = new CopyOnWriteArrayList<>();
 
     private ChatString() {}
 
