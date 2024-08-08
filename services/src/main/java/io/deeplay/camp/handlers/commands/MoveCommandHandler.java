@@ -164,7 +164,7 @@ public class MoveCommandHandler implements CommandHandler {
         mainHandler.getGameLogic().displayEndGame(mainHandler.getBoardLogic());
         session.setGameState(GameStatus.FINISHED);
         String msgWin = "game-status::finished";
-
+        
         if (!session.getPlayer2().getIsBot()) {
             SessionManager.getInstance().sendMessageToAllInSession(mainHandler, msgWin);
         } else {
