@@ -32,6 +32,13 @@ public class SendSessionChatCommandHandler implements CommandHandler {
     public void handle(String message, MainHandler mainHandler) throws IOException, SQLException, InterruptedException {
         logger.info("Handling send session chat command");
 
+        if (mainHandler.getSession() == null) {
+            String errorMsg = "No active session found.";
+            logger.warning(errorMsg);
+            mainHandler.sendMessageToClient(errorMsg);
+            return;
+        }
+
         String[] parts = message.split(MainHandler.splitRegex, 2);
         if (parts.length < 2) {
             String errorMsg = "Invalid message format.";
