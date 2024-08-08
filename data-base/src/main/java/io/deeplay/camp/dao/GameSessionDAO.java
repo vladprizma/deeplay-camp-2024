@@ -8,12 +8,25 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Data Access Object (DAO) for managing game sessions in the database.
+ * <p>
+ * This class provides methods to add, update, retrieve, and delete game sessions from the database.
+ * </p>
+ */
 public class GameSessionDAO {
     private static final UserDAO USER_DAO = new UserDAO();
     private static final String DB_URL = "jdbc:postgresql://localhost:5431/reversi";
     private static final String DB_USER = "admin";
     private static final String DB_PASSWORD = "admin";
 
+    /**
+     * Adds a new game session to the database.
+     *
+     * @param gameSession The game session to be added.
+     * @param log         The game log.
+     * @throws SQLException If a database access error occurs.
+     */
     public void addGameSession(GameSession gameSession, String log) throws SQLException {
         String sql = "INSERT INTO gamesessions (player1_id, result, log, player2_id, session_chat) VALUES (?, ?, ?, ?, ?)";
 
@@ -28,6 +41,13 @@ public class GameSessionDAO {
         }
     }
 
+    /**
+     * Updates an existing game session in the database.
+     *
+     * @param gameSession The game session to be updated.
+     * @param log         The game log.
+     * @throws SQLException If a database access error occurs.
+     */
     public void updateGameSession(GameSession gameSession, String log) throws SQLException {
         String sql = "UPDATE gamesessions SET player1_id = ?, result = ?, log = ?, player2_id = ?, session_chat = ? WHERE id = ?";
 
@@ -43,6 +63,13 @@ public class GameSessionDAO {
         }
     }
 
+    /**
+     * Retrieves a game session from the database by its ID.
+     *
+     * @param id The ID of the game session to be retrieved.
+     * @return The game session with the specified ID, or null if not found.
+     * @throws SQLException If a database access error occurs.
+     */
     public GameSession getGameSessionById(int id) throws SQLException {
         String sql = "SELECT * FROM gamesessions WHERE id = ?";
 
@@ -70,6 +97,12 @@ public class GameSessionDAO {
         return null;
     }
 
+    /**
+     * Retrieves all game sessions from the database.
+     *
+     * @return A list of all game sessions.
+     * @throws SQLException If a database access error occurs.
+     */
     public List<GameSession> getAllGameSessions() throws SQLException {
         String sql = "SELECT * FROM gamesessions";
 
@@ -99,6 +132,12 @@ public class GameSessionDAO {
         return gameSessions;
     }
 
+    /**
+     * Deletes a game session from the database by its ID.
+     *
+     * @param id The ID of the game session to be deleted.
+     * @throws SQLException If a database access error occurs.
+     */
     public void deleteGameSession(int id) throws SQLException {
         String sql = "DELETE FROM gamesessions WHERE id = ?";
 
@@ -109,6 +148,12 @@ public class GameSessionDAO {
         }
     }
 
+    /**
+     * Converts a list of session messages to a string representation.
+     *
+     * @param sessionChat The list of session messages.
+     * @return The string representation of the session messages.
+     */
     private String convertChatToString(List<SessionMessage> sessionChat) {
         StringBuilder sb = new StringBuilder();
         for (SessionMessage message : sessionChat) {
@@ -117,6 +162,12 @@ public class GameSessionDAO {
         return sb.toString();
     }
 
+    /**
+     * Converts a string representation of session messages to a list.
+     *
+     * @param chat The string representation of the session messages.
+     * @return The list of session messages.
+     */
     private List<SessionMessage> convertStringToChat(String chat) {
         List<SessionMessage> sessionChat = new ArrayList<>();
         if (chat != null && !chat.isEmpty()) {
