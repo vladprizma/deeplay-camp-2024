@@ -12,21 +12,29 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * CommandHandler для отправки сообщений в чат сессии.
- * Позволяет отправлять сообщения всем участникам сессии.
+ * CommandHandler for sending messages to the session chat.
+ * <p>
+ * This handler is responsible for processing commands to send messages to the session chat. It validates the input message,
+ * adds the message to the session chat, and sends the message to all participants in the session. It also logs the process
+ * and handles any unexpected errors that may occur.
+ * </p>
  */
 public class SendSessionChatCommandHandler implements CommandHandler {
 
     private static final Logger logger = Logger.getLogger(SendSessionChatCommandHandler.class.getName());
 
     /**
-     * Обрабатывает команду для отправки сообщения в чат сессии.
+     * Handles the command to send a message to the session chat.
+     * <p>
+     * This method validates the input parameters, adds the message to the session chat, and sends the message to all participants
+     * in the session. In case of errors, appropriate messages are sent to the client and the error is logged.
+     * </p>
      *
-     * @param message     Сообщение команды.
-     * @param mainHandler Основной обработчик, управляющий сессией.
-     * @throws IOException            В случае ошибки ввода-вывода.
-     * @throws SQLException           В случае ошибки SQL.
-     * @throws InterruptedException   В случае прерывания потока.
+     * @param message     The command message.
+     * @param mainHandler The main handler managing the session.
+     * @throws IOException            If an I/O error occurs.
+     * @throws SQLException           If a SQL error occurs.
+     * @throws InterruptedException   If the thread is interrupted.
      */
     @Override
     public void handle(String message, MainHandler mainHandler) throws IOException, SQLException, InterruptedException {

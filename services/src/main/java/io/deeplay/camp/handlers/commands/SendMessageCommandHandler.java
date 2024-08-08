@@ -13,8 +13,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * CommandHandler для отправки сообщений в общий чат.
- * Позволяет отправлять сообщения всем участникам.
+ * CommandHandler for sending messages to the public chat.
+ * <p>
+ * This handler is responsible for processing commands to send messages to the public chat. It validates the input message,
+ * adds the message to the chat service, and sends the message to all participants. It also logs the process and handles any
+ * unexpected errors that may occur.
+ * </p>
  */
 public class SendMessageCommandHandler implements CommandHandler {
 
@@ -22,12 +26,16 @@ public class SendMessageCommandHandler implements CommandHandler {
     private final ChatService chatService = new ChatService();
 
     /**
-     * Обрабатывает команду для отправки сообщения в общий чат.
+     * Handles the command to send a message to the public chat.
+     * <p>
+     * This method validates the input parameters, adds the message to the chat service, and sends the message to all participants.
+     * In case of errors, appropriate messages are sent to the client and the error is logged.
+     * </p>
      *
-     * @param message Сообщение команды.
-     * @param mainHandler Основной обработчик, управляющий сессией.
-     * @throws IOException В случае ошибки ввода-вывода.
-     * @throws SQLException В случае ошибки SQL.
+     * @param message     The command message.
+     * @param mainHandler The main handler managing the session.
+     * @throws IOException  If an I/O error occurs.
+     * @throws SQLException If a SQL error occurs.
      */
     @Override
     public void handle(String message, MainHandler mainHandler) throws IOException, SQLException {
@@ -59,7 +67,7 @@ public class SendMessageCommandHandler implements CommandHandler {
             logger.info("Chat message sent to all successfully.");
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error handling send message command", e);
-            throw e; 
+            throw e;
         }
     }
 }

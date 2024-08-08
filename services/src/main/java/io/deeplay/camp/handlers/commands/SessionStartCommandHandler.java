@@ -9,26 +9,47 @@ import io.deeplay.camp.user.UserService;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * Обработчик команды для начала сессии пользователя.
+ * CommandHandler for starting a user session.
+ * <p>
+ * This handler is responsible for processing commands to start a user session. It validates the JWT token,
+ * retrieves the user associated with the token, and sets the user in the main handler. It also logs the process
+ * and handles any unexpected errors that may occur.
+ * </p>
  */
 public class SessionStartCommandHandler implements CommandHandler {
 
+    private static final Logger logger = Logger.getLogger(SessionStartCommandHandler.class.getName());
     private final UserService userService = new UserService();
     private final JwtService jwtService = new JwtService();
 
     /**
-     * Обрабатывает команду начала сессии.
+     * Handles the command to start a user session.
+     * <p>
+     * This method validates the JWT token, retrieves the user associated with the token, and sets the user in the main handler.
+     * In case of errors, appropriate messages are sent to the client and the error is logged.
+     * </p>
      *
-     * @param message Сообщение с JWT токеном.
-     * @param mainHandler Основной обработчик, управляющий сессией.
-     * @throws IOException В случае ошибки ввода-вывода.
-     * @throws SQLException В случае ошибки работы с базой данных.
+     * @param message     The message containing the JWT token.
+     * @param mainHandler The main handler managing the session.
+     * @throws IOException  If an I/O error occurs.
+     * @throws SQLException If a SQL error occurs.
      */
     @Override
     public void handle(String message, MainHandler mainHandler) throws IOException, SQLException {
+        logger.info("Handling session start command");
+
         String[] parts = message.split(MainHandler.splitRegex);
+        if (parts.length < 2) {
+            String errorMsg = "Invalid message format. Expected: session-start::jwtToken";
+            logger.warning(errorMsg);
+            mainHandler.sendMessageToClient(errorMsg);
+            return;
+        }
+
         String jwtToken = parts[1];
         String username = jwtService.extractUsername(jwtToken);
 
@@ -41,11 +62,16 @@ public class SessionStartCommandHandler implements CommandHandler {
                 mainHandler.sendMessageToClient("Session started successfully. Welcome back, " + username);
                 mainHandler.sendMessageToClient("session-start::" + user.getUsername() + "::" + user.getUserPhoto() + "::" + user.getMatches() + "::" + user.getRating());
                 mainHandler.setLogin(true);
+                logger.info("Session started successfully for user: " + username);
             } else {
-                mainHandler.sendMessageToClient("Invalid or expired JWT token. Please login again.");
+                String errorMsg = "Invalid or expired JWT token. Please login again.";
+                logger.warning(errorMsg);
+                mainHandler.sendMessageToClient(errorMsg);
             }
         } else {
-            mainHandler.sendMessageToClient("User not found with jwt token.");
+            String errorMsg = "User not found with jwt token.";
+            logger.warning(errorMsg);
+            mainHandler.sendMessageToClient(errorMsg);
         }
     }
 }

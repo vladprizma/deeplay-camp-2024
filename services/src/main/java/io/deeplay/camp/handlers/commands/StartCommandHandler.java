@@ -13,21 +13,30 @@ import java.io.IOException;
 import java.util.Objects;
 
 /**
- * CommandHandler для начала игры.
- * Позволяет найти или создать игровую сессию, настроить логику игры и уведомить игрока о начале игры.
+ * CommandHandler for starting a game.
+ * <p>
+ * This handler is responsible for processing commands to start a game. It allows finding or creating a game session,
+ * setting up the game logic, and notifying the player about the start of the game. It also logs the process and handles
+ * any unexpected errors that may occur.
+ * </p>
  */
 public class StartCommandHandler implements CommandHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(StartCommandHandler.class);
-    private static final int MAX_WAIT_TIME_MS = 300000; // Максимальное время ожидания в миллисекундах
+    private static final int MAX_WAIT_TIME_MS = 300000; // Maximum wait time in milliseconds
 
     /**
-     * Обрабатывает команду начала игры.
+     * Handles the command to start a game.
+     * <p>
+     * This method checks if the user is logged in, finds or creates a game session, sets up the game logic, and notifies
+     * the player about the start of the game. In case of errors, appropriate messages are sent to the client and the error
+     * is logged.
+     * </p>
      *
-     * @param message     Сообщение команды.
-     * @param mainHandler Основной обработчик, управляющий сессией.
-     * @throws IOException          В случае ошибки ввода-вывода.
-     * @throws InterruptedException В случае прерывания потока.
+     * @param message     The command message.
+     * @param mainHandler The main handler managing the session.
+     * @throws IOException          If an I/O error occurs.
+     * @throws InterruptedException If the thread is interrupted.
      */
     @Override
     public void handle(String message, MainHandler mainHandler) throws IOException, InterruptedException {
@@ -42,7 +51,7 @@ public class StartCommandHandler implements CommandHandler {
         if (msg.length > 1) {
             if (Objects.equals(msg[1], "--bot")) isBot = true;
         }
-        
+
         var result = SessionManager.getInstance().findOrCreateSession(mainHandler, mainHandler.getUser(), isBot);
         mainHandler.setSession(result.getGameSession());
 
@@ -57,7 +66,7 @@ public class StartCommandHandler implements CommandHandler {
             logger.info("User {}: Game start failed due to timeout.", mainHandler.getUser().getId());
             return;
         }
-            
+
         mainHandler.setBoardLogic(new BoardLogic(result.getGameSession().getBoard()));
         mainHandler.setGameLogic(new GameLogic(mainHandler.getBoardLogic()));
 
@@ -69,10 +78,6 @@ public class StartCommandHandler implements CommandHandler {
             mainHandler.sendMessageToClient(String.format("session::%d %s %d %d %s %d",
                     opponent.getId(), opponent.getUserPhoto(), opponent.getRating(),
                     opponent.getMatches(), opponent.getUsername(), opponent.getRating()));
-
-//            mainHandler.sendMessageToClient(String.format("session::%d %s %d %d %s %d",
-//                    opponent.getId(), opponent.getUserPhoto(), opponent.getRating(),
-//                    opponent.getMatches(), opponent.getUsername(), opponent.getRating()));
         } else {
             var opponent = SessionManager.getInstance().getSession(mainHandler.getSession().getSessionId()).getPlayer2();
 
@@ -80,7 +85,7 @@ public class StartCommandHandler implements CommandHandler {
                     opponent.getId(), opponent.getUserPhoto(), opponent.getRating(),
                     opponent.getMatches(), opponent.getUsername(), opponent.getRating()));
         }
-        
+
         var userId = mainHandler.getUser().getId();
         int playerNumber = (userId == mainHandler.getSession().getPlayer1().getId()) ? 1 : 2;
 

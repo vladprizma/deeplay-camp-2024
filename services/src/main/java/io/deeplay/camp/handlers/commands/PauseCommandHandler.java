@@ -1,5 +1,7 @@
 package io.deeplay.camp.handlers.commands;
 
+import entity.GameSession;
+import entity.User;
 import enums.GameStatus;
 import io.deeplay.camp.handlers.main.MainHandler;
 import io.deeplay.camp.managers.SessionManager;
@@ -9,17 +11,27 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * CommandHandler для приостановки текущей игры.
+ * CommandHandler for pausing the current game.
+ * <p>
+ * This handler is responsible for processing pause game commands from clients. It checks the session and user state,
+ * as well as the current game state to determine if the game can be paused. If the game is in progress, it will be paused,
+ * and appropriate messages will be sent to the clients.
+ * </p>
  */
 public class PauseCommandHandler implements CommandHandler {
 
     private static final Logger logger = Logger.getLogger(PauseCommandHandler.class.getName());
 
     /**
-     * Обрабатывает команду для приостановки игры.
+     * Handles the command to pause the game.
+     * <p>
+     * This method checks the session and user state, as well as the current game state. If the game is in progress,
+     * it will be paused, and appropriate messages will be sent to the clients. In case of an error, it will be logged,
+     * and an error message will be sent to the client.
+     * </p>
      *
-     * @param message Сообщение команды.
-     * @param mainHandler Основной обработчик, управляющий сессией.
+     * @param message     The command message.
+     * @param mainHandler The main handler managing the session.
      */
     @Override
     public void handle(String message, MainHandler mainHandler) {
@@ -36,13 +48,7 @@ public class PauseCommandHandler implements CommandHandler {
             }
 
             if (session.getGameState() == GameStatus.IN_PROGRESS) {
-                SessionManager.getInstance().sendMessageToOpponent(
-                        mainHandler,
-                        session,
-                        user.getId() + " pause"
-                );
-                mainHandler.sendMessageToClient("pause");
-                logger.info("Game paused by user: " + user.getId());
+                pauseGame(mainHandler, session, user);
             } else {
                 mainHandler.sendMessageToClient("Cannot pause game. Game is not in progress.");
                 logger.warning("Cannot pause game. Game is not in progress.");
@@ -51,5 +57,22 @@ public class PauseCommandHandler implements CommandHandler {
             logger.log(Level.SEVERE, "Error handling pause command", e);
             mainHandler.sendMessageToClient("Error occurred while pausing the game.");
         }
+    }
+
+    /**
+     * Pauses the game and sends appropriate messages to the clients.
+     *
+     * @param mainHandler The main handler managing the session.
+     * @param session     The current game session.
+     * @param user        The user who initiated the pause.
+     */
+    private void pauseGame(MainHandler mainHandler, GameSession session, User user) {
+        SessionManager.getInstance().sendMessageToOpponent(
+                mainHandler,
+                session,
+                user.getId() + " pause"
+        );
+        mainHandler.sendMessageToClient("pause");
+        logger.info("Game paused by user: " + user.getId());
     }
 }

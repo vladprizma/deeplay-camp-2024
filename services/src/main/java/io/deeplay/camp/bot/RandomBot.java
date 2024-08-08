@@ -2,6 +2,7 @@ package io.deeplay.camp.bot;
 
 import entity.Tile;
 import io.deeplay.camp.board.BoardLogic;
+import org.jetbrains.annotations.NotNull;
 
 import java.security.SecureRandom;
 import java.util.List;
@@ -15,7 +16,7 @@ public class RandomBot extends BotStrategy {
     }
 
     @Override
-    public Tile getMakeMove(int currentPlayerId, BoardLogic boardLogic) {
+    public Tile getMakeMove(int currentPlayerId, @NotNull BoardLogic boardLogic) {
         List<Tile> allTiles = boardLogic.getAllValidTiles(currentPlayerId);
 
         if (allTiles.isEmpty()) {
@@ -27,7 +28,7 @@ public class RandomBot extends BotStrategy {
     }
 
     @Override
-    List<Tile> getAllValidMoves(int currentPlayerId, BoardLogic boardLogic) {
+    List<Tile> getAllValidMoves(int currentPlayerId, @NotNull BoardLogic boardLogic) {
         return boardLogic.getAllValidTiles(currentPlayerId);
     }
 }

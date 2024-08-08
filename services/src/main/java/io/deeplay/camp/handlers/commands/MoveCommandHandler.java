@@ -16,12 +16,30 @@ import java.sql.SQLException;
 import java.util.logging.Logger;
 
 /**
- * CommandHandler для обработки ходов в игре.
+ * CommandHandler for processing game moves.
+ * <p>
+ * This handler is responsible for processing move commands from clients. It validates the session,
+ * checks if it's the player's turn, processes the move, updates the game state, and sends the updated
+ * board state to the client. It also handles bot moves and checks for game win conditions.
+ * </p>
  */
 public class MoveCommandHandler implements CommandHandler {
 
     private static final Logger logger = Logger.getLogger(MoveCommandHandler.class.getName());
 
+    /**
+     * Handles the move command.
+     * <p>
+     * This method validates the session, checks if it's the player's turn, processes the move,
+     * updates the game state, and sends the updated board state to the client. It also handles bot moves
+     * and checks for game win conditions.
+     * </p>
+     *
+     * @param message     the message received from the client, should not be null
+     * @param mainHandler the main handler managing the session, should not be null
+     * @throws IOException  if an unexpected error occurs during the handling process
+     * @throws SQLException if a database access error occurs
+     */
     @Override
     public void handle(String message, MainHandler mainHandler) throws IOException, SQLException {
         logger.info("Handling move command");
@@ -127,7 +145,7 @@ public class MoveCommandHandler implements CommandHandler {
         board.setBlackChips(mainHandler.getBoardLogic().getBlackChips());
         board.setWhiteChips(mainHandler.getBoardLogic().getWhiteChips());
         session.setBoard(board);
-        
+
         mainHandler.getGameLogic().display(3 - getPlayerNumber(mainHandler, session), mainHandler.getBoardLogic());
     }
 
@@ -143,7 +161,7 @@ public class MoveCommandHandler implements CommandHandler {
             SessionManager.getInstance().getSession(session.getSessionId()).setCurrentPlayerId(newCurrentPlayer);
             boardState = mainHandler.getBoardLogic().getBoardStateDTO(getPlayerNumber(mainHandler, session));
         } else {
-            boardState = mainHandler.getBoardLogic().getBoardStateDTO( 3 - getPlayerNumber(mainHandler, session));
+            boardState = mainHandler.getBoardLogic().getBoardStateDTO(3 - getPlayerNumber(mainHandler, session));
         }
 
         String msg;
@@ -164,13 +182,13 @@ public class MoveCommandHandler implements CommandHandler {
         mainHandler.getGameLogic().displayEndGame(mainHandler.getBoardLogic());
         session.setGameState(GameStatus.FINISHED);
         String msgWin = "game-status::finished";
-        
+
         if (!session.getPlayer2().getIsBot()) {
             SessionManager.getInstance().sendMessageToAllInSession(mainHandler, msgWin);
         } else {
             mainHandler.sendMessageToClient(msgWin);
         }
-        
+
         boolean playerWon = getPlayerNumber(mainHandler, session) == mainHandler.getBoardLogic().checkForWin().getUserIdWinner();
         SessionManager.getInstance().finishedSession(mainHandler, playerWon);
     }
