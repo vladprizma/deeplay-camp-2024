@@ -17,11 +17,11 @@ java {
 dependencies {
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
-    implementation(project(":utilities"))
-    implementation(project(":services"))
+    implementation(project(":reversi-server:controller"))
+    implementation(project(":reversi-server:services"))
+    implementation(project(":reversi-server:model"))
     implementation(project(":client"))
-    implementation(project(":model"))
-    implementation(project(":controller"))
+    implementation(project(":utilities"))
             
     errorprone("com.google.errorprone:error_prone_core:2.28.0")
     implementation("ch.qos.logback:logback-classic:1.4.12")
