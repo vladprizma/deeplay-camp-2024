@@ -44,7 +44,7 @@ public class Main {
             gameCountSelfPlay = Integer.parseInt(properties.getProperty("server.game-count"));
             
             if (selfPlay) {
-                var botGameHandler = new BotGameHandler(gameCountSelfPlay);
+                var botGameHandler = new SelfPlay(gameCountSelfPlay);
                 botGameHandler.startBotGame();
             } else {
                 ServerSocket serverSocket = new ServerSocket(serverPort, maxLengthQueue, InetAddress.getByName(serverIp));

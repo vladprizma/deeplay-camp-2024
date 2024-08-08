@@ -4,6 +4,7 @@ import dto.BoardDTO;
 import entity.GameSession;
 import enums.GameStatus;
 import io.deeplay.camp.board.BoardLogic;
+import io.deeplay.camp.bot.BotStrategy;
 import io.deeplay.camp.bot.RandomBot;
 import io.deeplay.camp.game.GameLogic;
 import io.deeplay.camp.handlers.main.MainHandler;
@@ -169,24 +170,24 @@ public class MoveCommandHandler implements CommandHandler {
         } else {
             mainHandler.sendMessageToClient(msgWin);
         }
-
-        boolean playerWon = mainHandler.getBoardLogic().score()[0] > mainHandler.getBoardLogic().score()[1];
+        
+        boolean playerWon = getPlayerNumber(mainHandler, session) == mainHandler.getBoardLogic().checkForWin().getUserIdWinner();
         SessionManager.getInstance().finishedSession(mainHandler, playerWon);
     }
 
     private void handleBotMove(MainHandler mainHandler, GameSession session) throws IOException, SQLException {
-        var bot = new RandomBot();
+        BotStrategy bot = new RandomBot(2, "Bot");
         var newBoardLogicForBot = new BoardLogic(session.getBoard());
         mainHandler.setGameLogic(new GameLogic(newBoardLogicForBot));
         mainHandler.setBoardLogic(newBoardLogicForBot);
 
-        bot.makeMove(2, newBoardLogicForBot);
+        newBoardLogicForBot.makeMove(bot.id, bot.getMakeMove(bot.id, newBoardLogicForBot));
 
         updateSessionBoard(mainHandler, session);
 
-        sendBoardStateToClient(mainHandler, session, 2);
+        sendBoardStateToClient(mainHandler, session, bot.id);
 
-        if (mainHandler.getGameLogic().checkForWin()) {
+        if (mainHandler.getBoardLogic().checkForWin().isGameFinished()) {
             handleWin(mainHandler, session);
         }
 
