@@ -50,8 +50,6 @@ public class GetMessagesCommandHandler implements CommandHandler {
             throw new IllegalArgumentException("MainHandler cannot be null");
         }
 
-        logger.info("Handling get messages command for sessionId: {}", mainHandler.getSession().getSessionId());
-
         StringBuilder response = new StringBuilder(MESSAGES_PREFIX);
 
         try {
