@@ -150,7 +150,10 @@ public class GameView implements Observer {
             if (button != null) {
                 switch (boardArray[i]) {
                     case '*':
-                        Circle redCircle = new Circle(20, Color.RED);
+                        Circle redCircle = new Circle(30, Color.rgb(255, 0, 0, 0.2));
+                        redCircle.setStyle(
+                                "             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 5, 0.3, 1, 1);"
+                        );
                         button.setGraphic(redCircle);
                         button.setStyle("-fx-background-color: transparent;");
                         break;
@@ -159,14 +162,24 @@ public class GameView implements Observer {
                         button.setStyle("-fx-background-color: transparent;");
                         break;
                     case 'X':
-                        Circle blackCircle = new Circle(20, Color.BLACK);
+                        Circle blackCircle = new Circle(30, Color.BLACK);
+                        blackCircle.setStyle("-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.75), 10, 0.5, 2, 2);" +
+                                "-fx-fill: linear-gradient(from 0% 0% to 100% 100%, " +
+                                "rgba(255, 255, 255, 0.5), rgba(0, 0, 0, 1));" +
+                                "-fx-stroke: #000000;" +
+                                "-fx-stroke-width: 1;");
                         button.setGraphic(blackCircle);
                         button.setStyle("-fx-background-color: transparent;");
                         break;
                     case '0':
-                        Circle whiteCircle = new Circle(20, Color.WHITE);
+                        Circle whiteCircle = new Circle(30, Color.WHITE);
                         button.setGraphic(whiteCircle);
-                        button.setStyle("-fx-background-color: transparent;");
+                        whiteCircle.setStyle("-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.75), 10, 0.5, 2, 2);" +
+                                        "-fx-fill: linear-gradient(from 0% 0% to 100% 100%, " +
+                                        "rgba(255, 255, 255, 1), rgba(100, 100, 100, 0.5));" +
+                                        "-fx-stroke: #000000;" +
+                                        "-fx-stroke-width: 1;"
+                        );
                         break;
                 }
             }
