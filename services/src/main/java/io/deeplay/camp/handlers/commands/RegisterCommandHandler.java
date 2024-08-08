@@ -13,7 +13,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * CommandHandler для регистрации новых пользователей.
+ * CommandHandler for registering new users.
+ * <p>
+ * This handler is responsible for processing registration commands from clients. It validates the input message,
+ * checks if the username is unique, hashes the password, and stores the new user in the database. It also generates
+ * refresh tokens for the new user and logs the process. In case of errors, appropriate messages are sent to the client.
+ * </p>
  */
 public class RegisterCommandHandler implements CommandHandler {
 
@@ -22,12 +27,17 @@ public class RegisterCommandHandler implements CommandHandler {
     private final RefreshTokenService refreshTokenService = new RefreshTokenService();
 
     /**
-     * Обрабатывает команду для регистрации нового пользователя.
+     * Handles the command to register a new user.
+     * <p>
+     * This method validates the input parameters, checks if the username is unique, hashes the password,
+     * and stores the new user in the database. It also generates refresh tokens for the new user and logs the process.
+     * In case of errors, appropriate messages are sent to the client.
+     * </p>
      *
-     * @param message Сообщение команды.
-     * @param mainHandler Основной обработчик, управляющий сессией.
-     * @throws IOException В случае ошибки ввода-вывода.
-     * @throws SQLException В случае ошибки SQL.
+     * @param message     The command message.
+     * @param mainHandler The main handler managing the session.
+     * @throws IOException  If an I/O error occurs.
+     * @throws SQLException If a SQL error occurs.
      */
     @Override
     public void handle(String message, MainHandler mainHandler) throws IOException, SQLException {
@@ -40,7 +50,7 @@ public class RegisterCommandHandler implements CommandHandler {
             mainHandler.sendMessageToClient(errorMsg);
             return;
         }
-        
+
         if (!userService.isUsernameUnique(parts[1])) {
             String errorMsg = "Not unique username.";
             logger.warning(errorMsg);
@@ -69,7 +79,7 @@ public class RegisterCommandHandler implements CommandHandler {
             logger.info("User registered successfully: " + username);
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error handling register command", e);
-            throw e; 
+            throw e;
         }
     }
 }

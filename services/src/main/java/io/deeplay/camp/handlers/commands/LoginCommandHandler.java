@@ -14,6 +14,11 @@ import java.util.Optional;
 
 /**
  * Handler for processing login commands.
+ * <p>
+ * This handler is responsible for processing login requests from clients. It validates the input message,
+ * checks the user's credentials, and generates refresh tokens if the login is successful. It also logs the
+ * process and handles any unexpected errors that may occur.
+ * </p>
  */
 public class LoginCommandHandler implements CommandHandler {
 
@@ -27,9 +32,22 @@ public class LoginCommandHandler implements CommandHandler {
         this.refreshTokenService = new RefreshTokenService();
     }
 
+    /**
+     * Handles the login command.
+     * <p>
+     * This method validates the input parameters, retrieves the user information from the database,
+     * verifies the user's password, and generates refresh tokens if the login is successful. It also logs
+     * the process and handles any unexpected errors that may occur.
+     * </p>
+     *
+     * @param message     the message received from the client, should not be null
+     * @param mainHandler the main handler managing the session, should not be null
+     * @throws IOException  if an unexpected error occurs during the handling process
+     * @throws SQLException if a database access error occurs
+     */
     @Override
     public void handle(String message, MainHandler mainHandler) throws IOException, SQLException {
-        // Validate input message
+        // Validate input parameters
         if (message == null || mainHandler == null) {
             logger.error("Message or MainHandler is null");
             throw new IllegalArgumentException("Message or MainHandler cannot be null");
