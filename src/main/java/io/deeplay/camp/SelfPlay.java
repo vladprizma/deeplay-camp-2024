@@ -4,7 +4,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import entity.Board;
+import entity.Tile;
 import io.deeplay.camp.board.BoardLogic;
+import io.deeplay.camp.bot.BotStrategy;
 import io.deeplay.camp.bot.RandomBot;
 import io.deeplay.camp.game.GameLogic;
 import org.slf4j.Logger;
@@ -17,8 +19,8 @@ import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class BotGameHandler {
-    private static final Logger logger = LoggerFactory.getLogger(BotGameHandler.class);
+public class SelfPlay {
+    private static final Logger logger = LoggerFactory.getLogger(SelfPlay.class);
     private static final int GAME_THREAD_COUNT = Runtime.getRuntime().availableProcessors() * 10;
     private static final int SCHEDULER_THREAD_COUNT = 10;
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(SCHEDULER_THREAD_COUNT);
@@ -29,7 +31,7 @@ public class BotGameHandler {
     private final AtomicInteger draws = new AtomicInteger(0);
     private final AtomicInteger totalGamesCompleted = new AtomicInteger(0);
 
-    public BotGameHandler(int gameCount) {
+    public SelfPlay(int gameCount) {
         this.gameCount = gameCount;
     }
 
@@ -49,7 +51,7 @@ public class BotGameHandler {
                 try {
                     future.get();
                 } catch (InterruptedException | ExecutionException e) {
-                    logger.error("Error during game execution", e);
+                    logger.error(e.toString());
                 }
             }
 
@@ -64,66 +66,45 @@ public class BotGameHandler {
     }
 
     private Void playSingleGame(boolean firstBotStarts) {
-        RandomBot firstRandomBot = new RandomBot();
-        RandomBot secondRandomBot = new RandomBot();
+        BotStrategy firstRandomBot = new RandomBot(1, "DarlingBot");
+        BotStrategy secondRandomBot = new RandomBot(2, "ViolaBot");
         Board board = new Board();
         BoardLogic boardLogic = new BoardLogic(board);
-        GameLogic gameLogic = new GameLogic(boardLogic);
-
-        boolean gameFinished = false;
-
-        if (firstBotStarts) {
-            while (!gameFinished) {
-                gameFinished = executeBotMove(firstRandomBot, 1, boardLogic, gameLogic);
-                if (!gameFinished) {
-                    gameFinished = executeBotMove(secondRandomBot, 2, boardLogic, gameLogic);
-                }
-            }
-        } else {
-            while (!gameFinished) {
-                gameFinished = executeBotMove(secondRandomBot, 2, boardLogic, gameLogic);
-                if (!gameFinished) {
-                    gameFinished = executeBotMove(firstRandomBot, 1, boardLogic, gameLogic);
-                }
-            }
+        BotStrategy currentBot = firstBotStarts ? firstRandomBot : secondRandomBot;
+//        BotStrategy currentBot = firstRandomBot;
+        
+        while (!boardLogic.checkForWin().isGameFinished()) {
+            executeBotMove(currentBot, boardLogic);
+            currentBot = currentBot.id == firstRandomBot.id ? secondRandomBot : firstRandomBot;
         }
-
+        
+        if (boardLogic.checkForWin().getUserIdWinner() == 1) {
+            firstBotWins.incrementAndGet();
+        } else if (boardLogic.checkForWin().getUserIdWinner() == 2) {
+            secondBotWins.incrementAndGet();
+        } else {
+            draws.incrementAndGet();
+        }
+        
         totalGamesCompleted.incrementAndGet();
         return null;
     }
 
-    private boolean executeBotMove(RandomBot botService, int botNumber, BoardLogic boardLogic, GameLogic gameLogic) {
-        Callable<Boolean> botMoveTask = () -> botService.makeMove(botNumber, boardLogic);
-        Future<Boolean> futureMove = scheduler.schedule(botMoveTask, 0, TimeUnit.SECONDS);
+    private void executeBotMove(BotStrategy botService, BoardLogic boardLogic) {
+        Callable<Tile> botMoveTask = () -> botService.getMakeMove(botService.id, boardLogic);
+        Future<Tile> futureMove = scheduler.schedule(botMoveTask, 0, TimeUnit.SECONDS);
 
         try {
-            if (futureMove.get(5, TimeUnit.SECONDS)) {
-                return checkWin(boardLogic, gameLogic);
-            }
+            var tile = futureMove.get(5, TimeUnit.SECONDS);
+            boardLogic.makeMove(botService.id, tile);
         } catch (TimeoutException e) {
-            logger.error("Bot {} move timed out.", botNumber);
-            gameFinished(botNumber);
+            logger.error("Bot {} move timed out.", botService.id);
+            gameFinished(botService.id);
         } catch (Exception e) {
-            logger.error("Error during bot {} move", botNumber, e);
-            gameFinished(botNumber);
+            logger.error("Error during bot {} move", botService.id, e);
+            logger.error(e.toString());
+            gameFinished(botService.id);
         }
-
-        return true;
-    }
-
-    private boolean checkWin(BoardLogic boardLogic, GameLogic gameLogic) {
-        if (gameLogic.checkForWin()) {
-            int[] scores = boardLogic.score();
-            if (scores[0] > scores[1]) {
-                firstBotWins.incrementAndGet();
-            } else if (scores[0] < scores[1]) {
-                secondBotWins.incrementAndGet();
-            } else {
-                draws.incrementAndGet();
-            }
-            return true;
-        }
-        return false;
     }
 
     private void gameFinished(int botNumberLose) {

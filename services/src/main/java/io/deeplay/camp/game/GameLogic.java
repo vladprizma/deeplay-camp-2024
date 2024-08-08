@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 public class GameLogic implements ReversiListener {
 
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
-    private RandomBot botServices = new RandomBot();
+    private RandomBot botServices = new RandomBot(2, "Bot");
     private UserService playerService = new UserService();
     private DisplayServices displayServices = new DisplayServices();
     private boolean moveReturn = true;
@@ -43,8 +43,8 @@ public class GameLogic implements ReversiListener {
     @Override 
     public boolean moveMade(User user, int currentPlayerId, BoardLogic boardLogic, String move) {
         if (user instanceof Bot) {
-
-            return botServices.makeMove(currentPlayerId, boardLogic);
+            return false;
+//            return botServices.getMakeMove(currentPlayerId, boardLogic);
         } else {
             return makeUserMove(currentPlayerId, boardLogic, move);
         }

@@ -1,56 +1,33 @@
 package io.deeplay.camp.bot;
 
-import io.deeplay.camp.board.BoardLogic;
 import entity.Tile;
+import io.deeplay.camp.board.BoardLogic;
 
-public class RandomBot implements BotStrategy {
+import java.security.SecureRandom;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Random;
+
+public class RandomBot extends BotStrategy {
+
+    public RandomBot(int id, String name) {
+        super(id, name);
+    }
 
     @Override
-    public boolean makeMove(int currentPlayerId, BoardLogic boardLogic) {
-        int[] move = getCurrentPlayerMove(currentPlayerId, boardLogic);
-        if (move != null) {
-            int x = move[0];
-            int y = move[1];
-            boardLogic.setPiece(x, y, currentPlayerId);
-            return true;
-        } else {
-            return false;
-        }
-    }
+    public Tile getMakeMove(int currentPlayerId, BoardLogic boardLogic) {
+        List<Tile> allTiles = boardLogic.getAllValidTiles(currentPlayerId);
 
-    private int[] getCurrentPlayerMove(int currentPlayerId, BoardLogic boardLogic) {
-        int[] move;
-        move = getBotMove(currentPlayerId, boardLogic);
-
-        if (move != null) {
-            return new int[]{move[0], move[1]};
-        } else {
+        if (allTiles.isEmpty()) {
             return null;
         }
+
+        SecureRandom secureRandom = new SecureRandom();
+        return allTiles.get(secureRandom.nextInt(allTiles.size()));
     }
 
-    private int[] getBotMove(int currentPlayerId, BoardLogic boardLogic) {
-        Tile[] tiles = new Tile[64];
-        short tileCount = 0;
-        long blackValidMoves = boardLogic.getBlackValidMoves();
-        long whiteValidMoves = boardLogic.getWhiteValidMoves();
-
-        for (int y = 0; y < 8; y++) {
-            for (int x = 0; x < 8; x++) {
-                long validMoves = (currentPlayerId == 1) ? blackValidMoves : whiteValidMoves;
-                long mask = 1L << (x + 8 * y);
-                if ((validMoves & mask) != 0) {
-                    tiles[tileCount] = new Tile(x, y);
-                    tileCount++;
-                }
-            }
-        }
-
-        Tile selectedTile = tiles[(int) (Math.random() * tileCount)];
-        if (selectedTile != null) {
-            return new int[]{selectedTile.getX(), selectedTile.getY()};
-        } else {
-            return null;
-        }
+    @Override
+    List<Tile> getAllValidMoves(int currentPlayerId, BoardLogic boardLogic) {
+        return boardLogic.getAllValidTiles(currentPlayerId);
     }
 }

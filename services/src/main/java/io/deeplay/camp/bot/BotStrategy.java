@@ -1,7 +1,20 @@
 package io.deeplay.camp.bot;
 
+import entity.Tile;
 import io.deeplay.camp.board.BoardLogic;
 
-public interface BotStrategy {
-    boolean makeMove(int currentPlayerId, BoardLogic boardLogic);
+import java.util.List;
+
+public abstract class BotStrategy {
+    public final int id;
+    public final String name;
+
+    protected BotStrategy(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public abstract Tile getMakeMove(int currentPlayerId, BoardLogic boardLogic);
+
+    abstract List<Tile> getAllValidMoves(int currentPlayerId, BoardLogic boardLogic);
 }
