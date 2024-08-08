@@ -7,11 +7,23 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Data Access Object (DAO) for managing chat messages in the database.
+ * <p>
+ * This class provides methods to add, retrieve, and delete chat messages from the database.
+ * </p>
+ */
 public class ChatMessageDAO {
     private static final String DB_URL = "jdbc:postgresql://localhost:5431/reversi";
     private static final String DB_USER = "admin";
     private static final String DB_PASSWORD = "admin";
 
+    /**
+     * Adds a new chat message to the database.
+     *
+     * @param message The chat message to be added.
+     * @throws SQLException If a database access error occurs.
+     */
     public void addMessage(ChatMessage message) throws SQLException {
         String sql = "INSERT INTO chat_messages (user_id, message, timestamp) VALUES (?, ?, ?)";
 
@@ -24,6 +36,12 @@ public class ChatMessageDAO {
         }
     }
 
+    /**
+     * Retrieves all chat messages from the database, ordered by timestamp in descending order.
+     *
+     * @return A list of all chat messages.
+     * @throws SQLException If a database access error occurs.
+     */
     public List<ChatMessage> getAllMessages() throws SQLException {
         String sql = "SELECT * FROM chat_messages ORDER BY timestamp DESC";
         UserDAO userDAO = new UserDAO();
@@ -48,6 +66,12 @@ public class ChatMessageDAO {
         return messages;
     }
 
+    /**
+     * Deletes a chat message from the database by its ID.
+     *
+     * @param id The ID of the chat message to be deleted.
+     * @throws SQLException If a database access error occurs.
+     */
     public void deleteMessage(int id) throws SQLException {
         String sql = "DELETE FROM chat_messages WHERE id = ?";
 

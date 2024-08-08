@@ -1,16 +1,28 @@
 package io.deeplay.camp.dao;
 
 import entity.User;
-import entity.User;
 
 import java.sql.*;
 import java.util.Optional;
 
+/**
+ * Data Access Object (DAO) for managing users in the database.
+ * <p>
+ * This class provides methods to add, update, retrieve, and delete users from the database.
+ * </p>
+ */
 public class UserDAO {
     private static final String DB_URL = "jdbc:postgresql://localhost:5431/reversi";
     private static final String DB_USER = "admin";
     private static final String DB_PASSWORD = "admin";
 
+    /**
+     * Adds a new user to the database.
+     *
+     * @param user The user to be added.
+     * @return The ID of the newly added user.
+     * @throws SQLException If a database access error occurs.
+     */
     public int addUser(User user) throws SQLException {
         String sql = "INSERT INTO users (username, password, \"userPhoto\", rating, matches) VALUES (?, ?, ?, ?, ?) RETURNING id";
 
@@ -31,6 +43,12 @@ public class UserDAO {
         }
     }
 
+    /**
+     * Deletes a user from the database by their ID.
+     *
+     * @param userId The ID of the user to be deleted.
+     * @throws SQLException If a database access error occurs.
+     */
     public void deleteUserById(int userId) throws SQLException {
         String sql = "DELETE FROM users WHERE id = ?";
 
@@ -41,6 +59,12 @@ public class UserDAO {
         }
     }
 
+    /**
+     * Deletes a user from the database by their username.
+     *
+     * @param username The username of the user to be deleted.
+     * @throws SQLException If a database access error occurs.
+     */
     public void deleteUserByUsername(String username) throws SQLException {
         String sql = "DELETE FROM users WHERE username = ?";
 
@@ -51,6 +75,12 @@ public class UserDAO {
         }
     }
 
+    /**
+     * Updates an existing user in the database.
+     *
+     * @param user The user to be updated.
+     * @throws SQLException If a database access error occurs.
+     */
     public void updateUser(User user) throws SQLException {
         String sql = "UPDATE users SET password = ?, \"userPhoto\" = ?, rating = ?, matches = ? WHERE id = ?";
 
@@ -65,6 +95,13 @@ public class UserDAO {
         }
     }
 
+    /**
+     * Retrieves a user from the database by their ID.
+     *
+     * @param userId The ID of the user to be retrieved.
+     * @return An Optional containing the user if found, or an empty Optional if not found.
+     * @throws SQLException If a database access error occurs.
+     */
     public Optional<User> getUserById(int userId) throws SQLException {
         String sql = "SELECT * FROM users WHERE id = ?";
 
@@ -81,6 +118,13 @@ public class UserDAO {
         return Optional.empty();
     }
 
+    /**
+     * Retrieves a user from the database by their username.
+     *
+     * @param username The username of the user to be retrieved.
+     * @return An Optional containing the user if found, or an empty Optional if not found.
+     * @throws SQLException If a database access error occurs.
+     */
     public Optional<User> getUserByUsername(String username) throws SQLException {
         String sql = "SELECT * FROM users WHERE username = ?";
 
@@ -97,6 +141,13 @@ public class UserDAO {
         return Optional.empty();
     }
 
+    /**
+     * Maps a row from the result set to a User object.
+     *
+     * @param resultSet The result set containing the user data.
+     * @return The User object.
+     * @throws SQLException If a database access error occurs.
+     */
     private User mapRowToPlayer(ResultSet resultSet) throws SQLException {
         return new User(
                 resultSet.getInt("id"),
