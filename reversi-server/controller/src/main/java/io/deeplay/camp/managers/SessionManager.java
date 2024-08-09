@@ -207,6 +207,9 @@ public class SessionManager {
         
         gameSession.setResult(playerWon ? clientHandler.getUser().getId() + " win" : clientHandler.getUser().getId() + " lose");
         gameSession.setGameState(GameStatus.FINISHED);
+
+        gameSession.getPlayer2().setId(4);
+        gameSession.getPlayer2().setUsername("Bot12");
         
         gameSessionService.addGameSession(gameSession, gameSession.getLog());
 
@@ -312,6 +315,9 @@ public class SessionManager {
      */
     private void updateEloForPlayerVsBot(GameSession gameSession, boolean playerWon, EloService eloService, UserService userService, MainHandler clientHandler) throws SQLException {
         User player = gameSession.getPlayer1();
+        gameSession.getPlayer2().setId(0);
+        gameSession.getPlayer2().setUsername("Bot12");
+        
         int eloChanged = eloService.calculateEloChange(player, gameSession.getPlayer2(), playerWon);
 
         if (playerWon) {
@@ -319,7 +325,7 @@ public class SessionManager {
         } else {
             player.setRating(Math.max(player.getRating() - eloChanged, 0));
         }
-
+        
         userService.updateRating(player.getId(), player.getRating());
         clientHandler.setUser(player);
         clientHandler.sendMessageToClient("new-elo::" + player.getRating());
