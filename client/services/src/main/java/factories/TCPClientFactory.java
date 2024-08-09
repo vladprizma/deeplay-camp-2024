@@ -2,7 +2,7 @@ package factories;
 
 import client.Client;
 import client.TCPClient;
-import config.LoadServerProperties;
+import io.deeplay.camp.config.LoadServerProperties;
 
 import java.io.IOException;
 import java.util.Properties;
