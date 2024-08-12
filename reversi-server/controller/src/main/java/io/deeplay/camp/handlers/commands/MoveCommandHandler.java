@@ -63,7 +63,7 @@ public class MoveCommandHandler implements CommandHandler {
             mainHandler.sendMessageToClient("Invalid move format.");
             logger.warn("Invalid move format from user {}", mainHandler.getUser().getId());
             return;
-        } else if (mainHandler.getBoardLogic().getAllValidTiles(getPlayerNumber(mainHandler, session)).isEmpty()){
+        } else if (mainHandler.getBoardLogic().getAllValidTiles(getPlayerNumber(mainHandler, session)) == null || mainHandler.getBoardLogic().getAllValidTiles(getPlayerNumber(mainHandler, session)).isEmpty()){
             sendBoardStateToClient(mainHandler, session, getPlayerNumber(mainHandler, session));
             logger.info("Player " + getPlayerNumber(mainHandler, session) + " skip move");
 
