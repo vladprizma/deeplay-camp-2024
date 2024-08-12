@@ -130,7 +130,7 @@ public class SelfPlay {
 
         try {
             var tile = futureMove.get(5, TimeUnit.SECONDS);
-            boardLogic.makeMove(botService.id, tile);
+            if (tile != null) boardLogic.makeMove(botService.id, tile);
         } catch (TimeoutException e) {
             logger.error("Bot {} move timed out.", botService.id);
             gameFinished(botService.id);
