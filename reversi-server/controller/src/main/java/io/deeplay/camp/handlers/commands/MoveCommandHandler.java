@@ -63,7 +63,14 @@ public class MoveCommandHandler implements CommandHandler {
             mainHandler.sendMessageToClient("Invalid move format.");
             logger.warn("Invalid move format from user {}", mainHandler.getUser().getId());
             return;
-        } else if (move.equals("skip command")){
+        } else if (mainHandler.getBoardLogic().getAllValidTiles(getPlayerNumber(mainHandler, session)).isEmpty()){
+            sendBoardStateToClient(mainHandler, session, getPlayerNumber(mainHandler, session));
+            logger.info("Player " + getPlayerNumber(mainHandler, session) + " skip move");
+
+            if (session.getPlayer2().getIsBot()) {
+                handleBotMove(mainHandler, session);
+            }
+            
             if (!session.getPlayer2().getIsBot()) SessionManager.getInstance().getSession(mainHandler.getSession().getSessionId()).setCurrentPlayerId(3 - getPlayerNumber(mainHandler, session));
             return;
         }
@@ -178,16 +185,7 @@ public class MoveCommandHandler implements CommandHandler {
         if (messageParts.length < 2) {
             return null;
         }
-        if (Objects.equals(messageParts[1], "null")) {
-            sendBoardStateToClient(mainHandler, session, getPlayerNumber(mainHandler, session));
-            logger.info("Player " + getPlayerNumber(mainHandler, session) + " skip move");
-            
-            if (session.getPlayer2().getIsBot()) {
-                handleBotMove(mainHandler, session);
-            }
-            
-            return "skip command";
-        }
+        
         return messageParts[1];
     }
 
