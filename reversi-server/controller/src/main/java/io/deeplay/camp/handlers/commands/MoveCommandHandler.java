@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * CommandHandler for processing game moves.
@@ -57,10 +58,13 @@ public class MoveCommandHandler implements CommandHandler {
 
         if (!isPlayerTurn(mainHandler, session, playerNumber)) return;
 
-        String move = getMoveFromMessage(message);
+        String move = getMoveFromMessage(message, mainHandler, session);
         if (move == null) {
             mainHandler.sendMessageToClient("Invalid move format.");
             logger.warn("Invalid move format from user {}", mainHandler.getUser().getId());
+            return;
+        } else if (move.equals("skip command")){
+            if (!session.getPlayer2().getIsBot()) SessionManager.getInstance().getSession(mainHandler.getSession().getSessionId()).setCurrentPlayerId(3 - getPlayerNumber(mainHandler, session));
             return;
         }
 
@@ -151,7 +155,7 @@ public class MoveCommandHandler implements CommandHandler {
      */
     private boolean isPlayerTurn(MainHandler mainHandler, GameSession session, int playerNumber) throws IOException {
         var currentPlayerId = session.getCurrentPlayerId();
-        var userId = mainHandler.getUser().getId();
+        var userId = getPlayerNumber(mainHandler, session);
         if (currentPlayerId != userId) {
             mainHandler.sendMessageToClient("It's not your turn.");
             logger.warn("User {} tried to make a move out of turn.", userId);
@@ -169,10 +173,20 @@ public class MoveCommandHandler implements CommandHandler {
      * @param message the message received from the client, should not be null
      * @return the move command, or null if the message format is invalid
      */
-    private String getMoveFromMessage(String message) {
+    private String getMoveFromMessage(String message, MainHandler mainHandler, GameSession session) throws IOException, SQLException {
         String[] messageParts = message.split(" ");
         if (messageParts.length < 2) {
             return null;
+        }
+        if (Objects.equals(messageParts[1], "null")) {
+            sendBoardStateToClient(mainHandler, session, getPlayerNumber(mainHandler, session));
+            logger.info("Player " + getPlayerNumber(mainHandler, session) + " skip move");
+            
+            if (session.getPlayer2().getIsBot()) {
+                handleBotMove(mainHandler, session);
+            }
+            
+            return "skip command";
         }
         return messageParts[1];
     }
