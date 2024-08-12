@@ -64,7 +64,10 @@ public class MoveCommandHandler implements CommandHandler {
             logger.warn("Invalid move format from user {}", mainHandler.getUser().getId());
             return;
         } else if (move.equals("skip")){
-            if (!session.getPlayer2().getIsBot()) SessionManager.getInstance().getSession(mainHandler.getSession().getSessionId()).setCurrentPlayerId(3 - getPlayerNumber(mainHandler, session));
+            if (!session.getPlayer2().getIsBot()) {
+                SessionManager.getInstance().getSession(mainHandler.getSession().getSessionId()).setCurrentPlayerId(3 - getPlayerNumber(mainHandler, session));
+                mainHandler.getGameLogic().display(3 - getPlayerNumber(mainHandler, session), mainHandler.getBoardLogic());
+            }
             return;
         }
 
@@ -259,6 +262,7 @@ public class MoveCommandHandler implements CommandHandler {
         String validMoves = Long.toString(mainHandler.getBoardLogic().getValidMoves(3 - playerNumber));
         var newCurrentPlayer = playerNumber == 1 ? session.getPlayer2().getId() : session.getPlayer1().getId();
         String boardState;
+        
         if (session.getPlayer2().getIsBot()) {
             SessionManager.getInstance().getSession(session.getSessionId()).setCurrentPlayerId(newCurrentPlayer);
             boardState = mainHandler.getBoardLogic().getBoardStateDTO(getPlayerNumber(mainHandler, session));
@@ -267,6 +271,7 @@ public class MoveCommandHandler implements CommandHandler {
         }
 
         String msg;
+        
         if (!session.getPlayer2().getIsBot()) {
             gameLogs.add("board-after-move::" + boardDTOState + "::" + score + "::" + validMoves + "::" + newCurrentPlayer);
             msg = "board-after-move::" + boardDTOState + "::" + score + "::" + validMoves + "::" + newCurrentPlayer;
@@ -276,6 +281,7 @@ public class MoveCommandHandler implements CommandHandler {
         }
 
         mainHandler.sendMessageToClient(msg);
+        
         if (!session.getPlayer2().getIsBot()) {
             gameLogs.add("board-after-move::" + boardState + "::" + score + "::" + validMoves + "::" + newCurrentPlayer);
             msg = "board-after-move::" + boardState + "::" + score + "::" + validMoves + "::" + newCurrentPlayer;
@@ -328,7 +334,13 @@ public class MoveCommandHandler implements CommandHandler {
         mainHandler.setGameLogic(new GameService(newBoardLogicForBot));
         mainHandler.setBoardLogic(newBoardLogicForBot);
 
-        newBoardLogicForBot.makeMove(bot.id, bot.getMakeMove(bot.id, newBoardLogicForBot));
+        var move = bot.getMakeMove(bot.id, newBoardLogicForBot);
+        
+        if (move == null) {
+            sendBoardStateToClient(mainHandler, session, bot.id);
+        }
+        
+        newBoardLogicForBot.makeMove(bot.id, move);
 
         updateSessionBoard(mainHandler, session);
 
