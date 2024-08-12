@@ -180,7 +180,7 @@ public class MoveCommandHandler implements CommandHandler {
         String[] messageParts = message.split(" ");
         if (messageParts.length < 2) {
             return null;
-        } if (Objects.equals(messageParts[1], "null")) {
+        } else if (Objects.equals(messageParts[1], "null")) {
             sendBoardStateToClient(mainHandler, session, getPlayerNumber(mainHandler, session));
             logger.info("Player " + getPlayerNumber(mainHandler, session) + " skip move");
 
