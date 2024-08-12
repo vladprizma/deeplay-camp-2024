@@ -288,14 +288,14 @@ public class BoardService {
                     breakA = true; breakB = true;
                     for (int j = y + 1; j < 8; j++) {
                         if ((targetChip & (1L << (a + 8 * j))) != 0 && breakA) {
-                            if (!hasPiece(a - 1, j - 1) && (j + 1) < 8 && (a - 1) >= 0){
+                            if (!hasPiece(a - 1, j + 1) && (j + 1) < 8 && (a - 1) >= 0){
                                 validMoves |= (1L << (a - 1 + 8 * (j + 1)));
                                 breakA = false;
                             }
                             a--;
                         } else breakA = false;
                         if ((targetChip & (1L << (b + 8 * j))) != 0 && breakB) {
-                            if (!hasPiece(b + 1, j - 1) && (j + 1) < 8 && (b + 1) < 8) {
+                            if (!hasPiece(b + 1, j + 1) && (j + 1) < 8 && (b + 1) < 8) {
                                 validMoves |= (1L << (b + 1 + 8 * (j + 1)));
                                 breakB = false;
                             }

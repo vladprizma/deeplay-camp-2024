@@ -64,7 +64,8 @@ public class MoveCommandHandler implements CommandHandler {
             logger.warn("Invalid move format from user {}", mainHandler.getUser().getId());
             return;
         } else if (move.equals("skip")){
-            if (!session.getPlayer2().getIsBot()) SessionManager.getInstance().getSession(mainHandler.getSession().getSessionId()).setCurrentPlayerId(3 - getPlayerNumber(mainHandler, session));
+            if (!session.getPlayer2().getIsBot())
+                SessionManager.getInstance().getSession(mainHandler.getSession().getSessionId()).setCurrentPlayerId(3 - getPlayerNumber(mainHandler, session));
             return;
         }
 

@@ -248,7 +248,6 @@ public class GameView implements Observer {
                         redScore = Integer.parseInt(scores[0]);
                         greenScore = Integer.parseInt(scores[1]);
                         updateScores(redScore, greenScore);
-
                     }
                 }
 
