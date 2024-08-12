@@ -164,6 +164,5 @@
                 <DropShadow color = "#FFFFFF80" offsetY="10"/>
             </effect>
         </Circle>
-
     </children>
 </AnchorPane>

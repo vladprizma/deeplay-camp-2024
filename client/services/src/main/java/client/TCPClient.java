@@ -82,6 +82,7 @@ public class TCPClient implements Client {
                         case "move":
                         case "board-after-move":
                         case "session-ggg":
+                        case "game-status":
                             String finalServerResponse1 = serverResponse;
                             Platform.runLater(() -> action.handleResponseActionResponse(finalServerResponse1));
                             break;

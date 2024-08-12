@@ -6,10 +6,9 @@ import javafx.animation.Timeline;
 import javafx.animation.Transition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -21,8 +20,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import observer.Observer;
 import sigletonobserver.ChatString;
+import utils.ScreenSwitcher;
 
 import java.util.List;
+import java.util.Random;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -56,6 +57,9 @@ public class GameView implements Observer {
 
     private Timeline redTimer;
     private Timeline greenTimer;
+
+    private int redScore;
+    private int greenScore;
 
     private int redTimeLeft = 120;
     private int greenTimeLeft = 120;
@@ -113,11 +117,23 @@ public class GameView implements Observer {
         }
     }
 
-    private void startRedTimer() {
+//    EventHandler<ActionEvent> timerFinishedHandler = new EventHandler<ActionEvent>() {
+//        @Override
+//        public void handle(ActionEvent event) {
+//            stopRedTimer(); // Остановка таймера
+//            makeRandomMove(); // Выполнение случайного хода
+//        }
+//    };
+
+    private void startRedTimer(){
         if (redTimer.getStatus() == Timeline.Status.STOPPED) {
             redTimer.setCycleCount(Timeline.INDEFINITE);
             redTimer.play();
         }
+//        redTimer.setOnFinished(event -> {
+//            stopRedTimer();
+//            makeRandomMove();
+//        });
     }
 
     private void stopRedTimer() {
@@ -131,6 +147,10 @@ public class GameView implements Observer {
             greenTimer.setCycleCount(Timeline.INDEFINITE);
             greenTimer.play();
         }
+//        greenTimer.setOnFinished(event -> {
+//            stopRedTimer();
+//            makeRandomMove();
+//        });
     }
 
     private void stopGreenTimer() {
@@ -225,10 +245,9 @@ public class GameView implements Observer {
                 if (parts.length >= 3) {
                     String[] scores = parts[2].split(" ");
                     if (scores.length == 2) {
-
-                            int redScore = Integer.parseInt(scores[0]);
-                            int greenScore = Integer.parseInt(scores[1]);
-                            updateScores(redScore, greenScore);
+                        redScore = Integer.parseInt(scores[0]);
+                        greenScore = Integer.parseInt(scores[1]);
+                        updateScores(redScore, greenScore);
 
                     }
                 }
@@ -244,7 +263,9 @@ public class GameView implements Observer {
                         startGreenTimer();
                         stopRedTimer();
                     }
-
+                break;
+            case "game-status":
+                handleGameFinishedResponse(newString); // Вызов метода обработки завершения игры
                 break;
 //            case "session-ggg":
 //                System.out.println("evrerverv");
@@ -303,5 +324,37 @@ public class GameView implements Observer {
             }
         };
         return gradientAnimation;
+    }
+
+//    private void makeRandomMove() {
+//        Random random = new Random();
+//        int randomRow = random.nextInt(8);
+//        int randomCol = random.nextInt(8);
+//
+//        String tileId = "button_" + randomRow + "_" + randomCol;
+//
+//        modelManager.moveModelMethod(tileId);
+//    }
+
+    public void handleGameFinishedResponse(String status) {
+        if (status.equals("game-status::finished")) {
+            stopRedTimer();
+            stopGreenTimer();
+            System.out.println("Game is finished. Switching to Main Menu");
+            String textWin;
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Игра завершена");
+            alert.setHeaderText(null);
+            if(redScore > greenScore){
+                textWin = "Черные победили!\n";
+            } else if (greenScore > redScore){
+                textWin = "Белые победили!\n";
+            } else textWin = "Ничья!\n";
+            alert.setContentText(textWin + "Игра завершена! Нажмите OK, чтобы вернуться в главное меню.");
+            alert.showAndWait();
+            if (alert.getResult() == ButtonType.OK) {
+                ScreenSwitcher.loadView(getClass().getResource("/io/deeplay/camp/view/MainMenuView.fxml"));
+            }
+        }
     }
 }

@@ -22,6 +22,7 @@ import javafx.util.Callback;
 import javafx.util.Duration;
 import navigator.ViewNavigator;
 import observer.Observer;
+import utils.ScreenSwitcher;
 
 import java.io.IOException;
 import java.time.LocalDateTime;

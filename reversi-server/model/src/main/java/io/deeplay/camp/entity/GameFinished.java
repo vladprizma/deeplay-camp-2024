@@ -3,7 +3,7 @@ package io.deeplay.camp.entity;
 public class GameFinished {
     private boolean isGameFinished;
     private int userIdWinner;
-    
+
     public GameFinished(boolean isGameFinished, int userIdWinner) {
         this.isGameFinished = isGameFinished;
         this.userIdWinner = userIdWinner;

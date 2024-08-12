@@ -20,7 +20,7 @@ public class BoardService {
         this.blackChips = board.getBlackChips();
         this.whiteChips = board.getWhiteChips();
     }
-
+    
     //!! Установка фишки на доску
     public void setPiece(int x, int y, int player) {
         long piece = 1L << (x + 8 * y);
