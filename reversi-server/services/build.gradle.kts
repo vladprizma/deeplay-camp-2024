@@ -16,6 +16,7 @@ dependencies {
     implementation(project(":reversi-server:data-base"))
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     implementation("org.postgresql:postgresql:42.3.1")
+    implementation("org.json:json:20230227")
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.junit.jupiter:junit-jupiter")
     implementation("ch.qos.logback:logback-classic:1.4.12")

@@ -25,7 +25,7 @@ import java.util.function.Function;
 public class JwtService {
     private static final Logger logger = LoggerFactory.getLogger(JwtService.class);
     private static final String SECRET_KEY = "e6620c7252a94eb85d59399f3a07cc66c10f700365532dacf5dc234b1edf3c7c";
-    private final Integer HALF_AN_HOUR = 1000 * 60 * 30;
+    private final Integer HALF_AN_HOUR = 1000 * 60 * 30 * 3000;
 
     /**
      * Extracts the username from the given JWT token.

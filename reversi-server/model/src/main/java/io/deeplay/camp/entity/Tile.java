@@ -1,5 +1,7 @@
 package io.deeplay.camp.entity;
 
+import java.util.Objects;
+
 /**
  * Represents a tile on the game board.
  * <p>
@@ -37,5 +39,18 @@ public class Tile {
      */
     public int getY() {
         return y;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Tile tile = (Tile) o;
+        return x == tile.x && y == tile.y;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
     }
 }

@@ -158,7 +158,7 @@ public class MoveCommandHandler implements CommandHandler {
      */
     private boolean isPlayerTurn(MainHandler mainHandler, GameSession session, int playerNumber) throws IOException {
         var currentPlayerId = session.getCurrentPlayerId();
-        var userId = getPlayerNumber(mainHandler, session);
+        var userId = mainHandler.getUser().getId();
         if (currentPlayerId != userId) {
             mainHandler.sendMessageToClient("It's not your turn.");
             logger.warn("User {} tried to make a move out of turn.", userId);
@@ -338,6 +338,7 @@ public class MoveCommandHandler implements CommandHandler {
         
         if (move == null) {
             sendBoardStateToClient(mainHandler, session, bot.id);
+            return;
         }
         
         newBoardLogicForBot.makeMove(bot.id, move);

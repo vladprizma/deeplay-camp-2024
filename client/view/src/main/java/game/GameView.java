@@ -69,6 +69,8 @@ public class GameView implements Observer {
     public static ModelManager modelManager;
     private ChatString singleton;
 
+    private long validMoves = 1;
+
     public GameView() {
         singleton = ChatString.getInstance();
     }
@@ -218,7 +220,11 @@ public class GameView implements Observer {
     public void tileClick(ActionEvent actionEvent) {
         Button clickedButton = (Button) actionEvent.getSource();
         String tileId = clickedButton.getId();
-        modelManager.moveModelMethod(tileId);
+        if (validMoves != 0) {
+            modelManager.moveModelMethod(tileId);
+        } else {
+            modelManager.moveModelMethod(null);
+        }
     }
 
     public void initializeBoard(String boardState) {
@@ -249,6 +255,10 @@ public class GameView implements Observer {
                         greenScore = Integer.parseInt(scores[1]);
                         updateScores(redScore, greenScore);
                     }
+                }
+
+                if (parts.length >= 5) {
+                    validMoves = Long.parseLong(newString.split("::")[4]);
                 }
 
                 int currentPlayerId = extractCurrentPlayerId(newString);
