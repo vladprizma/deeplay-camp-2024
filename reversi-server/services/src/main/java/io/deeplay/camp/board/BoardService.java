@@ -429,7 +429,7 @@ public class BoardService {
         long blackValidMoves = getValidMoves(1);
         long whiteValidMoves = getValidMoves(2);
 
-        if (getChips(1).size() + getChips(2).size() == 64) {
+        if (getChips(1).size() + getChips(2).size() == 64 || (blackValidMoves == 0 && whiteValidMoves == 0)) {
             if (getChips(1).size() > getChips(2).size()) {
                 winner = 1;
                 return gameFinished = new GameFinished(true, winner);
