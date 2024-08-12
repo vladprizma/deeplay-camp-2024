@@ -20,101 +20,125 @@ public class BoardService {
         this.blackChips = board.getBlackChips();
         this.whiteChips = board.getWhiteChips();
     }
-    
+
     //!! Установка фишки на доску
     public void setPiece(int x, int y, int player) {
         long piece = 1L << (x + 8 * y);
         long tempChips;
-        long currentChips; long invertedChips;
+        long currentChips = 0; long invertedChips = 0;
         int a; int b;
-        boolean breakA; boolean breakB; boolean breakX;
         if (player == 1) {
             currentChips = blackChips;
             invertedChips = whiteChips;
-        } else {
+        } else if (player == 2) {
             currentChips = whiteChips;
             invertedChips = blackChips;
-        }
+        } else System.out.println("Who are moving?");
+
         if (isValidMove(x, y, player)) {
             currentChips |= piece;
             // Горизонтали
-            tempChips = 0;
-            for (int i = x - 1; i > 0; i--) {
-                if ((invertedChips & (1L << (i + 8 * y))) != 0) {
-                    tempChips |= (1L << (i + 8 * y));
-                } else if ((currentChips & (1L << (i + 8 * y))) != 0) {
-                    invertedChips &= ~tempChips;
-                    currentChips |= tempChips;
-                } else break;
+            if(x > 0){
+                tempChips = 0;
+                for (int i = x - 1; i >= 0; i--) {
+                    if ((invertedChips & (1L << (i + 8 * y))) != 0) {
+                        tempChips |= (1L << (i + 8 * y));
+                    } else if ((currentChips & (1L << (i + 8 * y))) != 0) {
+                        invertedChips &= ~tempChips;
+                        currentChips |= tempChips;
+                        break;
+                    } else break;
+                }
             }
-            tempChips = 0;
-            for (int i = x + 1; i < 7; i++) {
-                if ((invertedChips & (1L << (i + 8 * y))) != 0) {
-                    tempChips |= (1L << (i + 8 * y));
-                } else if ((currentChips & (1L << (i + 8 * y))) != 0) {
-                    invertedChips &= ~tempChips;
-                    currentChips |= tempChips;
-                } else break;
+            if(x < 7){
+                tempChips = 0;
+                for (int i = x + 1; i < 8; i++) {
+                    if ((invertedChips & (1L << (i + 8 * y))) != 0) {
+                        tempChips |= (1L << (i + 8 * y));
+                    } else if ((currentChips & (1L << (i + 8 * y))) != 0) {
+                        invertedChips &= ~tempChips;
+                        currentChips |= tempChips;
+                        break;
+                    } else break;
+                }
             }
             // Вертикали
-            tempChips = 0;
-            for (int j = y - 1; j > 0; j--) {
-                if ((invertedChips & (1L << (x + 8 * j))) != 0) {
-                    tempChips |= (1L << (x + 8 * j));
-                } else if ((currentChips & (1L << (x + 8 * j))) != 0) {
-                    invertedChips &= ~tempChips;
-                    currentChips |= tempChips;
-                } else break;
+            if(y > 0){
+                tempChips = 0;
+                for (int j = y - 1; j >= 0; j--) {
+                    if ((invertedChips & (1L << (x + 8 * j))) != 0) {
+                        tempChips |= (1L << (x + 8 * j));
+                    } else if ((currentChips & (1L << (x + 8 * j))) != 0) {
+                        invertedChips &= ~tempChips;
+                        currentChips |= tempChips;
+                        break;
+                    } else break;
+                }
             }
-            tempChips = 0;
-            for (int j = y + 1; j < 7; j++) {
-                if ((invertedChips & (1L << (x + 8 * j))) != 0) {
-                    tempChips |= (1L << (x + 8 * j));
-                } else if ((currentChips & (1L << (x + 8 * j))) != 0) {
-                    invertedChips &= ~tempChips;
-                    currentChips |= tempChips;
-                } else break;
+            if(y < 7){
+                tempChips = 0;
+                for (int j = y + 1; j < 8; j++) {
+                    if ((invertedChips & (1L << (x + 8 * j))) != 0) {
+                        tempChips |= (1L << (x + 8 * j));
+                    } else if ((currentChips & (1L << (x + 8 * j))) != 0) {
+                        invertedChips &= ~tempChips;
+                        currentChips |= tempChips;
+                        break;
+                    } else break;
+                }
             }
-            tempChips = 0; a = x - 1;
             // Диагонали
-            for (int j = y - 1; j > 0; j--) {
-                if ((invertedChips & (1L << (a + 8 * j))) != 0) {
-                    tempChips |= (1L << (a + 8 * j));
-                    a--;
-                } else if ((currentChips & (1L << (a + 8 * j))) != 0) {
-                    invertedChips &= ~tempChips;
-                    currentChips |= tempChips;
-                } else break;
+            if(y > 0 && x > 0){
+                tempChips = 0; a = x - 1;
+                for (int j = y - 1; j >= 0; j--) {
+                    if ((invertedChips & (1L << (a + 8 * j))) != 0 && a >= 0) {
+                        tempChips |= (1L << (a + 8 * j));
+                        a--;
+                    } else if ((currentChips & (1L << (a + 8 * j))) != 0 && a >= 0) {
+                        invertedChips &= ~tempChips;
+                        currentChips |= tempChips;
+                        break;
+                    } else break;
+                }
             }
-            tempChips = 0; b = x + 1;
-            for (int j = y - 1; j > 0; j--) {
-                if ((invertedChips & (1L << (b + 8 * j))) != 0) {
-                    tempChips |= (1L << (b + 8 * j));
-                    b++;
-                } else if ((currentChips & (1L << (b + 8 * j))) != 0) {
-                    invertedChips &= ~tempChips;
-                    currentChips |= tempChips;
-                } else break;
+            if(y > 0 && x < 7){
+                tempChips = 0; b = x + 1;
+                for (int j = y - 1; j >= 0; j--) {
+                    if ((invertedChips & (1L << (b + 8 * j))) != 0) {
+                        tempChips |= (1L << (b + 8 * j));
+                        b++;
+                    } else if ((currentChips & (1L << (b + 8 * j))) != 0) {
+                        invertedChips &= ~tempChips;
+                        currentChips |= tempChips;
+                        break;
+                    } else break;
+                }
             }
-            tempChips = 0; a = x - 1;
-            for (int j = y + 1; j < 7; j++) {
-                if ((invertedChips & (1L << (a + 8 * j))) != 0) {
-                    tempChips |= (1L << (a + 8 * j));
-                    a--;
-                } else if ((currentChips & (1L << (a + 8 * j))) != 0) {
-                    invertedChips &= ~tempChips;
-                    currentChips |= tempChips;
-                } else break;
+            if(y < 7 && x > 0){
+                tempChips = 0; a = x - 1;
+                for (int j = y + 1; j < 8; j++) {
+                    if ((invertedChips & (1L << (a + 8 * j))) != 0) {
+                        tempChips |= (1L << (a + 8 * j));
+                        a--;
+                    } else if ((currentChips & (1L << (a + 8 * j))) != 0) {
+                        invertedChips &= ~tempChips;
+                        currentChips |= tempChips;
+                        break;
+                    } else break;
+                }
             }
-            tempChips = 0; b = x + 1;
-            for (int j = y + 1; j < 7; j++) {
-                if ((invertedChips & (1L << (b + 8 * j))) != 0) {
-                    tempChips |= (1L << (b + 8 * j));
-                    b++;
-                } else if ((currentChips & (1L << (b + 8 * j))) != 0) {
-                    invertedChips &= ~tempChips;
-                    currentChips |= tempChips;
-                } else break;
+            if(y < 7 && x < 7){
+                tempChips = 0; b = x + 1;
+                for (int j = y + 1; j < 8; j++) {
+                    if ((invertedChips & (1L << (b + 8 * j))) != 0) {
+                        tempChips |= (1L << (b + 8 * j));
+                        b++;
+                    } else if ((currentChips & (1L << (b + 8 * j))) != 0) {
+                        invertedChips &= ~tempChips;
+                        currentChips |= tempChips;
+                        break;
+                    } else break;
+                }
             }
             if (player == 1) {
                 blackChips = currentChips;
@@ -142,7 +166,7 @@ public class BoardService {
         long mask = 1L << (x + 8 * y);
         return ((blackChips & mask) != 0) || ((whiteChips & mask) != 0);
     }
-    
+
     public Board getBoard() {
         return board;
     }
@@ -189,72 +213,95 @@ public class BoardService {
     }
 
     // Создание возможных ходов
-    public void createValidMoves() {
+    public void createValidMoves(){
         long allChips = blackChips | whiteChips;
         blackValidMoves = 0;
         whiteValidMoves = 0;
         long targetChip;
         long validMoves = 0;
         int a, b;
-        boolean breakA, breakB, breakX;
-        for (int y = 0; y < 8; y++) {
-            for (int x = 0; x < 8; x++) {
-                if (hasPiece(x, y)) {
-                    if ((blackChips & (1L << (x + 8 * y))) != 0) targetChip = whiteChips;
-                    else targetChip = blackChips;
-                    for (int i = x - 1; i > 0; i--) {
-                        if ((targetChip & (1L << (i + 8 * y))) != 0) {
-                            if (!hasPiece(i - 1, y)) validMoves |= (1L << (i - 1 + 8 * y));
+        boolean breakA, breakB;
+
+        for(int x = 0; x < 8; x++) {
+            for(int y = 0; y < 8; y++) {
+                if(hasPiece(x, y)){
+                    if((blackChips & (1L << (x + 8 * y))) != 0){
+                        targetChip = whiteChips;
+                    } else if ((whiteChips & (1L << (x + 8 * y))) != 0){
+                        targetChip = blackChips;
+                    } else {
+                        System.out.println("Who are you?");
+                        break;
+                    }
+                    for(int i = x + 1; i < 8; i++){
+                        if((targetChip & (1L << (i + 8 * y))) != 0){
+                            if(!hasPiece(i + 1, y) && (i + 1) < 8){
+                                validMoves |= (1L << (i + 1 + 8 * y));
+                                break;
+                            }
                         } else break;
                     }
-                    for (int i = x + 1; i < 7; i++) {
-                        if ((targetChip & (1L << (i + 8 * y))) != 0) {
-                            if (!hasPiece(i + 1, y)) validMoves |= (1L << (i + 1 + 8 * y));
+                    for(int i = x - 1; i >= 0; i--){
+                        if((targetChip & (1L << (i + 8 * y))) != 0){
+                            if(!hasPiece(i - 1, y) && (i - 1) >= 0){
+                                validMoves |= (1L << (i - 1 + 8 * y));
+                                break;
+                            }
                         } else break;
                     }
-                    a = x - 1; b = x + 1;
-                    breakA = true; breakB = true; breakX = true;
-                    for (int j = y - 1; j > 0; j--) {
-                        if ((targetChip & (1L << (a + 8 * j))) != 0 && breakA) {
-                            if (!hasPiece(a - 1, j - 1)) {
-                                validMoves |= (1L << (a - 1 + 8 * (j - 1)));
-                            }
-                            a--;
-                        } else breakA = false;
-                        if ((targetChip & (1L << (b + 8 * j))) != 0 && breakB) {
-                            if (!hasPiece(b + 1, j - 1)) {
-                                validMoves |= (1L << (b + 1 + 8 * (j - 1)));
-                            }
-                            b++;
-                        } else breakB = false;
-                        if ((targetChip & (1L << (x + 8 * j))) != 0 && breakX) {
-                            if (!hasPiece(x, j - 1)) {
-                                validMoves |= (1L << (x + 8 * (j - 1)));
-                            }
-                        } else breakX = false;
-                        if (!breakA && !breakB && !breakX) break;
-                    }
-                    a = x - 1; b = x + 1;
-                    breakA = true; breakB = true; breakX = true;
-                    for (int j = y + 1; j < 7; j++) {
-                        if ((targetChip & (1L << (a + 8 * j))) != 0 && breakA) {
-                            if (!hasPiece(a - 1, j + 1)) {
-                                validMoves |= (1L << (a - 1 + 8 * (j + 1)));
-                            }
-                            a--;
-                        } else breakA = false;
-                        if ((targetChip & (1L << (b + 8 * j))) != 0 && breakB) {
-                            if (!hasPiece(b + 1, j + 1)) {
-                                validMoves |= (1L << (b + 1 + 8 * (j + 1)));
-                            }
-                            b++;
-                        } else breakB = false;
-                        if ((targetChip & (1L << (x + 8 * j))) != 0 && breakX) {
-                            if (!hasPiece(x, j + 1)) {
+                    for(int j = y + 1; j < 8; j++){
+                        if((targetChip & (1L << (x + 8 * j))) != 0){
+                            if(!hasPiece(x, j + 1) && (j + 1) < 8){
                                 validMoves |= (1L << (x + 8 * (j + 1)));
+                                break;
                             }
-                        } else breakX = false;
-                        if (!breakA && !breakB && !breakX) break;
+                        } else break;
+                    }
+                    for(int j = y - 1; j >= 0; j--){
+                        if((targetChip & (1L << (x + 8 * j))) != 0){
+                            if(!hasPiece(x, j - 1) && (j - 1) >= 0){
+                                validMoves |= (1L << (x + 8 * (j - 1)));
+                                break;
+                            }
+                        } else break;
+                    }
+                    a = x - 1; b = x + 1;
+                    breakA = true; breakB = true;
+                    for (int j = y - 1; j >= 0; j--) {
+                        if ((targetChip & (1L << (a + 8 * j))) != 0 && breakA) {
+                            if (!hasPiece(a - 1, j - 1) && (j - 1) >= 0 && (a - 1) >= 0){
+                                validMoves |= (1L << (a - 1 + 8 * (j - 1)));
+                                breakA = false;
+                            }
+                            a--;
+                        } else breakA = false;
+                        if ((targetChip & (1L << (b + 8 * j))) != 0 && breakB) {
+                            if (!hasPiece(b + 1, j - 1) && (j - 1) >= 0 && (b + 1) < 8) {
+                                validMoves |= (1L << (b + 1 + 8 * (j - 1)));
+                                breakB = false;
+                            }
+                            b++;
+                        } else breakB = false;
+                        if (!breakA && !breakB) break;
+                    }
+                    a = x - 1; b = x + 1;
+                    breakA = true; breakB = true;
+                    for (int j = y + 1; j < 8; j++) {
+                        if ((targetChip & (1L << (a + 8 * j))) != 0 && breakA) {
+                            if (!hasPiece(a - 1, j - 1) && (j + 1) < 8 && (a - 1) >= 0){
+                                validMoves |= (1L << (a - 1 + 8 * (j + 1)));
+                                breakA = false;
+                            }
+                            a--;
+                        } else breakA = false;
+                        if ((targetChip & (1L << (b + 8 * j))) != 0 && breakB) {
+                            if (!hasPiece(b + 1, j - 1) && (j + 1) < 8 && (b + 1) < 8) {
+                                validMoves |= (1L << (b + 1 + 8 * (j + 1)));
+                                breakB = false;
+                            }
+                            b++;
+                        } else breakB = false;
+                        if (!breakA && !breakB) break;
                     }
                     if ((blackChips & (1L << (x + 8 * y))) != 0) blackValidMoves |= validMoves;
                     else whiteValidMoves |= validMoves;
@@ -265,6 +312,7 @@ public class BoardService {
         blackValidMoves &= ~allChips;
         whiteValidMoves &= ~allChips;
     }
+
 
     // Вызов доски
     public StringBuilder getBoardState(int player) {
@@ -353,7 +401,7 @@ public class BoardService {
         int x = tile.getX();
         int y = tile.getY();
         setPiece(x, y, playerId);
-                
+
         return true;
     }
 
@@ -380,10 +428,8 @@ public class BoardService {
 
         long blackValidMoves = getValidMoves(1);
         long whiteValidMoves = getValidMoves(2);
-        
-        
-        //TODO переделать на && после починки логики игры
-        if (blackValidMoves == 0 || whiteValidMoves == 0) {
+
+        if (getChips(1).size() + getChips(2).size() == 64) {
             if (getChips(1).size() > getChips(2).size()) {
                 winner = 1;
                 return gameFinished = new GameFinished(true, winner);
