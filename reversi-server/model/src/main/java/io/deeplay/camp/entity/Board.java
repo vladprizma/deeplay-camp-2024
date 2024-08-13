@@ -22,6 +22,11 @@ public class Board {
         whiteChips = 0x0000001008000000L;
     }
 
+    public Board(Board other) {
+        this.blackChips = other.blackChips;
+        this.whiteChips = other.whiteChips;
+    }
+
     /**
      * Sets the positions of the black chips.
      *

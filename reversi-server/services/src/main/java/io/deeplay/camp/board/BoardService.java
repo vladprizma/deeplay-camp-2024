@@ -21,6 +21,14 @@ public class BoardService {
         this.whiteChips = board.getWhiteChips();
     }
 
+    public BoardService(BoardService other) {
+        this.board = new Board(other.board); // Assuming Board has a copy constructor
+        this.blackChips = other.blackChips;
+        this.whiteChips = other.whiteChips;
+        this.blackValidMoves = other.blackValidMoves;
+        this.whiteValidMoves = other.whiteValidMoves;
+    }
+    
     //!! Установка фишки на доску
     public void setPiece(int x, int y, int player) {
         long piece = 1L << (x + 8 * y);
@@ -442,6 +450,10 @@ public class BoardService {
             }
         }
         return new GameFinished(false, -1);
+    }
+
+    public BoardService getBoardServiceCopy() {
+        return new BoardService(this);
     }
 
     public void setBlackValidMoves(long blackValidMoves) {
