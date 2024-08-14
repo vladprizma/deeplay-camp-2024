@@ -102,7 +102,7 @@ public class DarlingBot extends BotStrategy {
         if (depth == 0 || node.getChildren().isEmpty()) {
             MoveNode parent = node.getParent();
             BoardService boardBefore = (parent != null) ? parent.getBoardService() : node.getBoardService();
-            double evaluation = heuristicEvaluator.evaluate(boardBefore, node.getBoardService(), currentPlayerId);
+            double evaluation = heuristicEvaluator.heuristic(boardBefore, node.getBoardService(), currentPlayerId);
             transpositionTable.put(boardHash, evaluation);
             return evaluation;
         }
