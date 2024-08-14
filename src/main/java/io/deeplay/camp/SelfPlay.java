@@ -96,7 +96,7 @@ public class SelfPlay {
      * @return null
      */
     private Void playSingleGame(boolean firstBotStarts) {
-        BotStrategy firstRandomBot = new DarlingBot(1, "DarlingBot", 3);
+        BotStrategy firstRandomBot = new DarlingBot(1, "DarlingBot", 4);
         BotStrategy secondRandomBot = new RandomBot(2, "ViolaBot");
         Board board = new Board();
         BoardService boardLogic = new BoardService(board);
