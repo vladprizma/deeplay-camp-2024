@@ -89,7 +89,6 @@ public class HeuristicEvaluator {
                     }
                 }
 
-                // Учитываем количество фишек на границе
                 if (isFrontierDisc(boardAfter, x, y)) {
                     if ((currentPlayerId == 1 && boardAfter.hasPieceBlack(x, y)) ||
                             (currentPlayerId == 2 && boardAfter.hasPieceWhite(x, y))) {
@@ -152,9 +151,6 @@ public class HeuristicEvaluator {
         return flippedPieces;
     }
 
-    /**
-     * Определяет, является ли фишка Frontier Disc (имеет ли она рядом пустые клетки).
-     */
     private boolean isFrontierDisc(BoardService board, int x, int y) {
         int[] dx = {-1, 0, 1, 0, -1, 1, -1, 1};
         int[] dy = {0, -1, 0, 1, -1, -1, 1, 1};
@@ -171,14 +167,8 @@ public class HeuristicEvaluator {
         return false;
     }
 
-    /**
-     * Подсчитывает количество стабильных фишек для каждого игрока.
-     *
-     * @param board The current board state.
-     * @return Массив с количеством стабильных фишек [для черных, для белых].
-     */
     private int[] countStablePieces(BoardService board) {
-        int[] stablePieces = new int[2]; // stablePieces[0] - для черных, stablePieces[1] - для белых
+        int[] stablePieces = new int[2]; 
 
         for (int y = 0; y < 8; y++) {
             for (int x = 0; x < 8; x++) {
@@ -195,16 +185,12 @@ public class HeuristicEvaluator {
         return stablePieces;
     }
 
-    /**
-     * Определяет, является ли фишка стабильной.
-     */
     private boolean isStable(BoardService board, int x, int y) {
         int piece = board.getPiece(x, y);
         if (piece == 0) {
-            return false; // Пустая клетка не может быть стабильной
+            return false; 
         }
 
-        // Проверяем, окружена ли фишка такими же фишками по горизонтали, вертикали и диагоналям
         boolean horizontal = checkLineStability(board, x, y, 1, 0) && checkLineStability(board, x, y, -1, 0);
         boolean vertical = checkLineStability(board, x, y, 0, 1) && checkLineStability(board, x, y, 0, -1);
         boolean diagonal1 = checkLineStability(board, x, y, 1, 1) && checkLineStability(board, x, y, -1, -1);
@@ -213,9 +199,6 @@ public class HeuristicEvaluator {
         return horizontal && vertical && diagonal1 && diagonal2;
     }
 
-    /**
-     * Проверяет стабильность фишки в заданной линии.
-     */
     private boolean checkLineStability(BoardService board, int x, int y, int dx, int dy) {
         int piece = board.getPiece(x, y);
         int newX = x + dx;
