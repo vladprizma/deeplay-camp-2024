@@ -175,6 +175,16 @@ public class BoardService {
         return ((blackChips & mask) != 0) || ((whiteChips & mask) != 0);
     }
 
+    public boolean hasPieceBlack(int x, int y) {
+        long mask = 1L << (x + 8 * y);
+        return ((blackChips & mask) != 0);
+    }
+
+    public boolean hasPieceWhite(int x, int y) {
+        long mask = 1L << (x + 8 * y);
+        return ((whiteChips & mask) != 0);
+    }
+
     public Board getBoard() {
         return board;
     }
@@ -391,6 +401,19 @@ public class BoardService {
         return whiteValidMoves;
     }
 
+    public int getPiece(int x, int y) {
+        long mask = 1L << (x + 8 * y);
+
+        if ((blackChips & mask) != 0) {
+            return 1; // Черная фишка
+        } else if ((whiteChips & mask) != 0) {
+            return 2; // Белая фишка
+        } else {
+            return 0; // Пустая клетка
+        }
+    }
+
+
     public List<Tile> getAllValidTiles(int playerId) {
         List<Tile> validTiles = new ArrayList<>();
         long validMoves = getValidMoves(playerId);
@@ -399,7 +422,9 @@ public class BoardService {
             if ((validMoves & mask) != 0) {
                 int x = i % 8;
                 int y = i / 8;
-                validTiles.add(new Tile(x, y));
+                var buf = new Tile(x, y);
+                buf.setPlayerId(playerId);
+                validTiles.add(buf);
             }
         }
         return validTiles;

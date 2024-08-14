@@ -5,30 +5,48 @@ import io.deeplay.camp.board.BoardService;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Represents a bot that uses the Minimax algorithm with alpha-beta pruning to play the game.
+ */
 public class DarlingBot extends BotStrategy {
     private int depthTree;
     private int depthMinimax;
-    
-    public DarlingBot(int id, String name, int depthTree, int depthMinimax) {
+    private final Map<Long, Double> transpositionTable;
+    private final MoveTreeBuilder moveTreeBuilder;
+    private final HeuristicEvaluator heuristicEvaluator;
+
+    /**
+     * Constructs a new DarlingBot.
+     *
+     * @param id           The ID of the bot.
+     * @param name         The name of the bot.
+     * @param depth   The depth of the move tree and min max.
+     */
+    public DarlingBot(int id, String name, int depth) {
         super(id, name);
-        this.depthTree = depthTree;
-        this.depthMinimax = depthMinimax;
+        this.depthTree = depth;
+        this.transpositionTable = new ConcurrentHashMap<>();
+        this.moveTreeBuilder = new MoveTreeBuilder();
+        this.heuristicEvaluator = new HeuristicEvaluator();
     }
 
+    /**
+     * Gets the best move for the bot using iterative deepening.
+     *
+     * @param currentPlayerId The ID of the current player.
+     * @param boardLogic      The board logic to be used for making the move.
+     * @return The best move for the bot.
+     */
     @Override
     public Tile getMakeMove(int currentPlayerId, @NotNull BoardService boardLogic) {
-        MoveNode root = buildMoveTree(boardLogic, currentPlayerId, depthTree);
-        minimax(root, depthMinimax, true, Integer.MIN_VALUE, Integer.MAX_VALUE);
-
+        BoardService boardCopy = boardLogic.getBoardServiceCopy();
         Tile bestMove = null;
-        int bestScore = -1;
 
-        for (MoveNode child : root.getChildren()) {
-            if (child.getScore() > bestScore) {
-                bestScore = child.getScore();
-                bestMove = child.getMove();
-            }
+        for (int depth = 1; depth <= depthTree; depth++) {
+            bestMove = iterativeDeepening(boardCopy, currentPlayerId, depth);
         }
 
         return bestMove;
@@ -36,61 +54,84 @@ public class DarlingBot extends BotStrategy {
 
     @Override
     List<Tile> getAllValidMoves(int currentPlayerId, @NotNull BoardService boardLogic) {
-        return boardLogic.getAllValidTiles(currentPlayerId);
+        return List.of();
     }
 
-    private MoveNode buildMoveTree(BoardService boardLogic, int currentPlayerId, int depth) {
-        if (depth == 0 || boardLogic.checkForWin().isGameFinished()) {
-            int score = boardLogic.getChips(currentPlayerId).size();
-            MoveNode leaf = new MoveNode(null, boardLogic, currentPlayerId);
-            leaf.setScore(score);
-            return leaf;
+    /**
+     * Performs iterative deepening to find the best move.
+     *
+     * @param board          The current board state.
+     * @param currentPlayerId The ID of the current player.
+     * @param depth          The depth to search to.
+     * @return The best move found.
+     */
+    private Tile iterativeDeepening(BoardService board, int currentPlayerId, int depth) {
+        MoveNode root = moveTreeBuilder.buildMoveTree(board, currentPlayerId, depth);
+
+        double bestValue = Double.NEGATIVE_INFINITY;
+        Tile bestMove = null;
+
+        for (MoveNode child : root.getChildren()) {
+            double nodeValue = minimax(child, depth - 1, false, currentPlayerId, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+            if (nodeValue > bestValue) {
+                bestValue = nodeValue;
+                bestMove = child.getMove();
+            }
         }
 
-        List<Tile> validMoves = boardLogic.getAllValidTiles(currentPlayerId);
-        MoveNode root = new MoveNode(null, boardLogic, currentPlayerId);
-
-        for (Tile move : validMoves) {
-            BoardService boardCopy = boardLogic.getBoardServiceCopy();
-            boardCopy.setPiece(move.getX(), move.getY(), currentPlayerId);
-
-            MoveNode childNode = buildMoveTree(boardCopy, 3 - currentPlayerId, depth - 1);
-            childNode.setMove(move);
-            childNode.setBoardService(boardCopy);
-            root.addChild(childNode);
-        }
-
-        return root;
+        return bestMove;
     }
 
-    private int minimax(MoveNode node, int depth, boolean isMaximizingPlayer, int alpha, int beta) {
+    /**
+     * Performs the Minimax algorithm with alpha-beta pruning.
+     *
+     * @param node            The current node in the move tree.
+     * @param depth           The depth to search to.
+     * @param maximizingPlayer Whether the current player is the maximizing player.
+     * @param currentPlayerId The ID of the current player.
+     * @param alpha           The alpha value for alpha-beta pruning.
+     * @param beta            The beta value for alpha-beta pruning.
+     * @return The evaluation score of the node.
+     */
+    private double minimax(MoveNode node, int depth, boolean maximizingPlayer, int currentPlayerId, double alpha, double beta) {
+        long boardHash = node.getBoardService().hashCode();
+        if (transpositionTable.containsKey(boardHash)) {
+            return transpositionTable.get(boardHash);
+        }
+
         if (depth == 0 || node.getChildren().isEmpty()) {
-            return node.getScore();
+            MoveNode parent = node.getParent();
+            BoardService boardBefore = (parent != null) ? parent.getBoardService() : node.getBoardService();
+            double evaluation = heuristicEvaluator.evaluate(boardBefore, node.getBoardService(), currentPlayerId);
+            transpositionTable.put(boardHash, evaluation);
+            return evaluation;
         }
 
-        if (isMaximizingPlayer) {
-            int maxEval = -1;
+        if (maximizingPlayer) {
+            double maxEval = Double.NEGATIVE_INFINITY;
             for (MoveNode child : node.getChildren()) {
-                int eval = minimax(child, depth - 1, false, alpha, beta);
+                double eval = minimax(child, depth - 1, false, currentPlayerId, alpha, beta);
                 maxEval = Math.max(maxEval, eval);
                 alpha = Math.max(alpha, eval);
                 if (beta <= alpha) {
                     break;
                 }
             }
-            node.setScore(maxEval);
+
+            transpositionTable.put(boardHash, maxEval);
             return maxEval;
         } else {
-            int minEval = Integer.MAX_VALUE;
+            double minEval = Double.POSITIVE_INFINITY;
             for (MoveNode child : node.getChildren()) {
-                int eval = minimax(child, depth - 1, true, alpha, beta);
+                double eval = minimax(child, depth - 1, true, currentPlayerId, alpha, beta);
                 minEval = Math.min(minEval, eval);
                 beta = Math.min(beta, eval);
                 if (beta <= alpha) {
                     break;
                 }
             }
-            node.setScore(minEval);
+
+            transpositionTable.put(boardHash, minEval);
             return minEval;
         }
     }

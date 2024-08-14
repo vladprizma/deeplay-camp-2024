@@ -1,53 +1,35 @@
 package io.deeplay.camp.bot;
 
-import io.deeplay.camp.board.BoardService;
 import io.deeplay.camp.entity.Tile;
+import io.deeplay.camp.board.BoardService;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a node in the move tree.
+ */
 public class MoveNode {
-    Tile move; 
-    List<MoveNode> children; 
-    int score; 
-    BoardService boardService;
-    int currentPlayerId;
+    private Tile move;
+    private BoardService boardService;
+    private int currentPlayerId;
+    private MoveNode parent;
+    private List<MoveNode> children;
 
+    /**
+     * Constructs a new MoveNode.
+     *
+     * @param move           The move associated with this node.
+     * @param boardService   The board state associated with this node.
+     * @param currentPlayerId The ID of the current player.
+     */
     public MoveNode(Tile move, BoardService boardService, int currentPlayerId) {
         this.move = move;
+        this.boardService = boardService;
+        this.currentPlayerId = currentPlayerId;
         this.children = new ArrayList<>();
-        this.boardService = boardService;
-        this.currentPlayerId = currentPlayerId;
-    }
-    
-    public BoardService getBoardService() {
-        return boardService;
-    }
-    
-    public void setBoardService(BoardService boardService) {
-        this.boardService = boardService;
-    }
-    
-    public int getCurrentPlayerId() {
-        return currentPlayerId;
-    }
-    
-    public void setCurrentPlayerId(int currentPlayerId) {
-        this.currentPlayerId = currentPlayerId;
     }
 
-    public void addChild(MoveNode child) {
-        children.add(child);
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
-    
-    public int getScore() {
-        return score;
-    }
-    
     public Tile getMove() {
         return move;
     }
@@ -55,19 +37,36 @@ public class MoveNode {
     public void setMove(Tile move) {
         this.move = move;
     }
-    
+
+    public BoardService getBoardService() {
+        return boardService;
+    }
+
+    public void setBoardService(BoardService boardService) {
+        this.boardService = boardService;
+    }
+
+    public int getCurrentPlayerId() {
+        return currentPlayerId;
+    }
+
+    public void setCurrentPlayerId(int currentPlayerId) {
+        this.currentPlayerId = currentPlayerId;
+    }
+
+    public MoveNode getParent() {
+        return parent;
+    }
+
+    public void setParent(MoveNode parent) {
+        this.parent = parent;
+    }
+
     public List<MoveNode> getChildren() {
         return children;
     }
 
-    public int countTerminalNodes() {
-        if (children.isEmpty()) {
-            return 1;
-        }
-        int count = 0;
-        for (MoveNode child : children) {
-            count += child.countTerminalNodes();
-        }
-        return count;
+    public void addChild(MoveNode child) {
+        this.children.add(child);
     }
 }
