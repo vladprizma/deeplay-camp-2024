@@ -452,6 +452,39 @@ public class BoardService {
         return new GameFinished(false, -1);
     }
 
+    public int getScore(int player) {
+        int score = 0;
+
+        long chips;
+        if (player == 1) {
+            chips = blackChips;
+        } else if (player == 2) {
+            chips = whiteChips;
+        } else {
+            throw new IllegalArgumentException("Некорректный ID игрока");
+        }
+
+        // Подсчет количества фишек на доске у заданного игрока
+        for (int i = 0; i < 64; i++) {
+            long mask = 1L << i;
+            if ((chips & mask) != 0) {
+                score++;
+            }
+        }
+        return score;
+    }
+    
+    public boolean isGameOver() {
+        long blackValidMoves = getBlackValidMoves();
+        long whiteValidMoves = getWhiteValidMoves();
+
+        // Если на доске нет пустых мест или нет допустимых ходов у обоих игроков
+        if ((blackValidMoves == 0 && whiteValidMoves == 0) || (getChips(1).size() + getChips(2).size() == 64)) {
+            return true;
+        }
+        return false;
+    }
+
     public BoardService getBoardServiceCopy() {
         return new BoardService(this);
     }

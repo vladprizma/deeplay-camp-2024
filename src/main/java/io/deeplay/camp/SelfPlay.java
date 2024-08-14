@@ -3,6 +3,7 @@ package io.deeplay.camp;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import io.deeplay.camp.bot.DarlingBot;
 import io.deeplay.camp.entity.Board;
 import io.deeplay.camp.entity.Tile;
 import io.deeplay.camp.board.BoardService;
@@ -54,14 +55,17 @@ public class SelfPlay {
      */
     public void startBotGame() {
         int totalBatches = (int) Math.ceil((double) gameCount / 50);
+        int index = 0;
 
         for (int batch = 0; batch < totalBatches; batch++) {
             int gamesInBatch = Math.min(50, gameCount - batch * 50);
             List<Future<Void>> futures = new ArrayList<>();
 
             for (int i = 0; i < gamesInBatch; i++) {
-                int gameIndex = batch * 50 + i;
-                futures.add(gameExecutor.submit(() -> playSingleGame(gameIndex % 2 == 0)));
+                int gameIndex = batch * 10 + i;
+                int finalIndex = index;
+                futures.add(gameExecutor.submit(() -> playSingleGame(finalIndex % 2 == 0)));
+                index++;
             }
 
             for (Future<Void> future : futures) {
@@ -92,8 +96,8 @@ public class SelfPlay {
      * @return null
      */
     private Void playSingleGame(boolean firstBotStarts) {
-        BotStrategy firstRandomBot = new RandomBot(1, "DarlingBot");
-        BotStrategy secondRandomBot = new RandomBot(2, "ViolaBot");
+        BotStrategy firstRandomBot = new DarlingBot(1, "DarlingBot", 4, 4);
+        BotStrategy secondRandomBot = new DarlingBot(2, "ViolaBot", 2, 2);
         Board board = new Board();
         BoardService boardLogic = new BoardService(board);
         BotStrategy currentBot = firstBotStarts ? firstRandomBot : secondRandomBot;
@@ -129,7 +133,7 @@ public class SelfPlay {
         Future<Tile> futureMove = scheduler.schedule(botMoveTask, 0, TimeUnit.SECONDS);
 
         try {
-            var tile = futureMove.get(5, TimeUnit.SECONDS);
+            var tile = futureMove.get(10, TimeUnit.SECONDS);
             if (tile != null) boardLogic.makeMove(botService.id, tile);
         } catch (TimeoutException e) {
             logger.error("Bot {} move timed out.", botService.id);
