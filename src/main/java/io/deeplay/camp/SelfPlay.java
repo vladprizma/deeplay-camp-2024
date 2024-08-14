@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class SelfPlay {
     private static final Logger logger = LoggerFactory.getLogger(SelfPlay.class);
     private static final int GAME_THREAD_COUNT = Runtime.getRuntime().availableProcessors() * 10;
-    private static final int SCHEDULER_THREAD_COUNT = 10;
+    private static final int SCHEDULER_THREAD_COUNT = GAME_THREAD_COUNT;
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(SCHEDULER_THREAD_COUNT);
     private static final ExecutorService gameExecutor = Executors.newFixedThreadPool(GAME_THREAD_COUNT);
     private final int gameCount;
@@ -96,8 +96,8 @@ public class SelfPlay {
      * @return null
      */
     private Void playSingleGame(boolean firstBotStarts) {
-        BotStrategy firstRandomBot = new DarlingBot(1, "DarlingBot", 4, 4);
-        BotStrategy secondRandomBot = new DarlingBot(2, "ViolaBot", 2, 2);
+        BotStrategy firstRandomBot = new DarlingBot(1, "DarlingBot", 3);
+        BotStrategy secondRandomBot = new RandomBot(2, "ViolaBot");
         Board board = new Board();
         BoardService boardLogic = new BoardService(board);
         BotStrategy currentBot = firstBotStarts ? firstRandomBot : secondRandomBot;
@@ -133,7 +133,7 @@ public class SelfPlay {
         Future<Tile> futureMove = scheduler.schedule(botMoveTask, 0, TimeUnit.SECONDS);
 
         try {
-            var tile = futureMove.get(10, TimeUnit.SECONDS);
+            var tile = futureMove.get(5, TimeUnit.SECONDS);
             if (tile != null) boardLogic.makeMove(botService.id, tile);
         } catch (TimeoutException e) {
             logger.error("Bot {} move timed out.", botService.id);

@@ -11,7 +11,16 @@ import java.util.Objects;
 public class Tile {
     private int x;
     private int y;
-
+    private int playerId;
+    
+    public int getPlayerId() {
+        return playerId;
+    }
+    
+    public void setPlayerId(int playerId) {
+        this.playerId = playerId;
+    }
+    
     /**
      * Initializes a new Tile with the specified coordinates.
      *
