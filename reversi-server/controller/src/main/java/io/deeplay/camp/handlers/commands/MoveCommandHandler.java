@@ -330,7 +330,7 @@ public class MoveCommandHandler implements CommandHandler {
      * @throws SQLException if a database access error occurs
      */
     private void handleBotMove(MainHandler mainHandler, GameSession session) throws IOException, SQLException {
-        BotStrategy bot = new DarlingBot(2, "Bot", 6);
+        BotStrategy bot = new DarlingBot(2, "Bot", 4);
         var newBoardLogicForBot = new BoardService(session.getBoard());
         mainHandler.setGameLogic(new GameService(newBoardLogicForBot));
         mainHandler.setBoardLogic(newBoardLogicForBot);
