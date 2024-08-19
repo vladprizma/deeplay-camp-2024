@@ -57,4 +57,10 @@ public class Board {
     public long getWhiteChips() {
         return whiteChips;
     }
+
+    public Board(Board board) {
+        this.blackChips = board.blackChips;
+        this.whiteChips = board.whiteChips;
+    }
+
 }

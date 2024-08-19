@@ -313,7 +313,6 @@ public class BoardService {
         whiteValidMoves &= ~allChips;
     }
 
-
     // Вызов доски
     public StringBuilder getBoardState(int player) {
         createValidMoves();
@@ -367,6 +366,25 @@ public class BoardService {
                         state.append(". ");
                     }
                 }
+            }
+        }
+
+        return "Board{" + state + '}';
+    }
+
+    public String getBoardStateDTOWithoutValidMoves(){
+        StringBuilder state = new StringBuilder("");
+        for (int y = 0; y < 8; y++) {
+            for (int x = 0; x < 8; x++) {
+                if (hasPiece(x, y)) {
+                    if ((blackChips & (1L << (x + 8 * y))) != 0) {
+                        state.append("X ");
+                    } else {
+                        state.append("0 ");
+                    }
+                } else {
+                        state.append(". ");
+                    }
             }
         }
 
@@ -442,6 +460,18 @@ public class BoardService {
             }
         }
         return new GameFinished(false, -1);
+    }
+
+    public BoardService(BoardService oldBoardService) {
+        this.board = new Board(oldBoardService.board);
+        this.blackChips = oldBoardService.blackChips;
+        this.whiteChips = oldBoardService.whiteChips;
+        this.blackValidMoves = oldBoardService.blackValidMoves;
+        this.whiteValidMoves = oldBoardService.whiteValidMoves;
+    }
+
+    public BoardService getCopy() {
+        return new BoardService(this);
     }
 
     public void setBlackValidMoves(long blackValidMoves) {
