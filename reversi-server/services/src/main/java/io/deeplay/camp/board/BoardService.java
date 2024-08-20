@@ -540,9 +540,13 @@ public class BoardService {
 
     //Смена игрока
     public void playerSwap(){
-        if(playerID == 1) {
-            playerID = 2;
-        } else playerID = 1;
+        if(!checkForWin().isGameFinished()){
+            if(playerID == 1 && getValidMoves(2) != 0) {
+                playerID = 2;
+            } else if(playerID == 2 && getValidMoves(1) != 0) {
+                playerID = 1;
+            }
+        }
     }
 
     public String getBoardStateDTO(int player){
