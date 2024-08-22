@@ -5,7 +5,7 @@ import io.deeplay.camp.board.BoardService;
 /**
  * Evaluates the board state using a heuristic function.
  */
-public class HeuristicEvaluator {
+public class HeuristicEvaluatorStrategy implements EvaluationStrategy {
     private static int[][] getDynamicWeights(double gameProgress) {
         if (gameProgress < 0.2) {
             return new int[][] {
@@ -50,7 +50,8 @@ public class HeuristicEvaluator {
      * @param currentPlayerId The ID of the current player.
      * @return The evaluation score of the board state.
      */
-    public double heuristic(BoardService boardService, int currentPlayerId) {
+    @Override
+    public double evaluate(BoardService boardService, int currentPlayerId) {
         //TODO нормировать возвратные значения
         if (boardService.checkForWin().isGameFinished()) {
             if (boardService.checkForWin().getUserIdWinner() == currentPlayerId) {
@@ -122,7 +123,7 @@ public class HeuristicEvaluator {
      * @param currentPlayerId The ID of the current player.
      * @return The mobility score of the current player.
      */
-    private int calculateMobility(BoardService board, int currentPlayerId) {
+    private static int calculateMobility(BoardService board, int currentPlayerId) {
         return board.getAllValidTiles(currentPlayerId).size();
     }
 
@@ -133,7 +134,7 @@ public class HeuristicEvaluator {
      * @param boardAfter  The board state after the move.
      * @return The number of pieces flipped.
      */
-    private int countFlippedPieces(BoardService boardBefore, BoardService boardAfter) {
+    private static int countFlippedPieces(BoardService boardBefore, BoardService boardAfter) {
         int flippedPieces = 0;
 
         for (int x = 0; x < 8; x++) {
@@ -149,7 +150,7 @@ public class HeuristicEvaluator {
         return flippedPieces;
     }
 
-    private boolean isFrontierDisc(BoardService board, int x, int y) {
+    private static boolean isFrontierDisc(BoardService board, int x, int y) {
         int[] dx = {-1, 0, 1, 0, -1, 1, -1, 1};
         int[] dy = {0, -1, 0, 1, -1, -1, 1, 1};
 
@@ -165,7 +166,7 @@ public class HeuristicEvaluator {
         return false;
     }
 
-    private int[] countStablePieces(BoardService board) {
+    private static int[] countStablePieces(BoardService board) {
         int[] stablePieces = new int[2]; 
 
         for (int y = 0; y < 8; y++) {
@@ -183,7 +184,7 @@ public class HeuristicEvaluator {
         return stablePieces;
     }
 
-    private boolean isStable(BoardService board, int x, int y) {
+    private static boolean isStable(BoardService board, int x, int y) {
         int piece = board.getPiece(x, y);
         if (piece == 0) {
             return false; 
@@ -197,7 +198,7 @@ public class HeuristicEvaluator {
         return horizontal && vertical && diagonal1 && diagonal2;
     }
 
-    private boolean checkLineStability(BoardService board, int x, int y, int dx, int dy) {
+    private static boolean checkLineStability(BoardService board, int x, int y, int dx, int dy) {
         int piece = board.getPiece(x, y);
         int newX = x + dx;
         int newY = y + dy;
@@ -220,7 +221,7 @@ public class HeuristicEvaluator {
      * @param opponentId The ID of the opponent player.
      * @return The difference in corner control between the current player and the opponent.
      */
-    private int evaluateCornerControl(BoardService board, int currentPlayerId, int opponentId) {
+    private static int evaluateCornerControl(BoardService board, int currentPlayerId, int opponentId) {
         int[] corners = {
                 board.getPiece(0, 0), board.getPiece(0, 7),
                 board.getPiece(7, 0), board.getPiece(7, 7)

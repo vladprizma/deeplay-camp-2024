@@ -1,6 +1,7 @@
 package io.deeplay.camp.handlers.commands;
 
-import io.deeplay.camp.bot.DarlingBot;
+import io.deeplay.camp.bot.DarlingBotStrategy;
+import io.deeplay.camp.bot.HeuristicEvaluatorStrategy;
 import io.deeplay.camp.dto.BoardDTO;
 import io.deeplay.camp.entity.GameSession;
 import io.deeplay.camp.enums.GameStatus;
@@ -329,7 +330,7 @@ public class MoveCommandHandler implements CommandHandler {
      * @throws SQLException if a database access error occurs
      */
     private void handleBotMove(MainHandler mainHandler, GameSession session) throws IOException, SQLException {
-        BotStrategy bot = new DarlingBot(2, "Bot", 4);
+        BotStrategy bot = new DarlingBotStrategy(2, "Bot", 4, new HeuristicEvaluatorStrategy());
         var newBoardLogicForBot = new BoardService(session.getBoard());
         mainHandler.setGameLogic(new GameService(newBoardLogicForBot));
         mainHandler.setBoardLogic(newBoardLogicForBot);
