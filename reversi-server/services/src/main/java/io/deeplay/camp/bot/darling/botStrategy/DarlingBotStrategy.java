@@ -14,7 +14,7 @@ import java.util.Map;
  * Represents a bot that uses the Minimax algorithm with alpha-beta pruning to play the game.
  */
 public class DarlingBotStrategy extends BotStrategy {
-    private int depthTree;
+    private final int depthTree;
     private final EvaluationStrategy evaluationStrategy;
 
     /**
@@ -62,8 +62,8 @@ public class DarlingBotStrategy extends BotStrategy {
         for (Tile move : validMoves) {
             var boardServiceCopy = board.getBoardServiceCopy();
             boardServiceCopy.makeMove(currentPlayerId, move);
-            double nodeValue = minimax(boardServiceCopy, depth - 1, false, currentPlayerId, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
-            utilityMap.put(move, nodeValue);
+            double value = minimax(boardServiceCopy, depth - 1, false, currentPlayerId, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+            utilityMap.put(move, value);
         }
 
         return utilityMap.entrySet().stream()
@@ -87,7 +87,6 @@ public class DarlingBotStrategy extends BotStrategy {
             return evaluationStrategy.evaluate(boardService, currentPlayerId);
         }
         
-        //TODO перенести в board
         var nextPlayer = currentPlayerId == 1 ? 2 : 1;
         
         if (maximizingPlayer) {
