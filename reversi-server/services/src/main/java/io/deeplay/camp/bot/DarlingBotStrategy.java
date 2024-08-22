@@ -7,15 +7,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Represents a bot that uses the Minimax algorithm with alpha-beta pruning to play the game.
  */
-public class DarlingBot extends BotStrategy {
+public class DarlingBotStrategy extends BotStrategy {
     private int depthTree;
-    private final HeuristicEvaluator heuristicEvaluator;
+    private final EvaluationStrategy evaluationStrategy;
 
     /**
      * Constructs a new DarlingBot.
@@ -24,10 +22,10 @@ public class DarlingBot extends BotStrategy {
      * @param name         The name of the bot.
      * @param depth   The depth of the move tree and min max.
      */
-    public DarlingBot(int id, String name, int depth) {
+    public DarlingBotStrategy(int id, String name, int depth, EvaluationStrategy evaluationStrategy) {
         super(id, name);
         this.depthTree = depth;
-        this.heuristicEvaluator = new HeuristicEvaluator();
+        this.evaluationStrategy = evaluationStrategy;
     }
 
     /**
@@ -84,7 +82,7 @@ public class DarlingBot extends BotStrategy {
      */
     private double minimax(BoardService boardService, int depth, boolean maximizingPlayer, int currentPlayerId, double alpha, double beta) {
         if (depth == 0 || boardService.checkForWin().isGameFinished()) {
-            return heuristicEvaluator.heuristic(boardService, currentPlayerId);
+            return evaluationStrategy.evaluate(boardService, currentPlayerId);
         }
         
         //TODO перенести в board
@@ -130,4 +128,6 @@ public class DarlingBot extends BotStrategy {
             return minEval;
         }
     }
+    
+    
 }
