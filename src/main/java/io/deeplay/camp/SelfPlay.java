@@ -3,12 +3,10 @@ package io.deeplay.camp;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import io.deeplay.camp.bot.DarlingBot;
+import io.deeplay.camp.bot.*;
 import io.deeplay.camp.entity.Board;
 import io.deeplay.camp.entity.Tile;
 import io.deeplay.camp.board.BoardService;
-import io.deeplay.camp.bot.BotStrategy;
-import io.deeplay.camp.bot.RandomBot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,13 +17,6 @@ import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * Handles self-play games between bots.
- * <p>
- * This class manages the execution of multiple games between two bots, collects the results, and saves them to a JSON file.
- * It uses a scheduled executor service to manage the game threads and a fixed thread pool for game execution.
- * </p>
- */
 public class SelfPlay {
     private static final Logger logger = LoggerFactory.getLogger(SelfPlay.class);
     private static final int GAME_THREAD_COUNT = Runtime.getRuntime().availableProcessors() * 10;
@@ -38,21 +29,10 @@ public class SelfPlay {
     private final AtomicInteger draws = new AtomicInteger(0);
     private final AtomicInteger totalGamesCompleted = new AtomicInteger(0);
 
-    /**
-     * Initializes a new SelfPlay instance with the specified number of games.
-     *
-     * @param gameCount The total number of games to be played.
-     */
     public SelfPlay(int gameCount) {
         this.gameCount = gameCount;
     }
 
-    /**
-     * Starts the self-play games between the bots.
-     * <p>
-     * This method divides the total games into batches, executes them, and logs the results after each batch.
-     * </p>
-     */
     public void startBotGame() {
         int totalBatches = (int) Math.ceil((double) gameCount / 50);
         int index = 0;
@@ -86,18 +66,9 @@ public class SelfPlay {
         saveResultsToJson();
     }
 
-    /**
-     * Plays a single game between the bots.
-     * <p>
-     * This method initializes the bots and the board, executes the game, and updates the win/draw counters.
-     * </p>
-     *
-     * @param firstBotStarts True if the first bot starts the game, false otherwise.
-     * @return null
-     */
     private Void playSingleGame(boolean firstBotStarts) {
-        BotStrategy firstRandomBot = new DarlingBot(1, "DarlingBot", 3);
-        BotStrategy secondRandomBot = new RandomBot(2, "ViolaBot");
+        BotStrategy firstRandomBot = new DarlingBotStrategy(1, "DarlingBot", 3, new HeuristicEvaluatorStrategy());
+        BotStrategy secondRandomBot = new DarlingBotStrategy(2, "DarlingBot", 3, new MonteCarloEvaluatorStrategy(2));
         Board board = new Board();
         BoardService boardLogic = new BoardService(board);
         BotStrategy currentBot = firstBotStarts ? firstRandomBot : secondRandomBot;
@@ -119,21 +90,12 @@ public class SelfPlay {
         return null;
     }
 
-    /**
-     * Executes a move for the given bot.
-     * <p>
-     * This method schedules the bot's move and updates the board with the move.
-     * </p>
-     *
-     * @param botService The bot making the move.
-     * @param boardLogic The board logic to be used for making the move.
-     */
     private void executeBotMove(BotStrategy botService, BoardService boardLogic) {
         Callable<Tile> botMoveTask = () -> botService.getMove(botService.id, boardLogic);
         Future<Tile> futureMove = scheduler.schedule(botMoveTask, 0, TimeUnit.SECONDS);
 
         try {
-            var tile = futureMove.get(5, TimeUnit.SECONDS);
+            var tile = futureMove.get(50, TimeUnit.SECONDS);
             if (tile != null) boardLogic.makeMove(botService.id, tile);
         } catch (TimeoutException e) {
             logger.error("Bot {} move timed out.", botService.id);
@@ -145,14 +107,6 @@ public class SelfPlay {
         }
     }
 
-    /**
-     * Updates the game results when a bot loses.
-     * <p>
-     * This method increments the win counter for the other bot and the total games completed counter.
-     * </p>
-     *
-     * @param botNumberLose The ID of the bot that lost.
-     */
     private void gameFinished(int botNumberLose) {
         if (botNumberLose == 1) {
             secondBotWins.incrementAndGet();
@@ -162,12 +116,6 @@ public class SelfPlay {
         totalGamesCompleted.incrementAndGet();
     }
 
-    /**
-     * Saves the game results to a JSON file.
-     * <p>
-     * This method reads existing results from the file, adds the new results, and writes them back to the file.
-     * </p>
-     */
     private void saveResultsToJson() {
         ObjectMapper mapper = new ObjectMapper();
         ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
@@ -179,7 +127,7 @@ public class SelfPlay {
             try {
                 resultsList = mapper.readValue(file, new TypeReference<List<Results>>() {});
             } catch (IOException e) {
-                logger.error("Error reading existing game results from JSON", e);
+                logger.error("Error reading results file", e);
                 resultsList = new ArrayList<>();
             }
         } else {
@@ -191,18 +139,11 @@ public class SelfPlay {
 
         try {
             writer.writeValue(file, resultsList);
-            logger.info("Game results saved to game_results.json");
         } catch (IOException e) {
-            logger.error("Error saving game results to JSON", e);
+            logger.error("Error writing results file", e);
         }
     }
 
-    /**
-     * Represents the results of the self-play games.
-     * <p>
-     * This class holds the total number of games, the number of wins for each bot, and the number of draws.
-     * </p>
-     */
     private static class Results {
         public int totalGames;
         public int firstBotWins;
