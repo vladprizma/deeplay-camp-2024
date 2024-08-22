@@ -818,4 +818,54 @@
   "firstBotWins" : 995,
   "secondBotWins" : 5,
   "draws" : 0
+}, {
+  "totalGames" : 1000,
+  "firstBotWins" : 982,
+  "secondBotWins" : 13,
+  "draws" : 5
+}, {
+  "totalGames" : 1000,
+  "firstBotWins" : 989,
+  "secondBotWins" : 9,
+  "draws" : 2
+}, {
+  "totalGames" : 1000,
+  "firstBotWins" : 998,
+  "secondBotWins" : 2,
+  "draws" : 0
+}, {
+  "totalGames" : 1000,
+  "firstBotWins" : 998,
+  "secondBotWins" : 1,
+  "draws" : 1
+}, {
+  "totalGames" : 1000,
+  "firstBotWins" : 988,
+  "secondBotWins" : 12,
+  "draws" : 0
+}, {
+  "totalGames" : 1000,
+  "firstBotWins" : 988,
+  "secondBotWins" : 12,
+  "draws" : 0
+}, {
+  "totalGames" : 1000,
+  "firstBotWins" : 803,
+  "secondBotWins" : 171,
+  "draws" : 26
+}, {
+  "totalGames" : 1000,
+  "firstBotWins" : 990,
+  "secondBotWins" : 9,
+  "draws" : 1
+}, {
+  "totalGames" : 1000,
+  "firstBotWins" : 997,
+  "secondBotWins" : 2,
+  "draws" : 1
+}, {
+  "totalGames" : 1000,
+  "firstBotWins" : 992,
+  "secondBotWins" : 8,
+  "draws" : 0
 } ]

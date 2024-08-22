@@ -15,7 +15,7 @@ public abstract class BotStrategy {
         this.name = name;
     }
 
-    public abstract Tile getMakeMove(int currentPlayerId, @NotNull BoardService boardLogic);
+    public abstract Tile getMove(int currentPlayerId, @NotNull BoardService boardLogic);
 
     abstract List<Tile> getAllValidMoves(int currentPlayerId, @NotNull BoardService boardLogic);
 }

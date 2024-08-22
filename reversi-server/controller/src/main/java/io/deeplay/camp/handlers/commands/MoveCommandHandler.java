@@ -6,7 +6,6 @@ import io.deeplay.camp.entity.GameSession;
 import io.deeplay.camp.enums.GameStatus;
 import io.deeplay.camp.board.BoardService;
 import io.deeplay.camp.bot.BotStrategy;
-import io.deeplay.camp.bot.RandomBot;
 import io.deeplay.camp.game.GameService;
 import io.deeplay.camp.handlers.main.MainHandler;
 import io.deeplay.camp.managers.SessionManager;
@@ -335,7 +334,7 @@ public class MoveCommandHandler implements CommandHandler {
         mainHandler.setGameLogic(new GameService(newBoardLogicForBot));
         mainHandler.setBoardLogic(newBoardLogicForBot);
 
-        var move = bot.getMakeMove(bot.id, newBoardLogicForBot);
+        var move = bot.getMove(bot.id, newBoardLogicForBot);
         
         if (move == null) {
             sendBoardStateToClient(mainHandler, session, bot.id);
