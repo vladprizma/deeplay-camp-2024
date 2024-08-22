@@ -888,4 +888,34 @@
   "firstBotWins" : 2500,
   "secondBotWins" : 0,
   "draws" : 0
+}, {
+  "totalGames" : 1000,
+  "firstBotWins" : 991,
+  "secondBotWins" : 9,
+  "draws" : 0
+}, {
+  "totalGames" : 10,
+  "firstBotWins" : 10,
+  "secondBotWins" : 0,
+  "draws" : 0
+}, {
+  "totalGames" : 10,
+  "firstBotWins" : 10,
+  "secondBotWins" : 0,
+  "draws" : 0
+}, {
+  "totalGames" : 10,
+  "firstBotWins" : 5,
+  "secondBotWins" : 4,
+  "draws" : 1
+}, {
+  "totalGames" : 10,
+  "firstBotWins" : 5,
+  "secondBotWins" : 5,
+  "draws" : 0
+}, {
+  "totalGames" : 10,
+  "firstBotWins" : 2,
+  "secondBotWins" : 6,
+  "draws" : 2
 } ]
