@@ -39,7 +39,7 @@ public class MoveTreeBuilder {
 
         BoardService board = node.getBoardService();
         List<Tile> validMoves = board.getAllValidTiles(currentPlayerId);
-
+        
         if (validMoves.isEmpty()) {
             return;
         }
