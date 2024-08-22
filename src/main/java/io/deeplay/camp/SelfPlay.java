@@ -96,7 +96,7 @@ public class SelfPlay {
      * @return null
      */
     private Void playSingleGame(boolean firstBotStarts) {
-        BotStrategy firstRandomBot = new DarlingBot(1, "DarlingBot", 4);
+        BotStrategy firstRandomBot = new DarlingBot(1, "DarlingBot", 3);
         BotStrategy secondRandomBot = new RandomBot(2, "ViolaBot");
         Board board = new Board();
         BoardService boardLogic = new BoardService(board);
@@ -129,7 +129,7 @@ public class SelfPlay {
      * @param boardLogic The board logic to be used for making the move.
      */
     private void executeBotMove(BotStrategy botService, BoardService boardLogic) {
-        Callable<Tile> botMoveTask = () -> botService.getMakeMove(botService.id, boardLogic);
+        Callable<Tile> botMoveTask = () -> botService.getMove(botService.id, boardLogic);
         Future<Tile> futureMove = scheduler.schedule(botMoveTask, 0, TimeUnit.SECONDS);
 
         try {

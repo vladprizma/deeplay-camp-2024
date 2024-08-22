@@ -14,6 +14,7 @@ public class BoardService {
     private long whiteChips;
     private long blackValidMoves;
     private long whiteValidMoves;
+    private int nextPlayerId;
 
     public BoardService(Board board) {
         this.board = board;

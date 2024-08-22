@@ -6,17 +6,6 @@ import io.deeplay.camp.board.BoardService;
  * Evaluates the board state using a heuristic function.
  */
 public class HeuristicEvaluator {
-    private static final int[][] WEIGHTS = {
-            {20, -3, 11, 8, 8, 11, -3, 20},
-            {-3, -7, -4, 1, 1, -4, -7, -3},
-            {11, -4, 2, 2, 2, 2, -4, 11},
-            {8, 1, 2, -3, -3, 2, 1, 8},
-            {8, 1, 2, -3, -3, 2, 1, 8},
-            {11, -4, 2, 2, 2, 2, -4, 11},
-            {-3, -7, -4, 1, 1, -4, -7, -3},
-            {20, -3, 11, 8, 8, 11, -3, 20}
-    };
-
     private static int[][] getDynamicWeights(double gameProgress) {
         if (gameProgress < 0.2) {
             return new int[][] {
@@ -57,15 +46,25 @@ public class HeuristicEvaluator {
     /**
      * Evaluates the board state.
      *
-     * @param boardBefore    The board state before the move.
-     * @param boardAfter     The board state after the move.
+     * @param boardService     The board state after the move.
      * @param currentPlayerId The ID of the current player.
      * @return The evaluation score of the board state.
      */
-    public double heuristic(BoardService boardBefore, BoardService boardAfter, int currentPlayerId) {
+    public double heuristic(BoardService boardService, int currentPlayerId) {
+        //TODO нормировать возвратные значения
+        if (boardService.checkForWin().isGameFinished()) {
+            if (boardService.checkForWin().getUserIdWinner() == currentPlayerId) {
+                return Double.POSITIVE_INFINITY - 1;
+            } else if (boardService.checkForWin().getUserIdWinner() != currentPlayerId) {
+                return Double.NEGATIVE_INFINITY + 1;
+            } else {
+                return 0;
+            }
+        }
+        
         int opponentId = (currentPlayerId == 1) ? 2 : 1;
-
-        int totalDiscs = boardAfter.getChips(1).size() + boardAfter.getChips(2).size();
+        
+        int totalDiscs = boardService.getChips(1).size() + boardService.getChips(2).size();
         double gameProgress = (double) totalDiscs / (8 * 8);
         int[][] currentWeights = getDynamicWeights(gameProgress);
         
@@ -75,13 +74,13 @@ public class HeuristicEvaluator {
 
         for (int x = 0; x < 8; x++) {
             for (int y = 0; y < 8; y++) {
-                if (boardAfter.hasPieceBlack(x, y)) {
+                if (boardService.hasPieceBlack(x, y)) {
                     if (currentPlayerId == 1) {
                         currentPlayerScore += currentWeights[x][y];
                     } else {
                         opponentScore += currentWeights[x][y];
                     }
-                } else if (boardAfter.hasPieceWhite(x, y)) {
+                } else if (boardService.hasPieceWhite(x, y)) {
                     if (currentPlayerId == 2) {
                         currentPlayerScore += currentWeights[x][y];
                     } else {
@@ -89,9 +88,9 @@ public class HeuristicEvaluator {
                     }
                 }
 
-                if (isFrontierDisc(boardAfter, x, y)) {
-                    if ((currentPlayerId == 1 && boardAfter.hasPieceBlack(x, y)) ||
-                            (currentPlayerId == 2 && boardAfter.hasPieceWhite(x, y))) {
+                if (isFrontierDisc(boardService, x, y)) {
+                    if ((currentPlayerId == 1 && boardService.hasPieceBlack(x, y)) ||
+                            (currentPlayerId == 2 && boardService.hasPieceWhite(x, y))) {
                         frontierDiscs--;
                     } else {
                         frontierDiscs++;
@@ -100,14 +99,13 @@ public class HeuristicEvaluator {
             }
         }
 
-        int pieceDifference = boardAfter.getChips(currentPlayerId).size() - boardAfter.getChips(opponentId).size();
-        int mobilityDifference = calculateMobility(boardAfter, currentPlayerId) - calculateMobility(boardAfter, opponentId);
-        int flipScore = countFlippedPieces(boardBefore, boardAfter);
+        int pieceDifference = boardService.getChips(currentPlayerId).size() - boardService.getChips(opponentId).size();
+        int mobilityDifference = calculateMobility(boardService, currentPlayerId) - calculateMobility(boardService, opponentId);
 
-        int[] stablePieces = countStablePieces(boardAfter);
+        int[] stablePieces = countStablePieces(boardService);
         int stableDifference = stablePieces[currentPlayerId - 1] - stablePieces[opponentId - 1];
 
-        int cornerControl = evaluateCornerControl(boardAfter, currentPlayerId, opponentId);
+        int cornerControl = evaluateCornerControl(boardService, currentPlayerId, opponentId);
 
         return currentPlayerScore - opponentScore
                 + 10 * pieceDifference          // Coin Parity

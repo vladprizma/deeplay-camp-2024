@@ -12,7 +12,7 @@ public class ViolettaBot extends BotStrategy {
     }
 
     @Override
-    public Tile getMakeMove(int currentPlayerId, @NotNull BoardService boardLogic) {
+    public Tile getMove(int currentPlayerId, @NotNull BoardService boardLogic) {
         return null;
     }
 
