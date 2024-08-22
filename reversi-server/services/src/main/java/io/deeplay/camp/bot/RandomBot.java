@@ -26,7 +26,7 @@ public class RandomBot extends BotStrategy {
     }
 
     @Override
-    List<Tile> getAllValidMoves(int currentPlayerId, @NotNull BoardService boardLogic) {
+    public List<Tile> getAllValidMoves(int currentPlayerId, @NotNull BoardService boardLogic) {
         return boardLogic.getAllValidTiles(currentPlayerId);
     }
 }

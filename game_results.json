@@ -883,4 +883,9 @@
   "firstBotWins" : 951,
   "secondBotWins" : 44,
   "draws" : 5
+}, {
+  "totalGames" : 1000,
+  "firstBotWins" : 2500,
+  "secondBotWins" : 0,
+  "draws" : 0
 } ]
