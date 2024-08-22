@@ -1,5 +1,7 @@
-package io.deeplay.camp.bot;
+package io.deeplay.camp.bot.darling.botStrategy;
 
+import io.deeplay.camp.bot.BotStrategy;
+import io.deeplay.camp.bot.darling.evaluationStrategy.EvaluationStrategy;
 import io.deeplay.camp.entity.Tile;
 import io.deeplay.camp.board.BoardService;
 import org.jetbrains.annotations.NotNull;
@@ -41,7 +43,7 @@ public class DarlingBotStrategy extends BotStrategy {
     }
 
     @Override
-    List<Tile> getAllValidMoves(int currentPlayerId, @NotNull BoardService boardLogic) {
+    public List<Tile> getAllValidMoves(int currentPlayerId, @NotNull BoardService boardLogic) {
         return List.of();
     }
 

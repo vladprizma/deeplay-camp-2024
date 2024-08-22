@@ -1,4 +1,4 @@
-package io.deeplay.camp.bot;
+package io.deeplay.camp.bot.darling.botStrategy;
 
 import io.deeplay.camp.entity.Tile;
 import io.deeplay.camp.board.BoardService;

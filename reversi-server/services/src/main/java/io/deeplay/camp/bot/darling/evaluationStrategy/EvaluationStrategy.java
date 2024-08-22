@@ -1,4 +1,4 @@
-package io.deeplay.camp.bot;
+package io.deeplay.camp.bot.darling.evaluationStrategy;
 
 import io.deeplay.camp.board.BoardService;
 

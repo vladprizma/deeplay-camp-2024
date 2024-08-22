@@ -1,7 +1,7 @@
 package io.deeplay.camp.handlers.commands;
 
-import io.deeplay.camp.bot.DarlingBotStrategy;
-import io.deeplay.camp.bot.HeuristicEvaluatorStrategy;
+import io.deeplay.camp.bot.darling.botStrategy.DarlingBotStrategy;
+import io.deeplay.camp.bot.darling.evaluationStrategy.HeuristicEvaluatorStrategy;
 import io.deeplay.camp.dto.BoardDTO;
 import io.deeplay.camp.entity.GameSession;
 import io.deeplay.camp.enums.GameStatus;
