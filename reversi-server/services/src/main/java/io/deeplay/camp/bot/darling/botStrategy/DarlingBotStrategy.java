@@ -10,6 +10,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+// создание бота в отдельном сервисе
+// микросервис для метрик (окружение)
+// схемку архитектуры
+
 /**
  * Represents a bot that uses the Minimax algorithm with alpha-beta pruning to play the game.
  */
