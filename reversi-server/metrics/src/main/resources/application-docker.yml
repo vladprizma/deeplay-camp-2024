@@ -1,8 +1,0 @@
-spring:
-  datasource:
-    url: ${INFLUXDB_URL}
-    username: ${INFLUXDB_USER}
-    password: ${INFLUXDB_PASSWORD}
-  influx:
-    uri: ${INFLUXDB_URL}
-    db: influxdb

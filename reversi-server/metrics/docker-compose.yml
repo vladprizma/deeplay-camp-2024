@@ -1,24 +1,4 @@
-version: '3.8'
-
 services:
-  app:
-    image: metrics
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: metrics
-    ports:
-      - "8080:8080"
-    depends_on:
-      - influxdb
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
-      INFLUXDB_URL: http://influxdb:8086
-      INFLUXDB_USER: artem
-      INFLUXDB_PASSWORD: artem
-    volumes:
-      - ./config:/config
-
   influxdb:
     image: influxdb:1.8
     container_name: influxdb
@@ -33,6 +13,16 @@ services:
       INFLUXDB_ADMIN_PASSWORD: admin
       INFLUXDB_USER: artem
       INFLUXDB_USER_PASSWORD: artem
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - influxdb
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
 
 volumes:
   influxdb_data:
