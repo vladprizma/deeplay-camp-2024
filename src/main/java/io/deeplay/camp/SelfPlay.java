@@ -70,9 +70,9 @@ public class SelfPlay {
     }
 
     private Void playSingleGame(boolean firstBotStarts) {
-//        BotStrategy firstRandomBot = new DarlingBotStrategy(1, "DarlingBot", 3, new HeuristicEvaluatorStrategy());
-        BotStrategy firstRandomBot = new DarlingBotStrategy(1, "DarlingBot", 3, new MCTSEvaluatorStrategy());
-        BotStrategy secondRandomBot = new RandomBot(2, "RandomBot");
+        BotStrategy firstRandomBot = new DarlingBotStrategy(1, "DarlingBot", 1, new HeuristicEvaluatorStrategy());
+        BotStrategy secondRandomBot = new DarlingBotStrategy(2, "DarlingBot", 3, new MCTSEvaluatorStrategy());
+//        BotStrategy secondRandomBot = new RandomBot(2, "RandomBot");
         
         Board board = new Board();
         BoardService boardLogic = new BoardService(board);
