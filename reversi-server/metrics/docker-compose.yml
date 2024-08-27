@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  app:
+    image: metrics
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: metrics
+    ports:
+      - "8080:8080"
+    depends_on:
+      - influxdb
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      INFLUXDB_URL: http://influxdb:8086
+      INFLUXDB_USER: artem
+      INFLUXDB_PASSWORD: artem
+    volumes:
+      - ./config:/config
+
+  influxdb:
+    image: influxdb:1.8
+    container_name: influxdb
+    ports:
+      - "8086:8086"
+    volumes:
+      - influxdb_data:/var/lib/influxdb
+    environment:
+      INFLUXDB_DB: influxDB
+      INFLUXDB_HTTP_AUTH_ENABLED: "true"
+      INFLUXDB_ADMIN_USER: admin
+      INFLUXDB_ADMIN_PASSWORD: admin
+      INFLUXDB_USER: artem
+      INFLUXDB_USER_PASSWORD: artem
+
+volumes:
+  influxdb_data:
