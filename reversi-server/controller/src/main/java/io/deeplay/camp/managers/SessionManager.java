@@ -330,4 +330,8 @@ public class SessionManager {
         clientHandler.setUser(player);
         clientHandler.sendMessageToClient("new-elo::" + player.getRating());
     }
+    
+    public List<GameSession> getSessions() {
+        return sessions;
+    }
 }
