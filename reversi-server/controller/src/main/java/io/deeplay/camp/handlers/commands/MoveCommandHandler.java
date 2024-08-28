@@ -10,6 +10,7 @@ import io.deeplay.camp.bot.BotStrategy;
 import io.deeplay.camp.game.GameService;
 import io.deeplay.camp.handlers.main.MainHandler;
 import io.deeplay.camp.managers.SessionManager;
+import io.deeplay.camp.metrics.MetricsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -334,24 +335,35 @@ public class MoveCommandHandler implements CommandHandler {
         var newBoardLogicForBot = new BoardService(session.getBoard());
         mainHandler.setGameLogic(new GameService(newBoardLogicForBot));
         mainHandler.setBoardLogic(newBoardLogicForBot);
-
+        var metricsService = new MetricsService("http://localhost:8080");
+    
+        long startTime = System.currentTimeMillis();
         var move = bot.getMove(bot.id, newBoardLogicForBot);
-        
+        long endTime = System.currentTimeMillis();
+        long responseTime = endTime - startTime;
+    
         if (move == null) {
             sendBoardStateToClient(mainHandler, session, bot.id);
             return;
         }
-        
+    
         newBoardLogicForBot.makeMove(bot.id, move);
-
+    
         updateSessionBoard(mainHandler, session);
-
+    
         sendBoardStateToClient(mainHandler, session, bot.id);
 
+        try {
+            metricsService.insertBotResponseTime(responseTime, 4, 1); // Assuming totalUsers and serverId are 1 for simplicity
+            logger.info("Bot response time: {} ms", responseTime);
+        } catch (Exception e) {
+            logger.error("Error reporting bot response time", e);
+        }
+    
         if (mainHandler.getBoardLogic().checkForWin().isGameFinished()) {
             handleWin(mainHandler, session);
         }
-
+    
         mainHandler.getGameLogic().display(1, newBoardLogicForBot);
     }
 }

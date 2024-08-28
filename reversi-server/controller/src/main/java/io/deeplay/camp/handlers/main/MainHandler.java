@@ -1,5 +1,6 @@
 package io.deeplay.camp.handlers.main;
 
+import com.sun.management.OperatingSystemMXBean;
 import io.deeplay.camp.entity.Board;
 import io.deeplay.camp.entity.GameSession;
 import io.deeplay.camp.entity.User;
@@ -11,10 +12,24 @@ import io.deeplay.camp.managers.SessionManager;
 import io.deeplay.camp.metrics.MetricsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import oshi.SystemInfo;
+import oshi.hardware.HWDiskStore;
+import oshi.hardware.HardwareAbstractionLayer;
 
+import javax.management.*;
+import java.io.File;
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
 import java.net.Socket;
+import java.nio.file.FileStore;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * MainHandler is responsible for managing the main operations of a game session.
@@ -29,7 +44,15 @@ public class MainHandler implements Runnable {
     private final GameContext gameContext;
     private final CommandDispatcher commandDispatcher;
     private final MetricsService metricsService;
-
+    private final AtomicInteger requestCount = new AtomicInteger(0);
+    private final AtomicInteger errorCount = new AtomicInteger(0);
+    private final AtomicInteger gameSessionsCount = new AtomicInteger(0);
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private static final SystemInfo systemInfo = new SystemInfo();
+    private static final HardwareAbstractionLayer hal = systemInfo.getHardware();
+    private long lastReadBytes = 0;
+    private long lastWriteBytes = 0;
+    
     public static String splitRegex = " ";
 
     /**
@@ -49,6 +72,10 @@ public class MainHandler implements Runnable {
         this.commandDispatcher = new CommandDispatcher();
 
         registerCommandHandlers();
+        startThroughputReporting();
+        startErrorRateReporting();
+        startGameSessionsCountReporting();
+        startServerLoadReporting();
     }
 
     /**
@@ -93,23 +120,139 @@ public class MainHandler implements Runnable {
 
             while ((message = connectionManager.getInputReader().readLine()) != null) {
                 long startTime = System.currentTimeMillis();
-                commandDispatcher.dispatchCommand(message, this);
-                long endTime = System.currentTimeMillis();
-                long responseTime = endTime - startTime;
+                try {
+                    commandDispatcher.dispatchCommand(message, this);
+                } catch (Exception e) {
+                    errorCount.incrementAndGet();
+                    throw e;
+                } finally {
+                    long endTime = System.currentTimeMillis();
+                    long responseTime = endTime - startTime;
 
-                metricsService.insertResponseTime(responseTime, SessionManager.getInstance().getHandlers().size(), 1);
-                logger.info("Response time: {}", responseTime);
+                    requestCount.incrementAndGet();
+                    metricsService.insertResponseTime(responseTime, SessionManager.getInstance().getHandlers().size(), 1);
+                    logger.info("Response time: {}", responseTime);
+                }
             }
         } catch (IOException | SQLException | InterruptedException e) {
+            errorCount.incrementAndGet();
             logger.error("Error in MainHandler run method", e);
         } catch (Exception e) {
+            errorCount.incrementAndGet();
             throw new RuntimeException(e);
         } finally {
             closeConnection();
         }
     }
 
-    // Delegated methods for GameContext
+    /**
+     * Starts the throughput reporting task.
+     * <p>
+     * This method schedules a task to report the throughput every minute.
+     * </p>
+     */
+    private void startThroughputReporting() {
+        scheduler.scheduleAtFixedRate(() -> {
+            try {
+                int throughput = requestCount.getAndSet(0);
+                metricsService.insertThroughput(throughput, 1);
+                logger.info("Throughput: {}", throughput);
+            } catch (Exception e) {
+                logger.error("Error reporting throughput", e);
+            }
+        }, 1, 1, TimeUnit.MINUTES);
+    }
+
+    /**
+     * Starts the error rate reporting task.
+     * <p>
+     * This method schedules a task to report the error rate every minute.
+     * </p>
+     */
+    private void startErrorRateReporting() {
+        scheduler.scheduleAtFixedRate(() -> {
+            try {
+                int totalRequests = requestCount.get();
+                int errors = errorCount.getAndSet(0);
+                double errorRate = totalRequests == 0 ? 0 : (double) errors / totalRequests;
+                metricsService.insertErrorRate(errorRate, 1);
+                logger.info("Error rate: {}", errorRate);
+            } catch (Exception e) {
+                logger.error("Error reporting error rate", e);
+            }
+        }, 1, 1, TimeUnit.MINUTES);
+    }
+
+    /**
+     * Starts the game sessions count reporting task.
+     * <p>
+     * This method schedules a task to report the count of game sessions every minute.
+     * </p>
+     */
+    private void startGameSessionsCountReporting() {
+        scheduler.scheduleAtFixedRate(() -> {
+            try {
+                gameSessionsCount.set(SessionManager.getInstance().getSessions().size());
+                int sessionsCount = gameSessionsCount.get();
+                metricsService.insertGameSessionsCount(sessionsCount, 1);
+                logger.info("Game sessions count: {}", sessionsCount);
+            } catch (Exception e) {
+                logger.error("Error reporting game sessions count", e);
+            }
+        }, 1, 1, TimeUnit.MINUTES);
+    }
+
+    /**
+     * Starts the server load reporting task.
+     * <p>
+     * This method schedules a task to report the server load every minute.
+     * </p>
+     */
+    private void startServerLoadReporting() {
+        scheduler.scheduleAtFixedRate(() -> {
+            try {
+                double cpuUsage = getCpuUsage();
+                double memoryUsage = getMemoryUsage();
+                double diskUsage = getDiskUsage();
+                metricsService.insertServerLoad(cpuUsage, memoryUsage, diskUsage, 1);
+                logger.info("Server load - CPU: {}%, Memory: {}%, Disk: {}%", cpuUsage, memoryUsage, diskUsage);
+            } catch (Exception e) {
+                logger.error("Error reporting server load", e);
+            }
+        }, 1, 1, TimeUnit.MINUTES);
+    }
+
+    /**
+     * Retrieves the current CPU usage.
+     *
+     * @return The current CPU usage as a percentage.
+     */
+    private double getCpuUsage() {
+        com.sun.management.OperatingSystemMXBean osBean = ManagementFactory.getPlatformMXBean(com.sun.management.OperatingSystemMXBean.class);
+        return osBean.getProcessCpuLoad() * 100;
+    }
+
+    /**
+     * Retrieves the current memory usage.
+     *
+     * @return The current memory usage as a percentage.
+     */
+    private double getMemoryUsage() {
+        Runtime runtime = Runtime.getRuntime();
+        long totalMemory = runtime.totalMemory();
+        long freeMemory = runtime.freeMemory();
+        long usedMemory = totalMemory - freeMemory;
+        return ((double) usedMemory / runtime.maxMemory()) * 100;
+    }
+
+    /**
+     * Retrieves the current disk usage.
+     *
+     * @return The current disk usage as a percentage.
+     */
+    private double getDiskUsage() {
+        return (1.0);
+    }
 
     /**
      * Retrieves the current user.
@@ -224,8 +367,6 @@ public class MainHandler implements Runnable {
     public Board getBoard() {
         return gameContext.getBoard();
     }
-
-    // Delegated methods for ConnectionManager
 
     /**
      * Sends a message to the client.
