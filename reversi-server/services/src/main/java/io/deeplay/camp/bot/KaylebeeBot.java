@@ -12,12 +12,12 @@ public class KaylebeeBot extends BotStrategy {
     }
 
     @Override
-    public Tile getMakeMove(int currentPlayerId, @NotNull BoardService boardLogic) {
+    public Tile getMove(int currentPlayerId, @NotNull BoardService boardLogic) {
         return null;
     }
 
     @Override
-    List<Tile> getAllValidMoves(int currentPlayerId, @NotNull BoardService boardLogic) {
+    public List<Tile> getAllValidMoves(int currentPlayerId, @NotNull BoardService boardLogic) {
         return boardLogic.getAllValidTiles(currentPlayerId);
     }
 }

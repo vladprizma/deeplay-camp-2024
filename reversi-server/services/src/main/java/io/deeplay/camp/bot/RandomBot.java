@@ -14,7 +14,7 @@ public class RandomBot extends BotStrategy {
     }
 
     @Override
-    public Tile getMakeMove(int currentPlayerId, @NotNull BoardService boardLogic) {
+    public Tile getMove(int currentPlayerId, @NotNull BoardService boardLogic) {
         List<Tile> allTiles = boardLogic.getAllValidTiles(currentPlayerId);
 
         if (allTiles.isEmpty()) {
@@ -26,7 +26,7 @@ public class RandomBot extends BotStrategy {
     }
 
     @Override
-    List<Tile> getAllValidMoves(int currentPlayerId, @NotNull BoardService boardLogic) {
+    public List<Tile> getAllValidMoves(int currentPlayerId, @NotNull BoardService boardLogic) {
         return boardLogic.getAllValidTiles(currentPlayerId);
     }
 }

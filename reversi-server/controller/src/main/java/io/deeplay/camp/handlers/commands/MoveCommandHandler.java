@@ -334,7 +334,7 @@ public class MoveCommandHandler implements CommandHandler {
         mainHandler.setGameLogic(new GameService(newBoardLogicForBot));
         mainHandler.setBoardLogic(newBoardLogicForBot);
 
-        var move = bot.getMakeMove(bot.id, newBoardLogicForBot);
+        var move = bot.getMove(bot.id, newBoardLogicForBot);
         
         if (move == null) {
             sendBoardStateToClient(mainHandler, session, bot.id);

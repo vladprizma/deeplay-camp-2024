@@ -729,6 +729,18 @@ public class BoardService {
         return new GameFinished(false, -1);
     }
 
+    public int getPiece(int x, int y) {
+        long mask = 1L << (x + 8 * y);
+
+        if ((blackChips & mask) != 0) {
+            return 1; // Черная фишка
+        } else if ((whiteChips & mask) != 0) {
+            return 2; // Белая фишка
+        } else {
+            return 0; // Пустая клетка
+        }
+    }
+
     public BoardService(BoardService oldBoardService) {
         this.board = new Board(oldBoardService.board);
         this.blackChips = oldBoardService.blackChips;
@@ -764,5 +776,15 @@ public class BoardService {
 
     public void setWhiteChips(long whiteChips) {
         this.whiteChips = whiteChips;
+    }
+
+    public boolean isBlackPiece(int x, int y) {
+        long mask = 1L << (x + 8 * y);
+        return ((blackChips & mask) != 0);
+    }
+
+    public boolean isWhitePiece(int x, int y) {
+        long mask = 1L << (x + 8 * y);
+        return ((whiteChips & mask) != 0);
     }
 }
