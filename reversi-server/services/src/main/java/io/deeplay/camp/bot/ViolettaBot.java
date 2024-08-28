@@ -3,19 +3,18 @@ package io.deeplay.camp.bot;
 import io.deeplay.camp.entity.Tile;
 import io.deeplay.camp.board.BoardService;
 import org.jetbrains.annotations.NotNull;
-import io.deeplay.camp.bot.darling.evaluationStrategy.TestUtilityFunction;
 
 import java.util.List;
 
 public class ViolettaBot extends BotStrategy {
 
     private final int depth;
-    private final TestUtilityFunction utilityFunction;
+    private final RandomUtilityFunction utilityFunction;
 
     public ViolettaBot(int id, String name, int depth) {
         super(id, name);
         this.depth = depth;
-        this.utilityFunction = new TestUtilityFunction();
+        this.utilityFunction = new RandomUtilityFunction();
     }
 
     @Override
@@ -34,7 +33,7 @@ public class ViolettaBot extends BotStrategy {
             clonedBoard.makeMove(currentPlayerId, tile); // Совершаем ход
 
             // Оценка хода с помощью метода минимакс
-            double score = minimax(clonedBoard, depth - 1, false, currentPlayerId);
+            double score = minimax(clonedBoard, depth - 1, false, currentPlayerId, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
             if (score > bestScore) {
                 bestScore = score;
                 bestMove = tile;
@@ -44,7 +43,7 @@ public class ViolettaBot extends BotStrategy {
         return bestMove;
     }
 
-    private double minimax(BoardService board, int depth, boolean isMaximizing, int currentPlayerId) {
+    private double minimax(BoardService board, int depth, boolean isMaximizing, int currentPlayerId, double alpha, double beta) {
         int opponentPlayerId = (currentPlayerId == 1) ? 2 : 1;
 
         // Проверяем состояние игры на каждом уровне
@@ -54,7 +53,7 @@ public class ViolettaBot extends BotStrategy {
 
         List<Tile> validMoves = board.getAllValidTiles(isMaximizing ? currentPlayerId : opponentPlayerId);
         if (validMoves.isEmpty()) {
-            return minimax(board, depth - 1, !isMaximizing, currentPlayerId); // Пропускаем ход
+            return minimax(board, depth - 1, !isMaximizing, currentPlayerId, alpha, beta); // Пропускаем ход
         }
 
         double bestScore = isMaximizing ? Double.NEGATIVE_INFINITY : Double.POSITIVE_INFINITY;
@@ -63,11 +62,19 @@ public class ViolettaBot extends BotStrategy {
             BoardService clonedBoard = board.getCopy();
             clonedBoard.makeMove(isMaximizing ? currentPlayerId : opponentPlayerId, move); // Совершаем ход
 
-            double score = minimax(clonedBoard, depth - 1, !isMaximizing, currentPlayerId);
+            double score = minimax(clonedBoard, depth - 1, !isMaximizing, currentPlayerId, alpha, beta);
+
             if (isMaximizing) {
                 bestScore = Math.max(bestScore, score);
+                alpha = Math.max(alpha, bestScore);
             } else {
                 bestScore = Math.min(bestScore, score);
+                beta = Math.min(beta, bestScore);
+            }
+
+            // Альфа-бета отсечение
+            if (beta <= alpha) {
+                break; // Выход из цикла, если отсечение произошло
             }
         }
 

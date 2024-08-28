@@ -741,6 +741,10 @@ public class BoardService {
         }
     }
 
+    public  int getRound(){
+        return ((score()[1] + score()[2]) - 3);
+    }
+
     public BoardService(BoardService oldBoardService) {
         this.board = new Board(oldBoardService.board);
         this.blackChips = oldBoardService.blackChips;
