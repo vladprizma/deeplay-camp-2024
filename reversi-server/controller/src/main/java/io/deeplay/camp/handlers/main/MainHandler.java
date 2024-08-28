@@ -8,6 +8,7 @@ import io.deeplay.camp.board.BoardService;
 import io.deeplay.camp.game.GameService;
 import io.deeplay.camp.handlers.commands.*;
 import io.deeplay.camp.managers.SessionManager;
+import io.deeplay.camp.metrics.MetricsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +28,7 @@ public class MainHandler implements Runnable {
     private final ConnectionManager connectionManager;
     private final GameContext gameContext;
     private final CommandDispatcher commandDispatcher;
+    private final MetricsService metricsService;
 
     public static String splitRegex = " ";
 
@@ -40,8 +42,9 @@ public class MainHandler implements Runnable {
      * @param socket The socket representing the connection to the client.
      * @throws IOException If an I/O error occurs when creating the input or output streams.
      */
-    public MainHandler(Socket socket) throws IOException {
+    public MainHandler(Socket socket, MetricsService metricsService) throws IOException {
         this.connectionManager = new ConnectionManager(socket);
+        this.metricsService = metricsService;
         this.gameContext = new GameContext();
         this.commandDispatcher = new CommandDispatcher();
 
@@ -89,10 +92,18 @@ public class MainHandler implements Runnable {
             String message;
 
             while ((message = connectionManager.getInputReader().readLine()) != null) {
+                long startTime = System.currentTimeMillis();
                 commandDispatcher.dispatchCommand(message, this);
+                long endTime = System.currentTimeMillis();
+                long responseTime = endTime - startTime;
+
+                metricsService.insertResponseTime(responseTime, SessionManager.getInstance().getHandlers().size(), 1);
+                logger.info("Response time: {}", responseTime);
             }
         } catch (IOException | SQLException | InterruptedException e) {
             logger.error("Error in MainHandler run method", e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         } finally {
             closeConnection();
         }

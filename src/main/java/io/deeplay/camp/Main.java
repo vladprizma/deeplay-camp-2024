@@ -2,6 +2,7 @@ package io.deeplay.camp;
 
 import io.deeplay.camp.config.LoadServerProperties;
 import io.deeplay.camp.handlers.main.MainHandler;
+import io.deeplay.camp.metrics.MetricsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,7 +54,7 @@ public class Main {
                 while (true) {
                     Socket clientSocket = serverSocket.accept();
                     logger.info("New client connected: " + clientSocket.getRemoteSocketAddress());
-                    executor.execute(new MainHandler(clientSocket));
+                    executor.execute(new MainHandler(clientSocket, new MetricsService(properties.getProperty("influxDB.url"))));
                 }
             }
         } else {
