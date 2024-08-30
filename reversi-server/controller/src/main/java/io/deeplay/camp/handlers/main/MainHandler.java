@@ -50,8 +50,6 @@ public class MainHandler implements Runnable {
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private static final SystemInfo systemInfo = new SystemInfo();
     private static final HardwareAbstractionLayer hal = systemInfo.getHardware();
-    private long lastReadBytes = 0;
-    private long lastWriteBytes = 0;
     
     public static String splitRegex = " ";
 
