@@ -57,7 +57,8 @@ public class InfluxDBService {
                 .build();
         influxDB.write(point);
     }
-
+        
+    //TODO bot name
     public void insertBotResponseTime(long botResponseTime, int botDepth, int serverId) {
         Point point = Point.measurement("bot_response_time")
                 .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
