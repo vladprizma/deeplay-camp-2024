@@ -1,7 +1,6 @@
-package io.deeplay.camp.bot.darling.evaluationStrategy;
+package io.deeplay.camp.botfactory.model;
 
-import io.deeplay.camp.board.BoardService;
-import io.deeplay.camp.entity.Tile;
+import io.deeplay.camp.botfactory.service.BoardService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,7 +102,7 @@ public class MCTSNode {
 
     public MCTSNode getBestChild() {
         if (children.isEmpty()) {
-            return null; 
+            return null;
         }
 
         MCTSNode bestChild = null;

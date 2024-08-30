@@ -1,47 +1,17 @@
-package io.deeplay.camp.bot.darling.evaluationStrategy;
+package io.deeplay.camp.botfactory.service.bot;
 
-import io.deeplay.camp.board.BoardService;
+
+import io.deeplay.camp.botfactory.service.BoardService;
 
 /**
  * Evaluates the board state using a heuristic function.
  */
 public class HeuristicEvaluatorStrategy implements EvaluationStrategy {
-//    private static int[][] getDynamicWeights(double gameProgress) {
-//        if (gameProgress < 0.2) {
-//            return new int[][] {
-//                    {20, -3, 11, 8, 8, 11, -3, 20},
-//                    {-3, -7, -4, 1, 1, -4, -7, -3},
-//                    {11, -4, 2, 2, 2, 2, -4, 11},
-//                    {8, 1, 2, -3, -3, 2, 1, 8},
-//                    {8, 1, 2, -3, -3, 2, 1, 8},
-//                    {11, -4, 2, 2, 2, 2, -4, 11},
-//                    {-3, -7, -4, 1, 1, -4, -7, -3},
-//                    {20, -3, 11, 8, 8, 11, -3, 20}
-//            };
-//        } else if (gameProgress < 0.8) {
-//            return new int[][] {
-//                    {16, -2, 8, 6, 6, 8, -2, 16},
-//                    {-2, -5, -3, 0, 0, -3, -5, -2},
-//                    {8, -3, 1, 1, 1, 1, -3, 8},
-//                    {6, 0, 1, -2, -2, 1, 0, 6},
-//                    {6, 0, 1, -2, -2, 1, 0, 6},
-//                    {8, -3, 1, 1, 1, 1, -3, 8},
-//                    {-2, -5, -3, 0, 0, -3, -5, -2},
-//                    {16, -2, 8, 6, 6, 8, -2, 16}
-//            };
-//        } else {
-//            return new int[][] {
-//                    {12, -1, 5, 4, 4, 5, -1, 12},
-//                    {-1, -3, -2, 0, 0, -2, -3, -1},
-//                    {5, -2, 0, 0, 0, 0, -2, 5},
-//                    {4, 0, 0, -1, -1, 0, 0, 4},
-//                    {4, 0, 0, -1, -1, 0, 0, 4},
-//                    {5, -2, 0, 0, 0, 0, -2, 5},
-//                    {-1, -3, -2, 0, 0, -2, -3, -1},
-//                    {12, -1, 5, 4, 4, 5, -1, 12}
-//            };
-//        }
-//    }
+    private int stabilityWeight = 560;
+    private int cornerWeight = 800;
+    private int mobilityWeight = 80;
+    private int pieceWeight = 10;
+    private int frontierWeight = 70;
 
     private static int[][] getDynamicWeights(double gameProgress) {
         int[][] baseWeights = {
@@ -85,13 +55,13 @@ public class HeuristicEvaluatorStrategy implements EvaluationStrategy {
                 return 0;
             }
         }
-        
+
         int opponentId = (currentPlayerId == 1) ? 2 : 1;
-        
+
         int totalDiscs = boardService.getChips(1).size() + boardService.getChips(2).size();
         double gameProgress = (double) totalDiscs / (8 * 8);
         int[][] currentWeights = getDynamicWeights(gameProgress);
-        
+
         int currentPlayerScore = 0;
         int opponentScore = 0;
         int frontierDiscs = 0;
@@ -132,11 +102,11 @@ public class HeuristicEvaluatorStrategy implements EvaluationStrategy {
         int cornerControl = evaluateCornerControl(boardService, currentPlayerId, opponentId);
 
         return currentPlayerScore - opponentScore
-                + 10 * pieceDifference          // Coin Parity
-                + 78 * mobilityDifference    // Mobility
-                + 74 * frontierDiscs          // Frontier Discs
-                + 561 * stableDifference        // Stability
-                + 801 * cornerControl;          // Corner Captivity
+                + pieceWeight * pieceDifference          // Coin Parity
+                + mobilityWeight * mobilityDifference    // Mobility
+                + frontierWeight * frontierDiscs         // Frontier Discs
+                + stabilityWeight * stableDifference     // Stability
+                + cornerWeight * cornerControl;          // Corner Captivity
     }
 
     /**
@@ -190,7 +160,7 @@ public class HeuristicEvaluatorStrategy implements EvaluationStrategy {
     }
 
     private static int[] countStablePieces(BoardService board) {
-        int[] stablePieces = new int[2]; 
+        int[] stablePieces = new int[2];
 
         for (int y = 0; y < 8; y++) {
             for (int x = 0; x < 8; x++) {
@@ -210,7 +180,7 @@ public class HeuristicEvaluatorStrategy implements EvaluationStrategy {
     private static boolean isStable(BoardService board, int x, int y) {
         int piece = board.getPiece(x, y);
         if (piece == 0) {
-            return false; 
+            return false;
         }
 
         boolean horizontal = checkLineStability(board, x, y, 1, 0) && checkLineStability(board, x, y, -1, 0);
