@@ -742,7 +742,7 @@ public class BoardService {
     }
 
     public  int getRound(){
-        return ((score()[1] + score()[2]) - 3);
+        return ((score()[0] + score()[1]) - 4);
     }
 
     public BoardService(BoardService oldBoardService) {
