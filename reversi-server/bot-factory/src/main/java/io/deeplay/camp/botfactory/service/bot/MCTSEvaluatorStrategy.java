@@ -1,15 +1,15 @@
-package io.deeplay.camp.bot.darling.evaluationStrategy;
+package io.deeplay.camp.botfactory.service.bot;
 
-import io.deeplay.camp.board.BoardService;
-import io.deeplay.camp.entity.Tile;
+import io.deeplay.camp.botfactory.model.MCTSNode;
+import io.deeplay.camp.botfactory.model.Tile;
+import io.deeplay.camp.botfactory.service.BoardService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class MCTSEvaluatorStrategy implements EvaluationStrategy {
 
-    private static final int SIMULATION_COUNT = 100; 
+    private static final int SIMULATION_COUNT = 10;
     private static final double EXPLORATION_PARAMETER = Math.sqrt(2);
 
     @Override
@@ -26,7 +26,7 @@ public class MCTSEvaluatorStrategy implements EvaluationStrategy {
 
         MCTSNode bestChild = root.getBestChild();
         if (bestChild == null) {
-            return 0.0; 
+            return 0.0;
         }
 
         return bestChild.getWinRate();
@@ -43,7 +43,7 @@ public class MCTSEvaluatorStrategy implements EvaluationStrategy {
         if (!node.isTerminal()) {
             node.expand();
         }
-        
+
         return node.isLeaf() ? node : node.getRandomChild();
     }
 
@@ -55,12 +55,12 @@ public class MCTSEvaluatorStrategy implements EvaluationStrategy {
         while (!board.isGameOver()) {
             List<Tile> legalMoves = board.getAllValidTiles(currentPlayer);
             if (legalMoves.isEmpty()) {
-                currentPlayer = 3 - currentPlayer; 
+                currentPlayer = 3 - currentPlayer;
                 continue;
             }
             Tile move = legalMoves.get(random.nextInt(legalMoves.size()));
             board.makeMove(currentPlayer, move);
-            currentPlayer = 3 - currentPlayer; 
+            currentPlayer = 3 - currentPlayer;
         }
 
         return board.checkForWin().getUserIdWinner() == node.getCurrentPlayerId() ? 1.0 : 0.0;

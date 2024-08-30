@@ -1,22 +1,25 @@
-package io.deeplay.camp.bot.darling.botStrategy;
+package io.deeplay.camp.botfactory.service.bot;
 
-import io.deeplay.camp.bot.BotStrategy;
-import io.deeplay.camp.bot.darling.evaluationStrategy.EvaluationStrategy;
-import io.deeplay.camp.entity.Tile;
-import io.deeplay.camp.board.BoardService;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 // создание бота в отдельном сервисе
 // микросервис для метрик (окружение)
 // схемку архитектуры
 
+import io.deeplay.camp.botfactory.model.Tile;
+import io.deeplay.camp.botfactory.service.BoardService;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Represents a bot that uses the Minimax algorithm with alpha-beta pruning to play the game.
  */
+@Component
+@Qualifier("darlingBotStrategy")
 public class DarlingBotStrategy extends BotStrategy {
     private final int depthTree;
     private final EvaluationStrategy evaluationStrategy;
@@ -28,10 +31,10 @@ public class DarlingBotStrategy extends BotStrategy {
      * @param name         The name of the bot.
      * @param depth   The depth of the move tree and min max.
      */
-    public DarlingBotStrategy(int id, String name, int depth, EvaluationStrategy evaluationStrategy) {
-        super(id, name);
-        this.depthTree = depth;
-        this.evaluationStrategy = evaluationStrategy;
+    public DarlingBotStrategy() {
+        super(1, "Darling");
+        this.depthTree = 3;
+        this.evaluationStrategy = new HeuristicEvaluatorStrategy();
     }
 
     /**
@@ -42,12 +45,12 @@ public class DarlingBotStrategy extends BotStrategy {
      * @return The best move for the bot.
      */
     @Override
-    public Tile getMove(int currentPlayerId, @NotNull BoardService boardLogic) {
+    public Tile getMove(int currentPlayerId, BoardService boardLogic) {
         return iterativeDeepening(boardLogic, currentPlayerId, depthTree);
     }
 
     @Override
-    public List<Tile> getAllValidMoves(int currentPlayerId, @NotNull BoardService boardLogic) {
+    public List<Tile> getAllValidMoves(int currentPlayerId, BoardService boardLogic) {
         return List.of();
     }
 
@@ -75,7 +78,7 @@ public class DarlingBotStrategy extends BotStrategy {
                 .map(Map.Entry::getKey)
                 .orElse(null);
     }
-    
+
     /**
      * Performs the Minimax algorithm with alpha-beta pruning.
      *
@@ -90,41 +93,41 @@ public class DarlingBotStrategy extends BotStrategy {
         if (depth == 0 || boardService.checkForWin().isGameFinished()) {
             return evaluationStrategy.evaluate(boardService, currentPlayerId);
         }
-        
+
         var nextPlayer = currentPlayerId == 1 ? 2 : 1;
-        
+
         if (maximizingPlayer) {
             double maxEval = Double.NEGATIVE_INFINITY;
             var validMoves = boardService.getAllValidTiles(currentPlayerId);
-            
+
             for (Tile move : validMoves) {
                 var boardServiceCopy = boardService.getBoardServiceCopy();
                 boardServiceCopy.makeMove(currentPlayerId, move);
-                
+
                 double eval = minimax(boardServiceCopy, depth - 1, false, currentPlayerId, alpha, beta);
-                
+
                 maxEval = Math.max(maxEval, eval);
                 alpha = Math.max(alpha, eval);
-                
+
                 if (beta <= alpha) {
                     break;
                 }
             }
-            
+
             return maxEval;
         } else {
             double minEval = Double.POSITIVE_INFINITY;
             var validMoves = boardService.getAllValidTiles(nextPlayer);
-            
+
             for (Tile move : validMoves) {
                 var boardServiceCopy = boardService.getBoardServiceCopy();
                 boardServiceCopy.makeMove(nextPlayer, move);
-                
+
                 double eval = minimax(boardServiceCopy, depth - 1, true, currentPlayerId, alpha, beta);
-                
+
                 minEval = Math.min(minEval, eval);
                 beta = Math.min(beta, eval);
-                
+
                 if (beta <= alpha) {
                     break;
                 }
@@ -133,6 +136,6 @@ public class DarlingBotStrategy extends BotStrategy {
             return minEval;
         }
     }
-    
-    
+
+
 }
