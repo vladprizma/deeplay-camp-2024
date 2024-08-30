@@ -12,7 +12,7 @@ services:
     networks:
       - reversi-network
     env_file:
-      - ./.env
+      - ../reversi-server/data-base/.env
     volumes:
       - pgadmin:/var/lib/pgadmin
 
@@ -33,7 +33,7 @@ services:
     networks:
       - reversi-network
     env_file:
-      - ./.env
+      - ../reversi-server/data-base/.env
 
 volumes:
   database:
