@@ -1,30 +1,20 @@
-package io.deeplay.camp.entity;
+package io.deeplay.camp.botfactory.model;
 
 import java.util.Objects;
 
-/**
- * Represents a tile on the game board.
- * <p>
- * This class holds the coordinates of a tile and provides methods to get these coordinates.
- * </p>
- */
 public class Tile {
     private int x;
     private int y;
     private int playerId;
-    
-    public Tile() {
-        
-    }
-    
+
     public int getPlayerId() {
         return playerId;
     }
-    
+
     public void setPlayerId(int playerId) {
         this.playerId = playerId;
     }
-    
+
     /**
      * Initializes a new Tile with the specified coordinates.
      *
