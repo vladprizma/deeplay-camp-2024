@@ -15,7 +15,7 @@ public class UserDAO {
     private static final String DB_URL = "jdbc:postgresql://localhost:5431/reversi";
     private static final String DB_USER = "admin";
     private static final String DB_PASSWORD = "admin";
-
+    
     /**
      * Adds a new user to the database.
      *

@@ -1,4 +1,3 @@
-// BotMoveResponse.java
 package io.deeplay.camp.botfactory.dto;
 
 import io.deeplay.camp.botfactory.model.Tile;

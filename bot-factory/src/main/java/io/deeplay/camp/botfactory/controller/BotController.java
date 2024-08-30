@@ -1,4 +1,3 @@
-// BotController.java
 package io.deeplay.camp.botfactory.controller;
 
 import io.deeplay.camp.botfactory.dto.BotMoveRequest;
