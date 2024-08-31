@@ -21,7 +21,6 @@ public class GameSessionDTO {
         this.sessionChat = sessionChat;
     }
 
-    // Геттеры и сеттеры
     public int getId() {
         return id;
     }
