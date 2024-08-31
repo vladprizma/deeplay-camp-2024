@@ -208,9 +208,18 @@ public class SessionManager {
         
         gameSession.setResult(playerWon ? clientHandler.getUser().getId() + " win" : clientHandler.getUser().getId() + " lose");
         gameSession.setGameState(GameStatus.FINISHED);
-
-        gameSession.getPlayer2().setId(4);
-        gameSession.getPlayer2().setUsername("Bot12");
+        
+        if (gameSession.getPlayer2().getIsBot()) {
+            gameSession.getPlayer2().setId(4);
+            gameSession.getPlayer2().setUsername("Bot");
+        } else {
+            var opponent = getOpponent(clientHandler);
+            if (gameSession.getPlayer1().getId() == clientHandler.getUser().getId()) {
+                gameSession.setPlayer2(opponent);
+            } else {
+                gameSession.setPlayer1(opponent);
+            }
+        }
         
         gameSessionService.addGameSession(gameSession);
 
