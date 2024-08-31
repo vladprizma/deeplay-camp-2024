@@ -25,14 +25,13 @@ public class BoardService {
     }
 
     public BoardService(BoardService other) {
-        this.board = new Board(other.board); // Assuming Board has a copy constructor
+        this.board = new Board(other.board); 
         this.blackChips = other.blackChips;
         this.whiteChips = other.whiteChips;
         this.blackValidMoves = other.blackValidMoves;
         this.whiteValidMoves = other.whiteValidMoves;
     }
-
-    //!! Установка фишки на доску
+    
     public void setPiece(int x, int y, int player) {
         long piece = 1L << (x + 8 * y);
         long tempChips;
@@ -73,7 +72,6 @@ public class BoardService {
                     } else break;
                 }
             }
-            // Вертикали
             if(y > 0){
                 tempChips = 0;
                 for (int j = y - 1; j >= 0; j--) {
