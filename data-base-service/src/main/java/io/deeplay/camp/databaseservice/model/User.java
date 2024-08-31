@@ -16,7 +16,7 @@ public class User {
     @Column(name = "password", nullable = false)
     String password;
     
-    @Column(name = "userPhoto", nullable = false)
+    @Column(name = "user_photo", nullable = false)
     String userPhoto;
     
     @Column(name = "rating", nullable = false)
@@ -35,7 +35,6 @@ public class User {
         this.matches = matches;
     }
 
-    // Геттеры и сеттеры
     public int getId() {
         return id;
     }

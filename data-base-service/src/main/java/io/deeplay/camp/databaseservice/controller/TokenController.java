@@ -1,5 +1,7 @@
 package io.deeplay.camp.databaseservice.controller;
 
+import io.deeplay.camp.databaseservice.dto.TokenDTO;
+import io.deeplay.camp.databaseservice.dto.TokenRequest;
 import io.deeplay.camp.databaseservice.model.Token;
 import io.deeplay.camp.databaseservice.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +22,14 @@ public class TokenController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Token>> getAllTokens() {
-        List<Token> tokens = tokenService.getAllTokens();
+    public ResponseEntity<List<TokenDTO>> getAllTokens() {
+        List<TokenDTO> tokens = tokenService.getAllTokens();
         return ResponseEntity.ok(tokens);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Token> getTokenById(@PathVariable int id) {
-        Token token = tokenService.getTokenById(id);
+    public ResponseEntity<TokenDTO> getTokenById(@PathVariable int id) {
+        TokenDTO token = tokenService.getTokenById(id);
         if (token != null) {
             return ResponseEntity.ok(token);
         } else {
@@ -36,8 +38,8 @@ public class TokenController {
     }
 
     @PostMapping
-    public ResponseEntity<Token> createToken(@RequestBody Token token) {
-        Token savedToken = tokenService.saveToken(token);
+    public ResponseEntity<TokenDTO> createToken(@RequestBody TokenRequest token) {
+        TokenDTO savedToken = tokenService.saveToken(token);
         return ResponseEntity.ok(savedToken);
     }
 

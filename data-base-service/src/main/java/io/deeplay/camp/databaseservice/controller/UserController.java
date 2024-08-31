@@ -1,8 +1,10 @@
 package io.deeplay.camp.databaseservice.controller;
 
+import io.deeplay.camp.databaseservice.dto.UserDTO;
 import io.deeplay.camp.databaseservice.model.User;
 import io.deeplay.camp.databaseservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,41 +21,60 @@ public class UserController {
         this.userService = userService;
     }
 
+    // Получение всех пользователей
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.getAllUsers();
-        return ResponseEntity.ok(users);
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        List<UserDTO> users = userService.getAllUsers();
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
+    // Получение пользователя по ID
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable int id) {
-        User user = userService.getUserById(id);
+    public ResponseEntity<UserDTO> getUserById(@PathVariable int id) {
+        UserDTO user = userService.getUserById(id);
         if (user != null) {
-            return ResponseEntity.ok(user);
+            return new ResponseEntity<>(user, HttpStatus.OK);
         } else {
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
+    // Получение пользователя по имени пользователя
     @GetMapping("/username/{username}")
-    public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
-        User user = userService.getUserByUsername(username);
+    public ResponseEntity<UserDTO> getUserByUsername(@PathVariable String username) {
+        UserDTO user = userService.getUserByUsername(username);
         if (user != null) {
-            return ResponseEntity.ok(user);
+            return new ResponseEntity<>(user, HttpStatus.OK);
         } else {
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>(null, HttpStatus.OK);
         }
     }
 
-    @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User savedUser = userService.saveUser(user);
-        return ResponseEntity.ok(savedUser);
+    // Обновление имени пользователя
+    @PutMapping("/{id}/username")
+    public ResponseEntity<Void> updateUsername(@PathVariable int id, @RequestParam String username) {
+        userService.updateUsername(id, username);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    // Обновление рейтинга пользователя
+    @PutMapping("/{id}/rating")
+    public ResponseEntity<Void> updateRating(@PathVariable int id, @RequestParam int rating) {
+        userService.updateRating(id, rating);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    // Создание нового пользователя
+    @PostMapping
+    public ResponseEntity<UserDTO> createUser(@RequestBody User user) {
+        UserDTO savedUser = userService.saveUser(user);
+        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+    }
+
+    // Удаление пользователя
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable int id) {
         userService.deleteUser(id);
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

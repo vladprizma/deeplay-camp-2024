@@ -1,5 +1,7 @@
 package io.deeplay.camp.databaseservice.controller;
 
+import io.deeplay.camp.databaseservice.dto.ChatMessageDTO;
+import io.deeplay.camp.databaseservice.dto.ChatMessageRequest;
 import io.deeplay.camp.databaseservice.model.ChatMessage;
 import io.deeplay.camp.databaseservice.service.ChatMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +22,14 @@ public class ChatMessageController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ChatMessage>> getAllMessages() {
-        List<ChatMessage> messages = chatMessageService.getAllMessages();
+    public ResponseEntity<List<ChatMessageDTO>> getAllMessages() {
+        List<ChatMessageDTO> messages = chatMessageService.getAllMessages();
         return ResponseEntity.ok(messages);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ChatMessage> getMessageById(@PathVariable int id) {
-        ChatMessage message = chatMessageService.getMessageById(id);
+    public ResponseEntity<ChatMessageDTO> getMessageById(@PathVariable int id) {
+        ChatMessageDTO message = chatMessageService.getMessageById(id);
         if (message != null) {
             return ResponseEntity.ok(message);
         } else {
@@ -36,8 +38,8 @@ public class ChatMessageController {
     }
 
     @PostMapping
-    public ResponseEntity<ChatMessage> createMessage(@RequestBody ChatMessage chatMessage) {
-        ChatMessage savedMessage = chatMessageService.saveMessage(chatMessage);
+    public ResponseEntity<ChatMessageDTO> createMessage(@RequestBody ChatMessageRequest chatMessage) {
+        ChatMessageDTO savedMessage = chatMessageService.saveMessage(chatMessage);
         return ResponseEntity.ok(savedMessage);
     }
 

@@ -10,7 +10,7 @@ public class DTOMapper {
     public static ChatMessageDTO toChatMessageDTO(ChatMessage chatMessage) {
         return new ChatMessageDTO(
                 chatMessage.getId(),
-                chatMessage.getUser().getId(),
+                chatMessage.getUser(),
                 chatMessage.getMessage(),
                 chatMessage.getTimestamp()
         );
@@ -30,7 +30,6 @@ public class DTOMapper {
     public static TokenDTO toTokenDTO(Token token) {
         return new TokenDTO(
                 token.getId(),
-                token.getUser().getId(),
                 token.getRefreshToken(),
                 token.getUpdateToken()
         );
@@ -42,7 +41,8 @@ public class DTOMapper {
                 user.getUsername(),
                 user.getUserPhoto(),
                 user.getRating(),
-                user.getMatches()
+                user.getMatches(),
+                user.getPassword()
         );
     }
 }
