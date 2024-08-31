@@ -62,30 +62,25 @@ public class LoginCommandHandler implements CommandHandler {
         String username = parts[1];
         String password = parts[2];
 
-        try {
-            Optional<User> optionalUser = userService.getUserByUsername(username);
-            if (optionalUser.isPresent()) {
-                User user = optionalUser.get();
-                if (userService.verifyPassword(password, user.getPassword())) {
-                    mainHandler.setUser(user);
-                    mainHandler.sendMessageToClient("Login successful. Welcome, " + username);
-                    var tokens = refreshTokenService.generateRefreshToken(user);
-                    var updateToken = tokens.updateToken;
-                    var refreshToken = tokens.refreshToken;
-                    mainHandler.setLogin(true);
-                    mainHandler.sendMessageToClient("login::" + refreshToken + "::" + updateToken);
-                    logger.info("User {} logged in successfully", username);
-                } else {
-                    mainHandler.sendMessageToClient("Invalid password.");
-                    logger.warn("Invalid password attempt for user {}", username);
-                }
+        Optional<User> optionalUser = userService.getUserByUsername(username);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            if (userService.verifyPassword(password, user.getPassword())) {
+                mainHandler.setUser(user);
+                mainHandler.sendMessageToClient("Login successful. Welcome, " + username);
+                var tokens = refreshTokenService.generateRefreshToken(user);
+                var updateToken = tokens.updateToken;
+                var refreshToken = tokens.refreshToken;
+                mainHandler.setLogin(true);
+                mainHandler.sendMessageToClient("login::" + refreshToken + "::" + updateToken);
+                logger.info("User {} logged in successfully", username);
             } else {
-                mainHandler.sendMessageToClient("User not found.");
-                logger.warn("User {} not found", username);
+                mainHandler.sendMessageToClient("Invalid password.");
+                logger.warn("Invalid password attempt for user {}", username);
             }
-        } catch (SQLException e) {
-            logger.error("Database error occurred while processing login for user {}", username, e);
-            mainHandler.sendMessageToClient("Internal server error. Please try again later.");
+        } else {
+            mainHandler.sendMessageToClient("User not found.");
+            logger.warn("User {} not found", username);
         }
     }
 }

@@ -49,25 +49,20 @@ public class SendMessageCommandHandler implements CommandHandler {
             return;
         }
 
-        try {
-            String chatMessage = parts[1];
-            chatService.addMessage(mainHandler.getUser(), chatMessage);
-            mainHandler.sendMessageToClient("Message sent successfully.");
+        String chatMessage = parts[1];
+        chatService.addMessage(mainHandler.getUser(), chatMessage);
+        mainHandler.sendMessageToClient("Message sent successfully.");
 
-            StringBuilder response = new StringBuilder("messages");
+        StringBuilder response = new StringBuilder("messages");
 
-            List<ChatMessage> messages = chatService.getAllMessages();
-            for (ChatMessage chatMessageItem : messages) {
-                response.append("::").append(chatMessageItem.getTimestamp())
-                        .append(" ").append(chatMessageItem.getUserId().getUsername())
-                        .append(" ").append(chatMessageItem.getMessage());
-            }
-
-            SessionManager.getInstance().sendMessageToAll(response.toString());
-            logger.info("Chat message sent to all successfully.");
-        } catch (SQLException e) {
-            logger.warn("Error handling send message command");
-            throw e;
+        List<ChatMessage> messages = chatService.getAllMessages();
+        for (ChatMessage chatMessageItem : messages) {
+            response.append("::").append(chatMessageItem.getTimestamp())
+                    .append(" ").append(chatMessageItem.getUserId().getUsername())
+                    .append(" ").append(chatMessageItem.getMessage());
         }
+
+        SessionManager.getInstance().sendMessageToAll(response.toString());
+        logger.info("Chat message sent to all successfully.");
     }
 }

@@ -1,38 +1,25 @@
-package io.deeplay.camp.databaseservice.dto;
-
-import io.deeplay.camp.databaseservice.model.User;
+package io.deeplay.camp.dto;
 
 import java.sql.Timestamp;
 
-public class ChatMessageDTO {
-    private int id;
-    private User userId;
+public class ChatMessageRequest {
+    private int userId;
     private String message;
     private Timestamp timestamp;
 
-    public ChatMessageDTO() {}
+    public ChatMessageRequest() {}
 
-    public ChatMessageDTO(int id, User userId, String message, Timestamp timestamp) {
-        this.id = id;
+    public ChatMessageRequest(int userId, String message, Timestamp timestamp) {
         this.userId = userId;
         this.message = message;
         this.timestamp = timestamp;
     }
 
-    // Геттеры и сеттеры
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public User getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(User userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 

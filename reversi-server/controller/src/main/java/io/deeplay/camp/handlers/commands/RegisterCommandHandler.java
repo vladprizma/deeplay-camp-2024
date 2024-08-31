@@ -58,28 +58,23 @@ public class RegisterCommandHandler implements CommandHandler {
             return;
         }
 
-        try {
-            String username = parts[1];
-            String password = parts[2];
-            String userPhoto = parts[3];
+        String username = parts[1];
+        String password = parts[2];
+        String userPhoto = parts[3];
 
-            User user = new User(0, username, PasswordService.hashPassword(password), 0, 0, userPhoto);
-            int userId = userService.addUser(user);
-            user.setId(userId);
-            mainHandler.setUser(user);
+        User user = new User(0, username, PasswordService.hashPassword(password), 0, 0, userPhoto);
+        int userId = userService.addUser(user);
+        user.setId(userId);
+        mainHandler.setUser(user);
 
-            mainHandler.sendMessageToClient("Registration successful. Welcome, " + username);
-            mainHandler.setLogin(true);
+        mainHandler.sendMessageToClient("Registration successful. Welcome, " + username);
+        mainHandler.setLogin(true);
 
-            var tokens = refreshTokenService.generateRefreshToken(user);
-            var updateToken = tokens.updateToken;
-            var refreshToken = tokens.refreshToken;
-            mainHandler.sendMessageToClient("register::" + refreshToken + "::" + updateToken);
+        var tokens = refreshTokenService.generateRefreshToken(user);
+        var updateToken = tokens.updateToken;
+        var refreshToken = tokens.refreshToken;
+        mainHandler.sendMessageToClient("register::" + refreshToken + "::" + updateToken);
 
-            logger.info("User registered successfully: " + username);
-        } catch (SQLException e) {
-            logger.error("Error handling register command", e);
-            throw e;
-        }
+        logger.info("User registered successfully: " + username);
     }
 }
