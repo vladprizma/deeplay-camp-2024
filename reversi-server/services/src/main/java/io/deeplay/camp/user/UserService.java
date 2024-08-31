@@ -84,8 +84,8 @@ public class UserService {
      */
     public void updateRating(int userId, int rating) throws IOException {
         logger.info("Updating rating for user ID: {}", userId);
-        String json = objectMapper.writeValueAsString(Map.of("userId", userId, "rating", rating));
-        sendRequest(BASE_URL + "/rating", "PUT", json);
+        String url = BASE_URL + "/" + userId + "/rating?rating=" + rating;
+        sendRequest(url, "PUT", null);
     }
 
     /**
