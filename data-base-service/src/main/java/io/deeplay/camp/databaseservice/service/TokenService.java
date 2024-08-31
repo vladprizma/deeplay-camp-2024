@@ -4,44 +4,28 @@ import io.deeplay.camp.databaseservice.dto.DTOMapper;
 import io.deeplay.camp.databaseservice.dto.TokenDTO;
 import io.deeplay.camp.databaseservice.dto.TokenRequest;
 import io.deeplay.camp.databaseservice.model.Token;
+import io.deeplay.camp.databaseservice.model.User;
 import io.deeplay.camp.databaseservice.repository.TokenRepository;
 import io.deeplay.camp.databaseservice.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-/**
- * Service class for managing tokens.
- */
 @Service
 public class TokenService {
 
-    /**
-     * Repository for accessing tokens.
-     */
+    private static final Logger logger = LoggerFactory.getLogger(TokenService.class);
+
     private final TokenRepository tokenRepository;
-
-    /**
-     * Service for managing users.
-     */
     private final UserService userService;
-
-    /**
-     * Repository for accessing users.
-     */
     private final UserRepository userRepository;
 
-    /**
-     * Constructs a new TokenService with the specified repositories and services.
-     *
-     * @param tokenRepository Repository for accessing tokens.
-     * @param userService Service for managing users.
-     * @param userRepository Repository for accessing users.
-     */
     @Autowired
     public TokenService(TokenRepository tokenRepository, UserService userService, UserRepository userRepository) {
         this.tokenRepository = tokenRepository;
@@ -49,58 +33,66 @@ public class TokenService {
         this.userRepository = userRepository;
     }
 
-    /**
-     * Retrieves all tokens.
-     *
-     * @return A list of TokenDTO objects representing all tokens.
-     */
     public List<TokenDTO> getAllTokens() {
-        return tokenRepository.findAll().stream()
-            .map(DTOMapper::toTokenDTO)
-            .collect(Collectors.toList());
+        logger.info("Retrieving all tokens");
+        List<TokenDTO> tokens = tokenRepository.findAll().stream()
+                .map(DTOMapper::toTokenDTO)
+                .collect(Collectors.toList());
+        logger.info("Retrieved {} tokens", tokens.size());
+        return tokens;
     }
 
-    /**
-     * Retrieves a token by its unique identifier.
-     *
-     * @param id The unique identifier of the token.
-     * @return A TokenDTO object representing the token, or null if not found.
-     */
     public TokenDTO getTokenById(int id) {
-        return DTOMapper.toTokenDTO(tokenRepository.findById(id).orElse(null));
+        logger.info("Retrieving token by ID: {}", id);
+        Optional<Token> tokenOptional = tokenRepository.findById(id);
+        if (tokenOptional.isPresent()) {
+            logger.info("Token found with ID: {}", id);
+            return DTOMapper.toTokenDTO(tokenOptional.get());
+        } else {
+            logger.warn("Token not found with ID: {}", id);
+            return null;
+        }
     }
 
-    /**
-     * Saves a new token or updates an existing one.
-     *
-     * @param token The TokenRequest object containing the details of the token to be saved.
-     * @return A TokenDTO object representing the saved token.
-     */
     @Transactional
-    public TokenDTO saveToken(TokenRequest token) {
-        var changedTokens = tokenRepository.findByUserId(token.getUserId());
+    public TokenDTO saveToken(TokenRequest tokenRequest) {
+        logger.info("Saving token for user ID: {}", tokenRequest.getUserId());
 
-        if (changedTokens != null) {
-            changedTokens.setRefreshToken(token.getRefreshToken());
-            changedTokens.setUpdateToken(token.getUpdateToken());
+        User user = userRepository.findById(tokenRequest.getUserId())
+                .orElseThrow(() -> {
+                    logger.error("User not found with ID: {}", tokenRequest.getUserId());
+                    return new IllegalArgumentException("User not found with ID: " + tokenRequest.getUserId());
+                });
+
+        Token token = tokenRepository.findByUserId(tokenRequest.getUserId());
+
+        if (token != null) {
+            logger.info("Updating existing token for user ID: {}", tokenRequest.getUserId());
+            token.setRefreshToken(tokenRequest.getRefreshToken());
+            token.setUpdateToken(tokenRequest.getUpdateToken());
         } else {
-            changedTokens = new Token();
-            changedTokens.setRefreshToken(token.getRefreshToken());
-            changedTokens.setUpdateToken(token.getUpdateToken());
-            changedTokens.setUser(userRepository.findById(token.getUserId()).get());
+            logger.info("Creating new token for user ID: {}", tokenRequest.getUserId());
+            token = new Token();
+            token.setRefreshToken(tokenRequest.getRefreshToken());
+            token.setUpdateToken(tokenRequest.getUpdateToken());
+            token.setUser(user);
         }
 
-        Token tokenSaved = tokenRepository.save(changedTokens);
+        Token savedToken = tokenRepository.save(token);
+        logger.info("Saved token with ID: {}", savedToken.getId());
 
-        return DTOMapper.toTokenDTO(tokenSaved);
+        return DTOMapper.toTokenDTO(savedToken);
     }
 
-    /**
-     * Deletes a token by its unique identifier.
-     *
-     * @param id The unique identifier of the token to be deleted.
-     */
     public void deleteToken(int id) {
+        logger.info("Deleting token with ID: {}", id);
+
+        if (!tokenRepository.existsById(id)) {
+            logger.warn("Token not found with ID: {}", id);
+            throw new IllegalArgumentException("Token not found with ID: " + id);
+        }
+
         tokenRepository.deleteById(id);
+        logger.info("Deleted token with ID: {}", id);
     }
 }
