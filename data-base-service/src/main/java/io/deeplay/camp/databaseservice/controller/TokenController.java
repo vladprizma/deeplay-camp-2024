@@ -3,6 +3,8 @@ package io.deeplay.camp.databaseservice.controller;
 import io.deeplay.camp.databaseservice.dto.TokenDTO;
 import io.deeplay.camp.databaseservice.dto.TokenRequest;
 import io.deeplay.camp.databaseservice.service.TokenService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/tokens")
 public class TokenController {
+
+    private static final Logger logger = LoggerFactory.getLogger(TokenController.class);
 
     private final TokenService tokenService;
 
@@ -35,7 +39,9 @@ public class TokenController {
      */
     @GetMapping
     public ResponseEntity<List<TokenDTO>> getAllTokens() {
+        logger.info("Retrieving all tokens");
         List<TokenDTO> tokens = tokenService.getAllTokens();
+        logger.info("Retrieved {} tokens", tokens.size());
         return ResponseEntity.ok(tokens);
     }
 
@@ -47,10 +53,13 @@ public class TokenController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<TokenDTO> getTokenById(@PathVariable int id) {
+        logger.info("Retrieving token by ID: {}", id);
         TokenDTO token = tokenService.getTokenById(id);
         if (token != null) {
+            logger.info("Token found with ID: {}", id);
             return ResponseEntity.ok(token);
         } else {
+            logger.warn("Token not found with ID: {}", id);
             return ResponseEntity.notFound().build();
         }
     }
@@ -63,7 +72,9 @@ public class TokenController {
      */
     @PostMapping
     public ResponseEntity<TokenDTO> createToken(@RequestBody TokenRequest token) {
+        logger.info("Creating new token");
         TokenDTO savedToken = tokenService.saveToken(token);
+        logger.info("Created new token for user: {}", savedToken.getUserId());
         return ResponseEntity.ok(savedToken);
     }
 
@@ -75,7 +86,14 @@ public class TokenController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteToken(@PathVariable int id) {
-        tokenService.deleteToken(id);
-        return ResponseEntity.noContent().build();
+        logger.info("Deleting token with ID: {}", id);
+        if (tokenService.getTokenById(id) != null) {
+            tokenService.deleteToken(id);
+            logger.info("Deleted token with ID: {}", id);
+            return ResponseEntity.noContent().build();
+        } else {
+            logger.warn("Token not found with ID: {}", id);
+            return ResponseEntity.notFound().build();
+        }
     }
 }

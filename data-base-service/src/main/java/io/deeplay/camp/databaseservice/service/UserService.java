@@ -4,10 +4,13 @@ import io.deeplay.camp.databaseservice.dto.DTOMapper;
 import io.deeplay.camp.databaseservice.dto.UserDTO;
 import io.deeplay.camp.databaseservice.model.User;
 import io.deeplay.camp.databaseservice.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -15,6 +18,8 @@ import java.util.stream.Collectors;
  */
 @Service
 public class UserService {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     /**
      * Repository for accessing users.
@@ -37,9 +42,12 @@ public class UserService {
      * @return A list of UserDTO objects representing all users.
      */
     public List<UserDTO> getAllUsers() {
-        return userRepository.findAll().stream()
+        logger.info("Retrieving all users");
+        List<UserDTO> users = userRepository.findAll().stream()
                 .map(DTOMapper::toUserDTO)
                 .collect(Collectors.toList());
+        logger.info("Retrieved {} users", users.size());
+        return users;
     }
 
     /**
@@ -49,7 +57,15 @@ public class UserService {
      * @return A UserDTO object representing the user, or null if not found.
      */
     public UserDTO getUserById(int id) {
-        return DTOMapper.toUserDTO(userRepository.findById(id).orElse(null));
+        logger.info("Retrieving user by ID: {}", id);
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isPresent()) {
+            logger.info("User found with ID: {}", id);
+            return DTOMapper.toUserDTO(userOptional.get());
+        } else {
+            logger.warn("User not found with ID: {}", id);
+            return null;
+        }
     }
 
     /**
@@ -59,7 +75,15 @@ public class UserService {
      * @return A UserDTO object representing the user, or null if not found.
      */
     public UserDTO getUserByUsername(String username) {
-        return DTOMapper.toUserDTO(userRepository.findByUsername(username));
+        logger.info("Retrieving user by username: {}", username);
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            logger.info("User found with username: {}", username);
+            return DTOMapper.toUserDTO(user);
+        } else {
+            logger.warn("User not found with username: {}", username);
+            return null;
+        }
     }
 
     /**
@@ -69,9 +93,17 @@ public class UserService {
      * @param username The new username of the user.
      */
     public void updateUsername(int userId, String username) {
-        var user = userRepository.findById(userId).get();
-        user.setUsername(username);
-        userRepository.save(user);
+        logger.info("Updating username for user ID: {}", userId);
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.setUsername(username);
+            userRepository.save(user);
+            logger.info("Updated username for user ID: {}", userId);
+        } else {
+            logger.warn("User not found with ID: {}", userId);
+            throw new IllegalArgumentException("User not found with ID: " + userId);
+        }
     }
 
     /**
@@ -81,9 +113,17 @@ public class UserService {
      * @param rating The new rating to be added to the user's current rating.
      */
     public void updateRating(int userId, int rating) {
-        var user = userRepository.findById(userId).get();
-        user.setRating(user.getRating() + rating);
-        userRepository.save(user);
+        logger.info("Updating rating for user ID: {}", userId);
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.setRating(user.getRating() + rating);
+            userRepository.save(user);
+            logger.info("Updated rating for user ID: {}", userId);
+        } else {
+            logger.warn("User not found with ID: {}", userId);
+            throw new IllegalArgumentException("User not found with ID: " + userId);
+        }
     }
 
     /**
@@ -93,7 +133,9 @@ public class UserService {
      * @return A UserDTO object representing the saved user.
      */
     public UserDTO saveUser(User user) {
-        var savedUser = userRepository.save(user);
+        logger.info("Saving user with ID: {}", user.getId());
+        User savedUser = userRepository.save(user);
+        logger.info("Saved user with ID: {}", savedUser.getId());
         return DTOMapper.toUserDTO(savedUser);
     }
 
@@ -103,6 +145,13 @@ public class UserService {
      * @param id The unique identifier of the user to be deleted.
      */
     public void deleteUser(int id) {
-        userRepository.deleteById(id);
+        logger.info("Deleting user with ID: {}", id);
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+            logger.info("Deleted user with ID: {}", id);
+        } else {
+            logger.warn("User not found with ID: {}", id);
+            throw new IllegalArgumentException("User not found with ID: " + id);
+        }
     }
 }
