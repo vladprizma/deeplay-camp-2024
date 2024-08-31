@@ -19,7 +19,6 @@ public class UserDTO {
         this.password = password;
     }
 
-    // Геттеры и сеттеры
     public int getId() {
         return id;
     }

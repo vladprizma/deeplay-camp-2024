@@ -21,14 +21,12 @@ public class UserController {
         this.userService = userService;
     }
 
-    // Получение всех пользователей
     @GetMapping
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         List<UserDTO> users = userService.getAllUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
-    // Получение пользователя по ID
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable int id) {
         UserDTO user = userService.getUserById(id);
@@ -39,7 +37,6 @@ public class UserController {
         }
     }
 
-    // Получение пользователя по имени пользователя
     @GetMapping("/username/{username}")
     public ResponseEntity<UserDTO> getUserByUsername(@PathVariable String username) {
         UserDTO user = userService.getUserByUsername(username);
@@ -50,28 +47,24 @@ public class UserController {
         }
     }
 
-    // Обновление имени пользователя
     @PutMapping("/{id}/username")
     public ResponseEntity<Void> updateUsername(@PathVariable int id, @RequestParam String username) {
         userService.updateUsername(id, username);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    // Обновление рейтинга пользователя
     @PutMapping("/{id}/rating")
     public ResponseEntity<Void> updateRating(@PathVariable int id, @RequestParam int rating) {
         userService.updateRating(id, rating);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    // Создание нового пользователя
     @PostMapping
     public ResponseEntity<UserDTO> createUser(@RequestBody User user) {
         UserDTO savedUser = userService.saveUser(user);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 
-    // Удаление пользователя
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable int id) {
         userService.deleteUser(id);

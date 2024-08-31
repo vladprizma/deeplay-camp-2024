@@ -40,7 +40,6 @@ public class TokenService {
 
     @Transactional
     public TokenDTO saveToken(TokenRequest token) {
-//        tokenRepository.deleteByUser(userRepository.findById(token.getUserId()).get());
         var changedTokens = tokenRepository.findByUserId(token.getUserId());
         
         if (changedTokens != null) {
