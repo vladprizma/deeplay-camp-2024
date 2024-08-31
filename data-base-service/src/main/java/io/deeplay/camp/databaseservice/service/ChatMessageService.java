@@ -4,87 +4,83 @@ import io.deeplay.camp.databaseservice.dto.ChatMessageDTO;
 import io.deeplay.camp.databaseservice.dto.ChatMessageRequest;
 import io.deeplay.camp.databaseservice.dto.DTOMapper;
 import io.deeplay.camp.databaseservice.model.ChatMessage;
+import io.deeplay.camp.databaseservice.model.User;
 import io.deeplay.camp.databaseservice.repository.ChatMessageRepository;
 import io.deeplay.camp.databaseservice.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-/**
- * Service class for managing chat messages.
- */
 @Service
 public class ChatMessageService {
 
-    /**
-     * Repository for accessing chat messages.
-     */
-    private final ChatMessageRepository chatMessageRepository;
+    private static final Logger logger = LoggerFactory.getLogger(ChatMessageService.class);
 
-    /**
-     * Repository for accessing users.
-     */
+    private final ChatMessageRepository chatMessageRepository;
     private final UserRepository userRepository;
 
-    /**
-     * Constructs a new ChatMessageService with the specified repositories.
-     *
-     * @param chatMessageRepository Repository for accessing chat messages.
-     * @param userRepository Repository for accessing users.
-     */
     @Autowired
     public ChatMessageService(ChatMessageRepository chatMessageRepository, UserRepository userRepository) {
         this.chatMessageRepository = chatMessageRepository;
         this.userRepository = userRepository;
     }
 
-    /**
-     * Retrieves all chat messages.
-     *
-     * @return A list of ChatMessageDTO objects representing all chat messages.
-     */
     public List<ChatMessageDTO> getAllMessages() {
-        return chatMessageRepository.findAll().stream()
+        logger.info("Retrieving all chat messages");
+        List<ChatMessageDTO> messages = chatMessageRepository.findAll().stream()
                 .map(DTOMapper::toChatMessageDTO)
                 .collect(Collectors.toList());
+        logger.info("Retrieved {} chat messages", messages.size());
+        return messages;
     }
 
-    /**
-     * Retrieves a chat message by its unique identifier.
-     *
-     * @param id The unique identifier of the chat message.
-     * @return A ChatMessageDTO object representing the chat message, or null if not found.
-     */
     public ChatMessageDTO getMessageById(int id) {
-        return DTOMapper.toChatMessageDTO(chatMessageRepository.findById(id).orElse(null));
+        logger.info("Retrieving chat message by ID: {}", id);
+        Optional<ChatMessage> chatMessageOptional = chatMessageRepository.findById(id);
+        if (chatMessageOptional.isPresent()) {
+            logger.info("Chat message found with ID: {}", id);
+            return DTOMapper.toChatMessageDTO(chatMessageOptional.get());
+        } else {
+            logger.warn("Chat message not found with ID: {}", id);
+            return null;
+        }
     }
 
-    /**
-     * Saves a new chat message.
-     *
-     * @param chatMessage The ChatMessageRequest object containing the details of the chat message to be saved.
-     * @return A ChatMessageDTO object representing the saved chat message.
-     */
-    public ChatMessageDTO saveMessage(ChatMessageRequest chatMessage) {
-        var newChatMessage = new ChatMessage(
-                userRepository.findById(chatMessage.getUserId()).orElse(null),
-                chatMessage.getMessage(),
-                chatMessage.getTimestamp()
+    public ChatMessageDTO saveMessage(ChatMessageRequest chatMessageRequest) {
+        logger.info("Saving new chat message from user ID: {}", chatMessageRequest.getUserId());
+
+        User user = userRepository.findById(chatMessageRequest.getUserId()).orElse(null);
+        if (user == null) {
+            logger.error("User not found with ID: {}", chatMessageRequest.getUserId());
+            throw new IllegalArgumentException("User not found with ID: " + chatMessageRequest.getUserId());
+        }
+
+        ChatMessage newChatMessage = new ChatMessage(
+                user,
+                chatMessageRequest.getMessage(),
+                chatMessageRequest.getTimestamp()
         );
 
-        chatMessageRepository.save(newChatMessage);
+        ChatMessage savedChatMessage = chatMessageRepository.save(newChatMessage);
+        logger.info("Saved chat message with ID: {}", savedChatMessage.getId());
 
-        return DTOMapper.toChatMessageDTO(newChatMessage);
+        return DTOMapper.toChatMessageDTO(savedChatMessage);
     }
 
-    /**
-     * Deletes a chat message by its unique identifier.
-     *
-     * @param id The unique identifier of the chat message to be deleted.
-     */
     public void deleteMessage(int id) {
+        logger.info("Deleting chat message with ID: {}", id);
+
+        if (!chatMessageRepository.existsById(id)) {
+            logger.warn("Chat message not found with ID: {}", id);
+            throw new IllegalArgumentException("Chat message not found with ID: " + id);
+        }
+
         chatMessageRepository.deleteById(id);
+        logger.info("Deleted chat message with ID: {}", id);
     }
 }

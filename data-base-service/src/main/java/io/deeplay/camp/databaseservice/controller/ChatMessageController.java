@@ -3,6 +3,8 @@ package io.deeplay.camp.databaseservice.controller;
 import io.deeplay.camp.databaseservice.dto.ChatMessageDTO;
 import io.deeplay.camp.databaseservice.dto.ChatMessageRequest;
 import io.deeplay.camp.databaseservice.service.ChatMessageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/chat-messages")
 public class ChatMessageController {
+
+    private static final Logger logger = LoggerFactory.getLogger(ChatMessageController.class);
 
     private final ChatMessageService chatMessageService;
 
@@ -35,7 +39,9 @@ public class ChatMessageController {
      */
     @GetMapping
     public ResponseEntity<List<ChatMessageDTO>> getAllMessages() {
+        logger.info("Retrieving all chat messages");
         List<ChatMessageDTO> messages = chatMessageService.getAllMessages();
+        logger.info("Retrieved {} chat messages", messages.size());
         return ResponseEntity.ok(messages);
     }
 
@@ -47,10 +53,13 @@ public class ChatMessageController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<ChatMessageDTO> getMessageById(@PathVariable int id) {
+        logger.info("Retrieving chat message by ID: {}", id);
         ChatMessageDTO message = chatMessageService.getMessageById(id);
         if (message != null) {
+            logger.info("Chat message found with ID: {}", id);
             return ResponseEntity.ok(message);
         } else {
+            logger.warn("Chat message not found with ID: {}", id);
             return ResponseEntity.notFound().build();
         }
     }
@@ -63,7 +72,9 @@ public class ChatMessageController {
      */
     @PostMapping
     public ResponseEntity<ChatMessageDTO> createMessage(@RequestBody ChatMessageRequest chatMessage) {
+        logger.info("Creating new chat message");
         ChatMessageDTO savedMessage = chatMessageService.saveMessage(chatMessage);
+        logger.info("Created new chat message with ID: {}", savedMessage.getId());
         return ResponseEntity.ok(savedMessage);
     }
 
@@ -75,7 +86,14 @@ public class ChatMessageController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMessage(@PathVariable int id) {
-        chatMessageService.deleteMessage(id);
-        return ResponseEntity.noContent().build();
+        logger.info("Deleting chat message with ID: {}", id);
+        if (chatMessageService.getMessageById(id) != null) {
+            chatMessageService.deleteMessage(id);
+            logger.info("Deleted chat message with ID: {}", id);
+            return ResponseEntity.noContent().build();
+        } else {
+            logger.warn("Chat message not found with ID: {}", id);
+            return ResponseEntity.notFound().build();
+        }
     }
 }

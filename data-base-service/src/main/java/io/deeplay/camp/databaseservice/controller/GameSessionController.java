@@ -2,8 +2,9 @@ package io.deeplay.camp.databaseservice.controller;
 
 import io.deeplay.camp.databaseservice.dto.GameSessionDTO;
 import io.deeplay.camp.databaseservice.dto.GameSessionRequest;
-import io.deeplay.camp.databaseservice.model.GameSession;
 import io.deeplay.camp.databaseservice.service.GameSessionService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/game-sessions")
 public class GameSessionController {
+
+    private static final Logger logger = LoggerFactory.getLogger(GameSessionController.class);
 
     private final GameSessionService gameSessionService;
 
@@ -36,7 +39,9 @@ public class GameSessionController {
      */
     @GetMapping
     public ResponseEntity<List<GameSessionDTO>> getAllSessions() {
+        logger.info("Retrieving all game sessions");
         List<GameSessionDTO> sessions = gameSessionService.getAllSessions();
+        logger.info("Retrieved {} game sessions", sessions.size());
         return ResponseEntity.ok(sessions);
     }
 
@@ -48,10 +53,13 @@ public class GameSessionController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<GameSessionDTO> getSessionById(@PathVariable int id) {
+        logger.info("Retrieving game session by ID: {}", id);
         GameSessionDTO session = gameSessionService.getSessionById(id);
         if (session != null) {
+            logger.info("Game session found with ID: {}", id);
             return ResponseEntity.ok(session);
         } else {
+            logger.warn("Game session not found with ID: {}", id);
             return ResponseEntity.notFound().build();
         }
     }
@@ -64,7 +72,9 @@ public class GameSessionController {
      */
     @PostMapping
     public ResponseEntity<GameSessionDTO> createSession(@RequestBody GameSessionRequest gameSession) {
+        logger.info("Creating new game session");
         GameSessionDTO savedSession = gameSessionService.saveSession(gameSession);
+        logger.info("Created new game session with ID: {}", savedSession.getId());
         return ResponseEntity.ok(savedSession);
     }
 
@@ -76,7 +86,14 @@ public class GameSessionController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSession(@PathVariable int id) {
-        gameSessionService.deleteSession(id);
-        return ResponseEntity.noContent().build();
+        logger.info("Deleting game session with ID: {}", id);
+        if (gameSessionService.getSessionById(id) != null) {
+            gameSessionService.deleteSession(id);
+            logger.info("Deleted game session with ID: {}", id);
+            return ResponseEntity.noContent().build();
+        } else {
+            logger.warn("Game session not found with ID: {}", id);
+            return ResponseEntity.notFound().build();
+        }
     }
 }
