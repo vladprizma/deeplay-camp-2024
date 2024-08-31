@@ -6,20 +6,30 @@ public class UserDTO {
     private String userPhoto;
     private int rating;
     private int matches;
+    private String password;
 
     public UserDTO() {}
 
-    public UserDTO(int id, String username, String userPhoto, int rating, int matches) {
+    public UserDTO(int id, String username, String userPhoto, int rating, int matches, String password) {
         this.id = id;
         this.username = username;
         this.userPhoto = userPhoto;
         this.rating = rating;
         this.matches = matches;
+        this.password = password;
     }
 
     // Геттеры и сеттеры
     public int getId() {
         return id;
+    }
+    
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    
+    public String getPassword() {
+        return password;
     }
 
     public void setId(int id) {

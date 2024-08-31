@@ -2,7 +2,7 @@ CREATE TABLE "users" (
      "id" SERIAL PRIMARY KEY,
      "username" VARCHAR(50) UNIQUE NOT NULL,
      "password" VARCHAR(255) NOT NULL,
-     "userPhoto" VARCHAR(255) NOT NULL,
+     "user_photo" VARCHAR(255) NOT NULL,
      "rating" INT DEFAULT 0,
      "matches" INT DEFAULT 0
 );
