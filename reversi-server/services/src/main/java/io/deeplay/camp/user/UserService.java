@@ -25,7 +25,7 @@ import java.util.Optional;
  */
 public class UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
-    private static final String BASE_URL = "http://localhost:8083/api/users"; // URL вашего микросервиса
+    private static final String BASE_URL = "http://localhost:8083/api/users"; 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     /**

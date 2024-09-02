@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "users")
 public class User {
-
+    
     /**
      * The unique identifier of the user.
      */

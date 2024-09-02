@@ -24,7 +24,7 @@ import java.util.List;
  */
 public class ChatService {
     private static final Logger logger = LoggerFactory.getLogger(ChatService.class);
-    private static final String BASE_URL = "http://localhost:8083/api/chat-messages"; // URL вашего микросервиса
+    private static final String BASE_URL = "http://localhost:8083/api/chat-messages"; 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     /**
