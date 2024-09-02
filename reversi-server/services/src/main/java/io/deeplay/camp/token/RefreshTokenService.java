@@ -34,7 +34,7 @@ import io.jsonwebtoken.security.Keys;
  */
 public class RefreshTokenService {
     private static final Logger logger = LoggerFactory.getLogger(RefreshTokenService.class);
-    private static final String BASE_URL = "http://localhost:8083/api/tokens"; // URL вашего микросервиса
+    private static final String BASE_URL = "http://localhost:8083/api/tokens"; 
     private static final String SECRET_KEY = "e6620c7252a94eb85d59399f3a07cc66c10f700365532dacf5dc234";
     private final Integer ONE_DAY = 1000 * 60 * 60 * 24;
     private final ObjectMapper objectMapper = new ObjectMapper();

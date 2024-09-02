@@ -27,9 +27,6 @@ public class DarlingBotStrategy extends BotStrategy {
     /**
      * Constructs a new DarlingBot.
      *
-     * @param id           The ID of the bot.
-     * @param name         The name of the bot.
-     * @param depth   The depth of the move tree and min max.
      */
     public DarlingBotStrategy() {
         super(1, "Darling");
