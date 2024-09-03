@@ -28,48 +28,49 @@ public class BotController {
     }
 
     @PostMapping("/darling/minimax/move")
-    public BotMoveResponse getBotMove(@RequestBody BotMoveRequest request) throws ExecutionException, InterruptedException {
+    public BotMoveResponse getBotMove(@RequestBody BotMoveRequest request) {
         var boardService = new BoardService(request.getBoard());
-        Tile move = botService.getBotMove(request.getCurrentPlayerId(), boardService).get();
+        Tile move = botService.getBotMove(request.getCurrentPlayerId(), boardService);
         BotMoveResponse response = new BotMoveResponse(move);
         response.setMove(move);
         return response;
     }
 
     @PostMapping("/viola/minimax/move")
-    public BotMoveResponse getMiniMaxBotMove(@RequestBody BotMoveRequest request) throws ExecutionException, InterruptedException {
+    public BotMoveResponse getMiniMaxBotMove(@RequestBody BotMoveRequest request) {
         violaBotService.setMiniMaxViolaStrategy();
         var boardService = new BoardService(request.getBoard());
-        Tile move = botService.getBotMove(request.getCurrentPlayerId(), boardService).get();
+        Tile move = violaBotService.getBotMove(request.getCurrentPlayerId(), boardService);
         BotMoveResponse response = new BotMoveResponse(move);
         response.setMove(move);
         return response;
     }
     
     @PostMapping("/andrey/minimax/move")
-    public BotMoveResponse getAndreyMiniMaxBotMove(@RequestBody BotMoveRequest request) throws ExecutionException, InterruptedException {
+    public BotMoveResponse getAndreyMiniMaxBotMove(@RequestBody BotMoveRequest request) {
+        andreyBotService.setMCTSbot();
         var boardService = new BoardService(request.getBoard());
-        Tile move = andreyBotService.getBotMove(request.getCurrentPlayerId(), boardService).get();
+        Tile move = andreyBotService.getBotMove(request.getCurrentPlayerId(), boardService);
         BotMoveResponse response = new BotMoveResponse(move);
         response.setMove(move);
         return response;
     }
 
     @PostMapping("/viola/expectimax/move")
-    public BotMoveResponse getExpectiMaxBotMove(@RequestBody BotMoveRequest request) throws ExecutionException, InterruptedException {
+    public BotMoveResponse getExpectiMaxBotMove(@RequestBody BotMoveRequest request) {
         violaBotService.setExpectiMaxViolaStrategy();
         var boardService = new BoardService(request.getBoard());
-        Tile move = botService.getBotMove(request.getCurrentPlayerId(), boardService).get();
+        Tile move = violaBotService.getBotMove(request.getCurrentPlayerId(), boardService);
         BotMoveResponse response = new BotMoveResponse(move);
         response.setMove(move);
         return response;
     }
 
     @PostMapping("/viola/montecarlo/move")
-    public BotMoveResponse getMonteCarloBotMove(@RequestBody BotMoveRequest request) throws ExecutionException, InterruptedException {
+    public BotMoveResponse getMonteCarloBotMove(@RequestBody BotMoveRequest request) {
         violaBotService.setMonteCarloViolaStrategy();
         var boardService = new BoardService(request.getBoard());
-        Tile move = botService.getBotMove(request.getCurrentPlayerId(), boardService).get();
+        Tile move = violaBotService.getBotMove(request.getCurrentPlayerId(), boardService);
         BotMoveResponse response = new BotMoveResponse(move);
         response.setMove(move);
         return response;

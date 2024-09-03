@@ -46,7 +46,7 @@ public class MoveCommandHandler implements CommandHandler {
      * @throws SQLException if a database access error occurs
      */
     @Override
-    public void handle(String message, MainHandler mainHandler) throws IOException, SQLException {
+    public void handle(String message, MainHandler mainHandler) throws Exception {
         logger.info("Handling move command");
 
         if (!isValidSession(mainHandler)) return;
@@ -177,7 +177,7 @@ public class MoveCommandHandler implements CommandHandler {
      * @param message the message received from the client, should not be null
      * @return the move command, or null if the message format is invalid
      */
-    private String getMoveFromMessage(String message, MainHandler mainHandler, GameSession session) throws IOException, SQLException {
+    private String getMoveFromMessage(String message, MainHandler mainHandler, GameSession session) throws Exception {
         String[] messageParts = message.split(" ");
         if (messageParts.length < 2) {
             return null;
@@ -208,7 +208,7 @@ public class MoveCommandHandler implements CommandHandler {
      * @throws IOException  if an unexpected error occurs during the handling process
      * @throws SQLException if a database access error occurs
      */
-    private void handleSuccessfulMove(MainHandler mainHandler, GameSession session, int playerNumber) throws IOException, SQLException {
+    private void handleSuccessfulMove(MainHandler mainHandler, GameSession session, int playerNumber) throws Exception {
         logger.info(mainHandler.getUser().getId() + ": Move made successfully.");
         updateSessionBoard(mainHandler, session);
 
@@ -329,7 +329,7 @@ public class MoveCommandHandler implements CommandHandler {
      * @throws IOException  if an unexpected error occurs during the handling process
      * @throws SQLException if a database access error occurs
      */
-    private void handleBotMove(MainHandler mainHandler, GameSession session) throws IOException, SQLException {
+    private void handleBotMove(MainHandler mainHandler, GameSession session) throws Exception {
         BotService botService = new BotService(2, "Bot", Bots.RANDOM);
         var newBoardLogicForBot = new BoardService(session.getBoard());
         mainHandler.setGameLogic(new GameService(newBoardLogicForBot));

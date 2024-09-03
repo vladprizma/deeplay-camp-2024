@@ -16,9 +16,15 @@ public class KaylebeeBotMyFunc extends BotStrategy {
     private final int maxDepth;
 
     public KaylebeeBotMyFunc() {
-        super(1, "Andrey");
+        super(2, "Andrey");
         this.utilityFunction = new AdvancedUtilityFunction();
         this.maxDepth = 3;
+    }
+
+    public KaylebeeBotMyFunc(int id, String name, int maxDepth) {
+        super(id, name);
+        this.utilityFunction = new AdvancedUtilityFunction();
+        this.maxDepth = maxDepth;
     }
 
     @Override
