@@ -1,8 +1,8 @@
-package io.deeplay.camp.botfactory.service.bot;
+package io.deeplay.camp.botfactory.service.bot.darling;
 
 import io.deeplay.camp.botfactory.model.MCTSNode;
 import io.deeplay.camp.botfactory.model.Tile;
-import io.deeplay.camp.botfactory.service.BoardService;
+import io.deeplay.camp.botfactory.service.board.BoardService;
 
 import java.util.List;
 import java.util.Random;
@@ -52,7 +52,7 @@ public class MCTSEvaluatorStrategy implements EvaluationStrategy {
         int currentPlayer = node.getCurrentPlayerId();
         Random random = new Random();
 
-        while (!board.isGameOver()) {
+        while (!board.checkForWin().isGameFinished()) {
             List<Tile> legalMoves = board.getAllValidTiles(currentPlayer);
             if (legalMoves.isEmpty()) {
                 currentPlayer = 3 - currentPlayer;

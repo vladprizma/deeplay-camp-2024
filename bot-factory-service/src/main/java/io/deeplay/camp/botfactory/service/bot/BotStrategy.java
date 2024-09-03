@@ -1,7 +1,7 @@
 package io.deeplay.camp.botfactory.service.bot;
 
 import io.deeplay.camp.botfactory.model.Tile;
-import io.deeplay.camp.botfactory.service.BoardService;
+import io.deeplay.camp.botfactory.service.board.BoardService;
 
 import java.util.List;
 
