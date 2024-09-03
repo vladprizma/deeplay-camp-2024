@@ -1,6 +1,8 @@
 package io.deeplay.camp.metrics.controller;
 
 import io.deeplay.camp.metrics.service.InfluxDBService;
+import io.deeplay.camp.metrics.service.MetricsStrategy;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -11,9 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/metrics")
 public class InfluxDBController {
-    private final InfluxDBService influxDBService;
-
-    public InfluxDBController(InfluxDBService influxDBService) {
+    private final MetricsStrategy influxDBService;
+    
+    @Autowired
+    public InfluxDBController(MetricsStrategy influxDBService) {
         this.influxDBService = influxDBService;
     }
 
