@@ -10,6 +10,8 @@ import io.deeplay.camp.enums.Bots;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,11 +23,15 @@ public class BotService extends BotStrategy {
     private static final String BOT_FACTORY_URL = "http://localhost:8082/bot";
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final CloseableHttpClient httpClient;
-    private static boolean serverAvailable = true;
 
     public BotService(int id, String name, Bots bot) {
         super(id, name, bot);
-        this.httpClient = HttpClientProvider.getHttpClient();
+        PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
+        connectionManager.setMaxTotal(200);
+        connectionManager.setDefaultMaxPerRoute(100);
+        this.httpClient = HttpClients.custom()
+                .setConnectionManager(connectionManager)
+                .build();
     }
 
     private String getBotMoveUrl(Bots bot) {
@@ -37,11 +43,7 @@ public class BotService extends BotStrategy {
         };
     }
 
-    private Tile executeBotMoveRequest(String url, BotMoveRequest request) throws IOException {
-        if (!serverAvailable) {
-            return getBackupBotMove(request);
-        }
-
+    private Tile executeBotMoveRequest(String url, BotMoveRequest request) throws Exception {
         String requestBody = objectMapper.writeValueAsString(request);
         HttpPost httpPost = new HttpPost(url);
 
@@ -55,15 +57,12 @@ public class BotService extends BotStrategy {
             } else {
                 return getBackupBotMove(request);
             }
-        } catch (SocketTimeoutException e) {
-            serverAvailable = false;
-            return getBackupBotMove(request);
-        } catch (IOException e) {
-            return getBackupBotMove(request);
+        } catch (Exception e) {
+            throw new Exception(e);
         }
     }
 
-    public Tile getBotMove(Board board, int currentPlayerId) throws IOException {
+    public Tile getBotMove(Board board, int currentPlayerId) throws Exception {
         BotMoveRequest request = new BotMoveRequest(board, currentPlayerId);
         String url = getBotMoveUrl(bot);
         return executeBotMoveRequest(url, request);
@@ -77,7 +76,7 @@ public class BotService extends BotStrategy {
     public Tile getMove(int currentPlayerId, @NotNull BoardService boardLogic) {
         try {
             return getBotMove(boardLogic.getBoard(), currentPlayerId);
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException("Error while getting bot move", e);
         }
     }
