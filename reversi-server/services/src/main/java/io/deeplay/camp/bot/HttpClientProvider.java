@@ -13,8 +13,8 @@ public class HttpClientProvider {
 
     static {
         PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
-        connectionManager.setMaxTotal(100);
-        connectionManager.setDefaultMaxPerRoute(50);
+        connectionManager.setMaxTotal(200);
+        connectionManager.setDefaultMaxPerRoute(100);
 
         httpClient = HttpClients.custom()
                 .setConnectionManager(connectionManager)

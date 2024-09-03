@@ -25,7 +25,6 @@ public class SelfPlay {
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(SCHEDULER_THREAD_COUNT);
     private static final ExecutorService gameExecutor = Executors.newFixedThreadPool(GAME_THREAD_COUNT);
     private final int gameCount;
-    private static final int BATCH_SIZE = 50;
     private final AtomicInteger firstBotWins = new AtomicInteger(0);
     private final AtomicInteger secondBotWins = new AtomicInteger(0);
     private final AtomicInteger draws = new AtomicInteger(0);
@@ -36,15 +35,15 @@ public class SelfPlay {
     }
 
     public void startBotGame() {
-        int totalBatches = (int) Math.ceil((double) gameCount / BATCH_SIZE);
+        int totalBatches = (int) Math.ceil((double) gameCount / 50);
         int index = 0;
 
         for (int batch = 0; batch < totalBatches; batch++) {
-            int gamesInBatch = Math.min(BATCH_SIZE, gameCount - batch * BATCH_SIZE);
+            int gamesInBatch = Math.min(50, gameCount - batch * 50);
             List<Future<Void>> futures = new ArrayList<>();
 
             for (int i = 0; i < gamesInBatch; i++) {
-                int gameIndex = batch * BATCH_SIZE + i;
+                int gameIndex = batch * 10 + i;
                 int finalIndex = index;
                 futures.add(gameExecutor.submit(() -> playSingleGame(finalIndex % 2 == 0)));
                 index++;
@@ -71,7 +70,7 @@ public class SelfPlay {
     private Void playSingleGame(boolean firstBotStarts) {
         BotStrategy firstRandomBot = new BotService(1, "Artem", Bots.DARLING);
         BotStrategy secondRandomBot = new BotService(2, "Andrey", Bots.ANDREY);
-        
+
         Board board = new Board();
         BoardService boardLogic = new BoardService(board);
         BotStrategy currentBot = firstBotStarts ? firstRandomBot : secondRandomBot;

@@ -29,5 +29,5 @@ public interface CommandHandler {
      * @throws SQLException         If a SQL error occurs during command processing.
      * @throws InterruptedException If the thread is interrupted during command processing.
      */
-    void handle(String message, MainHandler mainHandler) throws IOException, SQLException, InterruptedException;
+    void handle(String message, MainHandler mainHandler) throws Exception;
 }

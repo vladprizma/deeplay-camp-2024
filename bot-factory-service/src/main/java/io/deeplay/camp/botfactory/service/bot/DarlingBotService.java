@@ -21,8 +21,7 @@ public class DarlingBotService {
     @Autowired
     public DarlingBotService(@Qualifier("darlingBotStrategy") BotStrategy botStrategy) { this.botStrategy = botStrategy; }
     
-    @Async
-    public CompletableFuture<Tile> getBotMove(int currentPlayerId, BoardService boardService) {
+    public Tile getBotMove(int currentPlayerId, BoardService boardService) {
         logger.info("Getting bot move for player ID: {}", currentPlayerId);
 
         if (botStrategy == null) {
@@ -32,11 +31,10 @@ public class DarlingBotService {
 
         Tile move = botStrategy.getMove(currentPlayerId, boardService);
         logger.info("Bot move determined: {}", move);
-        return CompletableFuture.completedFuture(move);
+        return move;
     }
 
-    @Async
-    public CompletableFuture<List<Tile>> getAllValidMoves(int currentPlayerId, BoardService boardService) {
+    public List<Tile> getAllValidMoves(int currentPlayerId, BoardService boardService) {
         logger.info("Getting all valid moves for player ID: {}", currentPlayerId);
 
         if (botStrategy == null) {
@@ -46,6 +44,6 @@ public class DarlingBotService {
 
         List<Tile> moves = botStrategy.getAllValidMoves(currentPlayerId, boardService);
         logger.info("All valid moves determined: {}", moves);
-        return CompletableFuture.completedFuture(moves);
+        return moves;
     }
 }
