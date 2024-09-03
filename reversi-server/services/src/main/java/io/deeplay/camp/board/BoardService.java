@@ -642,6 +642,32 @@ public class BoardService {
         return validTiles;
     }
 
+    public List<Tile> getAllBlackChips(){
+        List<Tile> tiles = new ArrayList<>();
+        for (int i = 0; i < 64; i++) {
+            long mask = 1L << i;
+            if ((blackChips & mask) != 0) {
+                int x = i % 8;
+                int y = i / 8;
+                tiles.add(new Tile(x, y));
+            }
+        }
+        return tiles;
+    }
+
+    public List<Tile> getAllWhiteChips(){
+        List<Tile> tiles = new ArrayList<>();
+        for (int i = 0; i < 64; i++) {
+            long mask = 1L << i;
+            if ((whiteChips & mask) != 0) {
+                int x = i % 8;
+                int y = i / 8;
+                tiles.add(new Tile(x, y));
+            }
+        }
+        return tiles;
+    }
+
     public List<Tile> getAllValidTileNoPlayer() {
         List<Tile> validTiles = new ArrayList<>();
         long validMoves = getValidMoves(playerID);
