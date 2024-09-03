@@ -1,10 +1,8 @@
-package io.deeplay.camp.botfactory.service;
+package io.deeplay.camp.botfactory.service.board;
 
 import io.deeplay.camp.botfactory.model.Board;
 import io.deeplay.camp.botfactory.model.GameFinished;
 import io.deeplay.camp.botfactory.model.Tile;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +14,7 @@ public class BoardService {
     private long whiteChips;
     private long blackValidMoves;
     private long whiteValidMoves;
-    private int nextPlayerId;
+    private int playerID;
 
     public BoardService(Board board) {
         this.board = board;
@@ -24,14 +22,7 @@ public class BoardService {
         this.whiteChips = board.getWhiteChips();
     }
 
-    public BoardService(BoardService other) {
-        this.board = new Board(other.board); 
-        this.blackChips = other.blackChips;
-        this.whiteChips = other.whiteChips;
-        this.blackValidMoves = other.blackValidMoves;
-        this.whiteValidMoves = other.whiteValidMoves;
-    }
-    
+    //!! Установка фишки на доску
     public void setPiece(int x, int y, int player) {
         long piece = 1L << (x + 8 * y);
         long tempChips;
@@ -72,6 +63,7 @@ public class BoardService {
                     } else break;
                 }
             }
+            // Вертикали
             if(y > 0){
                 tempChips = 0;
                 for (int j = y - 1; j >= 0; j--) {
@@ -160,9 +152,12 @@ public class BoardService {
                 board.setWhiteChips(whiteChips);
                 board.setBlackChips(blackChips);
             }
+            playerSwap();
         }
     }
 
+    
+    
     //!! Убрать фишку
     public void removePiece(int x, int y) {
         long mask = ~(1L << (x + 8 * y));
@@ -174,16 +169,6 @@ public class BoardService {
     public boolean hasPiece(int x, int y) {
         long mask = 1L << (x + 8 * y);
         return ((blackChips & mask) != 0) || ((whiteChips & mask) != 0);
-    }
-
-    public boolean hasPieceBlack(int x, int y) {
-        long mask = 1L << (x + 8 * y);
-        return ((blackChips & mask) != 0);
-    }
-
-    public boolean hasPieceWhite(int x, int y) {
-        long mask = 1L << (x + 8 * y);
-        return ((whiteChips & mask) != 0);
     }
 
     public Board getBoard() {
@@ -332,7 +317,6 @@ public class BoardService {
         whiteValidMoves &= ~allChips;
     }
 
-
     // Вызов доски
     public StringBuilder getBoardState(int player) {
         createValidMoves();
@@ -367,6 +351,50 @@ public class BoardService {
         return state;
     }
 
+    public StringBuilder getBoardState() {
+        createValidMoves();
+        StringBuilder state = new StringBuilder();
+        state.append("\n\n");
+        for (int y = 0; y < 8; y++) {
+            state.append((8 - y) + " ");
+            for (int x = 0; x < 8; x++) {
+                if (hasPiece(x, y)) {
+                    if ((blackChips & (1L << (x + 8 * y))) != 0) {
+                        state.append("X ");
+                    } else {
+                        state.append("0 ");
+                    }
+                } else {
+                    long validMoves = (playerID == 1) ? blackValidMoves : whiteValidMoves;
+                    long mask = 1L << (x + 8 * y);
+                    if ((validMoves & mask) != 0) {
+                        state.append("* ");
+                    } else {
+                        state.append(". ");
+                    }
+                }
+            }
+            state.append("\n");
+        }
+        state.append(" ");
+        for (char i = 'a'; i <='h'; i++)
+            state.append(" " + i);
+
+        state.append("\n\n");
+        return state;
+    }
+
+    //Смена игрока
+    public void playerSwap(){
+        if(!checkForWin().isGameFinished()){
+            if(playerID == 1 && getValidMoves(2) != 0) {
+                playerID = 2;
+            } else if(playerID == 2 && getValidMoves(1) != 0) {
+                playerID = 1;
+            }
+        }
+    }
+
     public String getBoardStateDTO(int player){
         StringBuilder state = new StringBuilder("");
         for (int y = 0; y < 8; y++) {
@@ -392,6 +420,25 @@ public class BoardService {
         return "Board{" + state + '}';
     }
 
+    public String getBoardStateDTOWithoutValidMoves(){
+        StringBuilder state = new StringBuilder("");
+        for (int y = 0; y < 8; y++) {
+            for (int x = 0; x < 8; x++) {
+                if (hasPiece(x, y)) {
+                    if ((blackChips & (1L << (x + 8 * y))) != 0) {
+                        state.append("X ");
+                    } else {
+                        state.append("0 ");
+                    }
+                } else {
+                    state.append(". ");
+                }
+            }
+        }
+
+        return "Board{" + state + '}';
+    }
+
     public long getBlackValidMoves() {
         createValidMoves();
         return blackValidMoves;
@@ -402,47 +449,58 @@ public class BoardService {
         return whiteValidMoves;
     }
 
-    public int getPiece(int x, int y) {
-        long mask = 1L << (x + 8 * y);
-
-        if ((blackChips & mask) != 0) {
-            return 1; // Черная фишка
-        } else if ((whiteChips & mask) != 0) {
-            return 2; // Белая фишка
-        } else {
-            return 0; // Пустая клетка
-        }
-    }
-
-
-    public List<Tile> getAllValidTiles(int playerId) {
+    public List<Tile> getAllValidTiles(int player) {
         List<Tile> validTiles = new ArrayList<>();
-        long validMoves = getValidMoves(playerId);
+        long validMoves = getValidMoves(player);
         for (int i = 0; i < 64; i++) {
             long mask = 1L << i;
             if ((validMoves & mask) != 0) {
                 int x = i % 8;
                 int y = i / 8;
-                var buf = new Tile(x, y);
-                buf.setPlayerId(playerId);
-                validTiles.add(buf);
+                validTiles.add(new Tile(x, y));
             }
         }
         return validTiles;
     }
 
-    public boolean makeMove(int playerId, Tile tile) {
+    public List<Tile> getAllBlackChips(){
+        List<Tile> tiles = new ArrayList<>();
+        for (int i = 0; i < 64; i++) {
+            long mask = 1L << i;
+            if ((blackChips & mask) != 0) {
+                int x = i % 8;
+                int y = i / 8;
+                tiles.add(new Tile(x, y));
+            }
+        }
+        return tiles;
+    }
+
+    public List<Tile> getAllWhiteChips(){
+        List<Tile> tiles = new ArrayList<>();
+        for (int i = 0; i < 64; i++) {
+            long mask = 1L << i;
+            if ((whiteChips & mask) != 0) {
+                int x = i % 8;
+                int y = i / 8;
+                tiles.add(new Tile(x, y));
+            }
+        }
+        return tiles;
+    }
+
+    public boolean makeMove(int player, Tile tile) {
         int x = tile.getX();
         int y = tile.getY();
-        setPiece(x, y, playerId);
+        setPiece(x, y, player);
 
         return true;
     }
 
-    public List<Tile> getChips(int playerId) {
+    public List<Tile> getChips(int player) {
         List<Tile> playerChips = new ArrayList<>();
         long chips;
-        if(playerId == 1) {
+        if(player == 1) {
             chips = blackChips;
         } else chips = whiteChips;
         for (int i = 0; i < 64; i++) {
@@ -478,6 +536,31 @@ public class BoardService {
         return new GameFinished(false, -1);
     }
 
+    public int getPiece(int x, int y) {
+        long mask = 1L << (x + 8 * y);
+
+        if ((blackChips & mask) != 0) {
+            return 1; // Черная фишка
+        } else if ((whiteChips & mask) != 0) {
+            return 2; // Белая фишка
+        } else {
+            return 0; // Пустая клетка
+        }
+    }
+
+    public  int getRound(){
+        return ((score()[0] + score()[1]) - 4);
+    }
+
+    public BoardService(BoardService oldBoardService) {
+        this.board = new Board(oldBoardService.board);
+        this.blackChips = oldBoardService.blackChips;
+        this.whiteChips = oldBoardService.whiteChips;
+        this.blackValidMoves = oldBoardService.blackValidMoves;
+        this.whiteValidMoves = oldBoardService.whiteValidMoves;
+        this.playerID = oldBoardService.playerID;
+    }
+
     public int getScore(int player) {
         int score = 0;
 
@@ -500,18 +583,7 @@ public class BoardService {
         return score;
     }
 
-    public boolean isGameOver() {
-        long blackValidMoves = getBlackValidMoves();
-        long whiteValidMoves = getWhiteValidMoves();
-
-        // Если на доске нет пустых мест или нет допустимых ходов у обоих игроков
-        if ((blackValidMoves == 0 && whiteValidMoves == 0) || (getChips(1).size() + getChips(2).size() == 64)) {
-            return true;
-        }
-        return false;
-    }
-
-    public BoardService getBoardServiceCopy() {
+    public BoardService getCopy() {
         return new BoardService(this);
     }
 
@@ -531,11 +603,36 @@ public class BoardService {
         this.blackChips = blackChips;
     }
 
+    public boolean isGameOver() {
+        long blackValidMoves = getBlackValidMoves();
+        long whiteValidMoves = getWhiteValidMoves();
+
+        // Если на доске нет пустых мест или нет допустимых ходов у обоих игроков
+        if ((blackValidMoves == 0 && whiteValidMoves == 0) || (getChips(1).size() + getChips(2).size() == 64)) {
+            return true;
+        }
+        return false;
+    }
+    
     public long getWhiteChips() {
         return whiteChips;
     }
 
     public void setWhiteChips(long whiteChips) {
         this.whiteChips = whiteChips;
+    }
+
+    public BoardService getBoardServiceCopy() {
+        return new BoardService(this);
+    }
+
+    public boolean hasPieceBlack(int x, int y) {
+        long mask = 1L << (x + 8 * y);
+        return ((blackChips & mask) != 0);
+    }
+
+    public boolean hasPieceWhite(int x, int y) {
+        long mask = 1L << (x + 8 * y);
+        return ((whiteChips & mask) != 0);
     }
 }

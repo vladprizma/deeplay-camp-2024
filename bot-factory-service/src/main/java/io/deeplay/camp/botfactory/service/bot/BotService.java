@@ -1,7 +1,7 @@
 package io.deeplay.camp.botfactory.service.bot;
 
 import io.deeplay.camp.botfactory.model.Tile;
-import io.deeplay.camp.botfactory.service.BoardService;
+import io.deeplay.camp.botfactory.service.board.BoardService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

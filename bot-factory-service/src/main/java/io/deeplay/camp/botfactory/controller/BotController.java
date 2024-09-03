@@ -3,7 +3,7 @@ package io.deeplay.camp.botfactory.controller;
 import io.deeplay.camp.botfactory.dto.BotMoveRequest;
 import io.deeplay.camp.botfactory.dto.BotMoveResponse;
 import io.deeplay.camp.botfactory.model.Tile;
-import io.deeplay.camp.botfactory.service.BoardService;
+import io.deeplay.camp.botfactory.service.board.BoardService;
 import io.deeplay.camp.botfactory.service.bot.BotService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,4 +1,4 @@
-package io.deeplay.camp.botfactory.service.bot;
+package io.deeplay.camp.botfactory.service.bot.darling;
 
 
 // создание бота в отдельном сервисе
@@ -6,10 +6,10 @@ package io.deeplay.camp.botfactory.service.bot;
 // схемку архитектуры
 
 import io.deeplay.camp.botfactory.model.Tile;
-import io.deeplay.camp.botfactory.service.BoardService;
+import io.deeplay.camp.botfactory.service.board.BoardService;
+import io.deeplay.camp.botfactory.service.bot.BotStrategy;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
@@ -87,7 +87,7 @@ public class DarlingBotStrategy extends BotStrategy {
      * @return The evaluation score of the node.
      */
     private double minimax(BoardService boardService, int depth, boolean maximizingPlayer, int currentPlayerId, double alpha, double beta) {
-        if (depth == 0 || boardService.checkForWin().isGameFinished()) {
+        if (depth == 0 || boardService.isGameOver()) {
             return evaluationStrategy.evaluate(boardService, currentPlayerId);
         }
 

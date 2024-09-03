@@ -331,7 +331,7 @@ public class BoardService {
         blackValidMoves &= ~allChips;
         whiteValidMoves &= ~allChips;
     }
-
+    
 
     // Вызов доски
     public StringBuilder getBoardState(int player) {
