@@ -2,6 +2,7 @@ package io.deeplay.camp.bot;
 
 import io.deeplay.camp.entity.Tile;
 import io.deeplay.camp.board.BoardService;
+import io.deeplay.camp.enums.Bots;
 import org.jetbrains.annotations.NotNull;
 
 import java.security.SecureRandom;
@@ -9,8 +10,8 @@ import java.util.List;
 
 public class RandomBot extends BotStrategy {
 
-    public RandomBot(int id, String name) {
-        super(id, name);
+    public RandomBot(int id, String name, Bots bot) {
+        super(id, name, bot);
     }
 
     @Override

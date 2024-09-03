@@ -2,6 +2,10 @@ package io.deeplay.camp.botfactory.service.bot;
 
 import io.deeplay.camp.botfactory.model.Tile;
 import io.deeplay.camp.botfactory.service.board.BoardService;
+import io.deeplay.camp.botfactory.service.bot.darling.DarlingBotStrategy;
+import io.deeplay.camp.botfactory.service.bot.viola.ExpectiMaxBot;
+import io.deeplay.camp.botfactory.service.bot.viola.MiniMaxBot;
+import io.deeplay.camp.botfactory.service.bot.viola.MonteCarloBot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,42 +14,40 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-/**
- * Service for handling bot operations and strategies.
- */
 @Service
 public class BotService {
 
     private static final Logger logger = LoggerFactory.getLogger(BotService.class);
-
+    // ленивая инициализация ботов, котоыре не используются
     private BotStrategy botStrategy;
-
-    /**
-     * Constructs a new BotService with the specified bot strategy.
-     *
-     * @param botStrategy The strategy used by the bot.
-     */
+    private final MiniMaxBot miniMaxBot;
+    private final ExpectiMaxBot expectiMaxBot;
+    private final MonteCarloBot monteCarloBot;
+    // разнести на сервисы
     @Autowired
     public BotService(@Qualifier("darlingBotStrategy") BotStrategy botStrategy) {
         this.botStrategy = botStrategy;
+        this.miniMaxBot = new MiniMaxBot(1, "MiniMaxBot", 3);
+        this.expectiMaxBot = new ExpectiMaxBot(2, "ExpectiMaxBot", 3);
+        this.monteCarloBot = new MonteCarloBot(3, "MonteCarloBot", 1000);
+    }
+    
+    public void setMiniMaxDarlingStrategy() {
+        this.botStrategy = new DarlingBotStrategy();
     }
 
-    /**
-     * Sets the strategy for the bot.
-     *
-     * @param botStrategy The new strategy to be used by the bot.
-     */
-    public void setBotStrategy(BotStrategy botStrategy) {
-        this.botStrategy = botStrategy;
+    public void setMiniMaxBotStrategy() {
+        this.botStrategy = miniMaxBot;
     }
 
-    /**
-     * Gets the move for the bot based on the current player ID and board state.
-     *
-     * @param currentPlayerId The ID of the current player.
-     * @param boardService The service representing the current state of the board.
-     * @return The move made by the bot.
-     */
+    public void setExpectiMaxBotStrategy() {
+        this.botStrategy = expectiMaxBot;
+    }
+
+    public void setMonteCarloBotStrategy() {
+        this.botStrategy = monteCarloBot;
+    }
+
     public Tile getBotMove(int currentPlayerId, BoardService boardService) {
         logger.info("Getting bot move for player ID: {}", currentPlayerId);
 
@@ -59,13 +61,6 @@ public class BotService {
         return move;
     }
 
-    /**
-     * Gets all valid moves for the bot based on the current player ID and board state.
-     *
-     * @param currentPlayerId The ID of the current player.
-     * @param boardService The service representing the current state of the board.
-     * @return A list of all valid moves for the bot.
-     */
     public List<Tile> getAllValidMoves(int currentPlayerId, BoardService boardService) {
         logger.info("Getting all valid moves for player ID: {}", currentPlayerId);
 
