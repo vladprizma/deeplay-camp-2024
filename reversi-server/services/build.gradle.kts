@@ -13,7 +13,6 @@ repositories {
 dependencies {
     implementation(project(":reversi-server:model"))
     implementation(project(":utilities"))
-    implementation(project(":reversi-server:data-base"))
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     implementation("org.postgresql:postgresql:42.3.1")
     implementation("org.json:json:20230227")
