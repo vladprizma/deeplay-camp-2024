@@ -18,8 +18,8 @@ public class Board {
      * </p>
      */
     public Board() {
-        blackChips = 0xfcfea792bc90027fL;
-        whiteChips = 0x0300586d436ffc80L;
+        blackChips = 0x0000000810000000L;
+        whiteChips = 0x0000001008000000L;
     }
 
     public Board(Board other) {

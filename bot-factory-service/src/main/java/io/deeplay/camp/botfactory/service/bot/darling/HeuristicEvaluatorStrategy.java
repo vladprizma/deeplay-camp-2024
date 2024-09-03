@@ -1,7 +1,7 @@
-package io.deeplay.camp.botfactory.service.bot;
+package io.deeplay.camp.botfactory.service.bot.darling;
 
 
-import io.deeplay.camp.botfactory.service.BoardService;
+import io.deeplay.camp.botfactory.service.board.BoardService;
 
 /**
  * Evaluates the board state using a heuristic function.
@@ -46,7 +46,7 @@ public class HeuristicEvaluatorStrategy implements EvaluationStrategy {
     @Override
     public double evaluate(BoardService boardService, int currentPlayerId) {
         //TODO нормировать возвратные значения
-        if (boardService.checkForWin().isGameFinished()) {
+        if (boardService.isGameOver()) {
             if (boardService.checkForWin().getUserIdWinner() == currentPlayerId) {
                 return Double.POSITIVE_INFINITY - 1;
             } else if (boardService.checkForWin().getUserIdWinner() != currentPlayerId) {

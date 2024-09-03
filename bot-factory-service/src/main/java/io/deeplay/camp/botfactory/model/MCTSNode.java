@@ -1,6 +1,6 @@
 package io.deeplay.camp.botfactory.model;
 
-import io.deeplay.camp.botfactory.service.BoardService;
+import io.deeplay.camp.botfactory.service.board.BoardService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +84,7 @@ public class MCTSNode {
      * @return true if this node is a terminal node, false otherwise.
      */
     public boolean isTerminal() {
-        return boardService.isGameOver();
+        return boardService.checkForWin().isGameFinished();
     }
 
     /**
