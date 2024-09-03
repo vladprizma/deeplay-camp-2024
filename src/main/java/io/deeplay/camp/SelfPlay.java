@@ -25,6 +25,7 @@ public class SelfPlay {
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(SCHEDULER_THREAD_COUNT);
     private static final ExecutorService gameExecutor = Executors.newFixedThreadPool(GAME_THREAD_COUNT);
     private final int gameCount;
+    private static final int BATCH_SIZE = 50;
     private final AtomicInteger firstBotWins = new AtomicInteger(0);
     private final AtomicInteger secondBotWins = new AtomicInteger(0);
     private final AtomicInteger draws = new AtomicInteger(0);
@@ -35,15 +36,15 @@ public class SelfPlay {
     }
 
     public void startBotGame() {
-        int totalBatches = (int) Math.ceil((double) gameCount / 50);
+        int totalBatches = (int) Math.ceil((double) gameCount / BATCH_SIZE);
         int index = 0;
 
         for (int batch = 0; batch < totalBatches; batch++) {
-            int gamesInBatch = Math.min(50, gameCount - batch * 50);
+            int gamesInBatch = Math.min(BATCH_SIZE, gameCount - batch * BATCH_SIZE);
             List<Future<Void>> futures = new ArrayList<>();
 
             for (int i = 0; i < gamesInBatch; i++) {
-                int gameIndex = batch * 10 + i;
+                int gameIndex = batch * BATCH_SIZE + i;
                 int finalIndex = index;
                 futures.add(gameExecutor.submit(() -> playSingleGame(finalIndex % 2 == 0)));
                 index++;

@@ -4,10 +4,14 @@ package io.deeplay.camp.botfactory.service.bot.viola;
 import io.deeplay.camp.botfactory.model.Tile;
 import io.deeplay.camp.botfactory.service.board.BoardService;
 import io.deeplay.camp.botfactory.service.bot.BotStrategy;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
+@Qualifier("violaBotStrategy")
 public class MiniMaxBot extends BotStrategy {
 
     private final int depth;
@@ -15,9 +19,9 @@ public class MiniMaxBot extends BotStrategy {
     private List<Tile> moves; // Список для хранения ходов
     private List<Integer> rounds;
 
-    public MiniMaxBot(int id, String name, int depth) {
-        super(id, name);
-        this.depth = depth;
+    public MiniMaxBot() {
+        super(1, "Viola");
+        this.depth = 3;
         this.utilityFunction = new ClassicUtilityFunction();
         this.moves = new ArrayList<>();
         this.rounds = new ArrayList<>();
