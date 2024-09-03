@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.concurrent.TimeUnit;
 
 @Service
-public class InfluxDBService {
+public class InfluxDBService implements MetricsStrategy {
     private final InfluxDB influxDB;
 
     public InfluxDBService(
