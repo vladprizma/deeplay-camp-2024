@@ -22,6 +22,36 @@ public class BoardService {
         this.whiteChips = board.getWhiteChips();
     }
 
+    public int getBlackChipsCount() {
+        int count = 0;
+
+        for (int y = 0; y < 8; y++) {
+            for (int x = 0; x < 8; x++) {
+                long mask = 1L << (x + 8 * y);
+                if ((blackChips & mask) != 0) {
+                    count++;
+                }
+            }
+        }
+
+        return count;
+    }
+
+    public int getWhiteChipsCount() {
+        int count = 0;
+
+        for (int y = 0; y < 8; y++) {
+            for (int x = 0; x < 8; x++) {
+                long mask = 1L << (x + 8 * y);
+                if ((whiteChips & mask) != 0) {
+                    count++;
+                }
+            }
+        }
+
+        return count;
+    }
+
     //!! Установка фишки на доску
     public void setPiece(int x, int y, int player) {
         long piece = 1L << (x + 8 * y);

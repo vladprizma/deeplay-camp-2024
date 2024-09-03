@@ -40,6 +40,16 @@ public class BotController {
         response.setMove(move);
         return response;
     }
+    
+    @PostMapping("/andrey/minimax/move")
+    public BotMoveResponse getAndreyMiniMaxBotMove(@RequestBody BotMoveRequest request) {
+        botService.setAndreyMinimaxBotStrategy();
+        var boardService = new BoardService(request.getBoard());
+        Tile move = botService.getBotMove(request.getCurrentPlayerId(), boardService);
+        BotMoveResponse response = new BotMoveResponse(move);
+        response.setMove(move);
+        return response;
+    }
 
     @PostMapping("/viola/expectimax/move")
     public BotMoveResponse getExpectiMaxBotMove(@RequestBody BotMoveRequest request) {

@@ -18,6 +18,14 @@ repositories {
 }
 
 dependencies {
+    implementation("org.nd4j:nd4j-native-platform:1.0.0-beta7")
+    implementation("org.deeplearning4j:deeplearning4j-core:1.0.0-beta7")
+    implementation("org.nd4j:nd4j-native-platform:1.0.0-beta7")
+    implementation("com.microsoft.onnxruntime:onnxruntime:1.8.1")
+//    implementation("org.slf4j:slf4j-api:1.7.30")
+//    implementation("org.slf4j:slf4j-simple:1.7.30")
+    implementation("ch.qos.logback:logback-classic:1.4.12")
+
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter")
     testImplementation("org.springframework.boot:spring-boot-starter-test")

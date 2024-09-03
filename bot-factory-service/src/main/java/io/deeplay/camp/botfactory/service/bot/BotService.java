@@ -2,6 +2,8 @@ package io.deeplay.camp.botfactory.service.bot;
 
 import io.deeplay.camp.botfactory.model.Tile;
 import io.deeplay.camp.botfactory.service.board.BoardService;
+import io.deeplay.camp.botfactory.service.bot.andrey.KaylebeeBotMyFunc;
+import io.deeplay.camp.botfactory.service.bot.andrey.MCTSBot;
 import io.deeplay.camp.botfactory.service.bot.darling.DarlingBotStrategy;
 import io.deeplay.camp.botfactory.service.bot.viola.ExpectiMaxBot;
 import io.deeplay.camp.botfactory.service.bot.viola.MiniMaxBot;
@@ -23,13 +25,16 @@ public class BotService {
     private final MiniMaxBot miniMaxBot;
     private final ExpectiMaxBot expectiMaxBot;
     private final MonteCarloBot monteCarloBot;
+    private final BotStrategy kaylebeeBotMyFunc;
+    
     // разнести на сервисы
     @Autowired
     public BotService(@Qualifier("darlingBotStrategy") BotStrategy botStrategy) {
         this.botStrategy = botStrategy;
         this.miniMaxBot = new MiniMaxBot(1, "MiniMaxBot", 3);
         this.expectiMaxBot = new ExpectiMaxBot(2, "ExpectiMaxBot", 3);
-        this.monteCarloBot = new MonteCarloBot(3, "MonteCarloBot", 1000);
+        this.monteCarloBot = new MonteCarloBot(2, "MonteCarloBot", 1000);
+        this.kaylebeeBotMyFunc = new KaylebeeBotMyFunc(2, "MCTS", 3);
     }
     
     public void setMiniMaxDarlingStrategy() {
@@ -46,6 +51,10 @@ public class BotService {
 
     public void setMonteCarloBotStrategy() {
         this.botStrategy = monteCarloBot;
+    }
+    
+    public void setAndreyMinimaxBotStrategy() {
+        this.botStrategy = kaylebeeBotMyFunc;
     }
 
     public Tile getBotMove(int currentPlayerId, BoardService boardService) {

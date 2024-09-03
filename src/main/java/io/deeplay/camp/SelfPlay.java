@@ -68,8 +68,8 @@ public class SelfPlay {
     }
 
     private Void playSingleGame(boolean firstBotStarts) {
-        BotStrategy firstRandomBot = new BotService(1, "DarlingBot", Bots.DARLING);
-        BotStrategy secondRandomBot = new BotService(2, "ViolaBot", Bots.VIOLA);
+        BotStrategy firstRandomBot = new BotService(1, "Artem", Bots.DARLING);
+        BotStrategy secondRandomBot = new BotService(2, "Andrey", Bots.ANDREY);
         
         Board board = new Board();
         BoardService boardLogic = new BoardService(board);
@@ -97,7 +97,7 @@ public class SelfPlay {
         Future<Tile> futureMove = scheduler.schedule(botMoveTask, 0, TimeUnit.SECONDS);
 
         try {
-            var tile = futureMove.get(50, TimeUnit.SECONDS);
+            var tile = futureMove.get(5, TimeUnit.SECONDS);
             if (tile != null) boardLogic.makeMove(botService.id, tile);
         } catch (TimeoutException e) {
             logger.error("Bot {} move timed out.", botService.id);
