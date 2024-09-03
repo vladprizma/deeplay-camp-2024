@@ -1093,4 +1093,24 @@
   "firstBotWins" : 993,
   "secondBotWins" : 7,
   "draws" : 0
+}, {
+  "totalGames" : 1000,
+  "firstBotWins" : 0,
+  "secondBotWins" : 2500,
+  "draws" : 0
+}, {
+  "totalGames" : 1000,
+  "firstBotWins" : 500,
+  "secondBotWins" : 1000,
+  "draws" : 0
+}, {
+  "totalGames" : 1000,
+  "firstBotWins" : 0,
+  "secondBotWins" : 2500,
+  "draws" : 0
+}, {
+  "totalGames" : 1000,
+  "firstBotWins" : 968,
+  "secondBotWins" : 31,
+  "draws" : 1
 } ]

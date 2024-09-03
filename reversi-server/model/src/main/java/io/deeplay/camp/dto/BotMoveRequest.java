@@ -1,6 +1,7 @@
 package io.deeplay.camp.dto;
 
 import io.deeplay.camp.entity.Board;
+import io.deeplay.camp.enums.Bots;
 
 public class BotMoveRequest {
     private Board board;

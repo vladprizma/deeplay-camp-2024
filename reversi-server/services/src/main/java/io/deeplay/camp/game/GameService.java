@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 public class GameService implements ReversiListener {
 
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
-    private RandomBot botServices = new RandomBot(2, "Bot");
+//    private RandomBot botServices = new RandomBot(2, "Bot");
     private UserService playerService = new UserService();
     private DisplayServices displayServices = new DisplayServices();
     private boolean moveReturn = true;
