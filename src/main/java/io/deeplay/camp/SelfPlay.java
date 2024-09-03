@@ -7,6 +7,7 @@ import io.deeplay.camp.bot.*;
 import io.deeplay.camp.entity.Board;
 import io.deeplay.camp.entity.Tile;
 import io.deeplay.camp.board.BoardService;
+import io.deeplay.camp.enums.Bots;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,9 +68,8 @@ public class SelfPlay {
     }
 
     private Void playSingleGame(boolean firstBotStarts) {
-        BotStrategy firstRandomBot = new BotService(1, "DarlingBot");
-//        BotStrategy secondRandomBot = new DarlingBotStrategy(2, "DarlingBot", 3, new MCTSEvaluatorStrategy());
-        BotStrategy secondRandomBot = new RandomBot(2, "RandomBot");
+        BotStrategy firstRandomBot = new BotService(1, "DarlingBot", Bots.DARLING);
+        BotStrategy secondRandomBot = new BotService(2, "ViolaBot", Bots.VIOLA);
         
         Board board = new Board();
         BoardService boardLogic = new BoardService(board);

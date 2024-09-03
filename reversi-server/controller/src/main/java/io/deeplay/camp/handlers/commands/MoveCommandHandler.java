@@ -3,6 +3,7 @@ package io.deeplay.camp.handlers.commands;
 import io.deeplay.camp.bot.BotService;
 import io.deeplay.camp.dto.BoardDTO;
 import io.deeplay.camp.entity.GameSession;
+import io.deeplay.camp.enums.Bots;
 import io.deeplay.camp.enums.GameStatus;
 import io.deeplay.camp.board.BoardService;
 import io.deeplay.camp.game.GameService;
@@ -329,12 +330,12 @@ public class MoveCommandHandler implements CommandHandler {
      * @throws SQLException if a database access error occurs
      */
     private void handleBotMove(MainHandler mainHandler, GameSession session) throws IOException, SQLException {
-        BotService botService = new BotService(2, "Bot");
+        BotService botService = new BotService(2, "Bot", Bots.RANDOM);
         var newBoardLogicForBot = new BoardService(session.getBoard());
         mainHandler.setGameLogic(new GameService(newBoardLogicForBot));
         mainHandler.setBoardLogic(newBoardLogicForBot);
         var metricsService = new MetricsService("http://localhost:8080");
-    
+        
         long startTime = System.currentTimeMillis();
         var move = botService.getBotMove(newBoardLogicForBot.getBoard(), botService.id);
         long endTime = System.currentTimeMillis();
