@@ -52,22 +52,17 @@ public class GetMessagesCommandHandler implements CommandHandler {
 
         StringBuilder response = new StringBuilder(MESSAGES_PREFIX);
 
-        try {
-            List<ChatMessage> messages = chatService.getAllMessages();
-            logger.info("Retrieved {} messages from chat service", messages.size());
+        List<ChatMessage> messages = chatService.getAllMessages();
+        logger.info("Retrieved {} messages from chat service", messages.size());
 
-            for (ChatMessage chatMessage : messages) {
-                response.append("::").append(chatMessage.getTimestamp())
-                        .append(" ").append(chatMessage.getUserId().getUsername())
-                        .append(" ").append(chatMessage.getMessage());
-            }
-
-            mainHandler.sendMessageToClient(response.toString());
-            logger.info("Messages sent to client successfully");
-
-        } catch (SQLException e) {
-            logger.error("Database error occurred while retrieving messages", e);
-            mainHandler.sendMessageToClient("Internal server error. Please try again later.");
+        for (ChatMessage chatMessage : messages) {
+            response.append("::").append(chatMessage.getTimestamp())
+                    .append(" ").append(chatMessage.getUserId().getUsername())
+                    .append(" ").append(chatMessage.getMessage());
         }
+
+        mainHandler.sendMessageToClient(response.toString());
+        logger.info("Messages sent to client successfully");
+
     }
 }

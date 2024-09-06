@@ -8,6 +8,7 @@ import io.deeplay.camp.gameSession.GameSessionService;
 import io.deeplay.camp.handlers.main.MainHandler;
 import io.deeplay.camp.user.UserService;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -183,7 +184,7 @@ public class SessionManager {
      * @param playerWon     Indicates if the player won the session.
      * @throws SQLException If a SQL error occurs during the ELO update.
      */
-    public synchronized void finishedSession(MainHandler clientHandler, boolean playerWon) throws SQLException {
+    public synchronized void finishedSession(MainHandler clientHandler, boolean playerWon) throws SQLException, IOException {
         GameSession gameSession = sessions.stream()
                 .filter(session -> Objects.equals(session.getSessionId(), clientHandler.getSession().getSessionId()))
                 .findFirst()
@@ -207,11 +208,20 @@ public class SessionManager {
         
         gameSession.setResult(playerWon ? clientHandler.getUser().getId() + " win" : clientHandler.getUser().getId() + " lose");
         gameSession.setGameState(GameStatus.FINISHED);
-
-        gameSession.getPlayer2().setId(4);
-        gameSession.getPlayer2().setUsername("Bot12");
         
-        gameSessionService.addGameSession(gameSession, gameSession.getLog());
+        if (gameSession.getPlayer2().getIsBot()) {
+            gameSession.getPlayer2().setId(4);
+            gameSession.getPlayer2().setUsername("Bot");
+        } else {
+            var opponent = getOpponent(clientHandler);
+            if (gameSession.getPlayer1().getId() == clientHandler.getUser().getId()) {
+                gameSession.setPlayer2(opponent);
+            } else {
+                gameSession.setPlayer1(opponent);
+            }
+        }
+        
+        gameSessionService.addGameSession(gameSession);
 
         sessions.remove(gameSession);
     }
@@ -271,7 +281,7 @@ public class SessionManager {
      * @param userService The user service for updating user ratings.
      * @throws SQLException If a SQL error occurs during the ELO update.
      */
-    private void updateEloForPlayers(GameSession gameSession, boolean playerWon, EloService eloService, UserService userService) throws SQLException {
+    private void updateEloForPlayers(GameSession gameSession, boolean playerWon, EloService eloService, UserService userService) throws SQLException, IOException {
         User winner = playerWon ? gameSession.getPlayer1() : gameSession.getPlayer2();
         User loser = playerWon ? gameSession.getPlayer2() : gameSession.getPlayer1();
 
@@ -313,7 +323,7 @@ public class SessionManager {
      * @param clientHandler The handler managing the client connection.
      * @throws SQLException If a SQL error occurs during the ELO update.
      */
-    private void updateEloForPlayerVsBot(GameSession gameSession, boolean playerWon, EloService eloService, UserService userService, MainHandler clientHandler) throws SQLException {
+    private void updateEloForPlayerVsBot(GameSession gameSession, boolean playerWon, EloService eloService, UserService userService, MainHandler clientHandler) throws SQLException, IOException {
         User player = gameSession.getPlayer1();
         gameSession.getPlayer2().setId(0);
         gameSession.getPlayer2().setUsername("Bot12");
@@ -329,5 +339,9 @@ public class SessionManager {
         userService.updateRating(player.getId(), player.getRating());
         clientHandler.setUser(player);
         clientHandler.sendMessageToClient("new-elo::" + player.getRating());
+    }
+    
+    public List<GameSession> getSessions() {
+        return sessions;
     }
 }

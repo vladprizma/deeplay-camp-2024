@@ -44,7 +44,7 @@ public class CommandDispatcher {
      * @throws SQLException         If a SQL error occurs.
      * @throws InterruptedException If the thread is interrupted.
      */
-    public void dispatchCommand(String message, MainHandler mainHandler) throws IOException, SQLException, InterruptedException {
+    public void dispatchCommand(String message, MainHandler mainHandler) throws Exception {
         String command = message.split(MainHandler.splitRegex)[0];
         CommandHandler handler = commandHandlers.get(command);
 

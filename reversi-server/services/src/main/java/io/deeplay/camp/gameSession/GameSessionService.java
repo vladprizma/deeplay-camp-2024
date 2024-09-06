@@ -1,40 +1,147 @@
 package io.deeplay.camp.gameSession;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.deeplay.camp.entity.GameSession;
-import io.deeplay.camp.dao.GameSessionDAO;
-import java.sql.SQLException;
+
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
 
 public class GameSessionService {
-    private final GameSessionDAO gameSessionDAO;
+    private static final String BASE_URL = "http://localhost:8083/api/game-sessions";
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public GameSessionService() {
-        this.gameSessionDAO = new GameSessionDAO();
+    public void addGameSession(GameSession gameSession) throws IOException {
+        String json = objectMapper.writeValueAsString(new GameSessionRequest(gameSession));
+        sendRequest(BASE_URL, "POST", json);
     }
 
-    public void addGameSession(GameSession gameSession, List<String> log) throws SQLException {
-        var stringLog = convertLogToString(log);
-        
-        gameSessionDAO.addGameSession(gameSession, stringLog);
+    public void updateGameSession(GameSession gameSession, String log) throws IOException {
+        String json = objectMapper.writeValueAsString(new GameSessionUpdateRequest(gameSession, log));
+        sendRequest(BASE_URL + "/update", "PUT", json);
     }
 
-    public void updateGameSession(GameSession gameSession, String log) throws SQLException {
-        gameSessionDAO.updateGameSession(gameSession, log);
+    public GameSession getGameSessionById(int id) throws IOException {
+        String response = sendRequest(BASE_URL + "/" + id, "GET", null);
+        return objectMapper.readValue(response, GameSession.class);
     }
 
-    public GameSession getGameSessionById(int id) throws SQLException {
-        return gameSessionDAO.getGameSessionById(id);
+    public List<GameSession> getAllGameSessions() throws IOException {
+        String response = sendRequest(BASE_URL, "GET", null);
+        return objectMapper.readValue(response, objectMapper.getTypeFactory().constructCollectionType(List.class, GameSession.class));
     }
 
-    public List<GameSession> getAllGameSessions() throws SQLException {
-        return gameSessionDAO.getAllGameSessions();
+    public void deleteGameSession(int id) throws IOException {
+        sendRequest(BASE_URL + "/delete/" + id, "DELETE", null);
     }
 
-    public void deleteGameSession(int id) throws SQLException {
-        gameSessionDAO.deleteGameSession(id);
+    private String sendRequest(String urlString, String method, String json) throws IOException {
+        URL url = new URL(urlString);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod(method);
+        connection.setRequestProperty("Content-Type", "application/json");
+
+        if (json != null) {
+            connection.setDoOutput(true);
+            try (OutputStream os = connection.getOutputStream()) {
+                os.write(json.getBytes("utf-8"));
+            }
+        }
+
+        int responseCode = connection.getResponseCode();
+        if (responseCode != HttpURLConnection.HTTP_OK) {
+            throw new IOException("Failed to execute request. HTTP response code: " + responseCode);
+        }
+
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"))) {
+            StringBuilder response = new StringBuilder();
+            String responseLine;
+            while ((responseLine = br.readLine()) != null) {
+                response.append(responseLine.trim());
+            }
+            return response.toString();
+        }
     }
-    
+
     private String convertLogToString(List<String> log) {
         return String.join("\n", log);
+    }
+
+    private static class GameSessionRequest {
+        private int player1;
+        private int player2;
+        private String result;
+        private List<String> log;
+        private List<String> sessionChat;
+
+        public GameSessionRequest(GameSession gameSession) {
+            player1 = gameSession.getPlayer1().getId();
+            player2 = gameSession.getPlayer2().getId();
+            result = gameSession.getResult();
+            log = gameSession.getLog();
+            sessionChat = gameSession.getSessionChat().stream().map(Object::toString).toList();
+        }
+        
+        public GameSessionRequest(int player1, int player2, String result, List<String> log, List<String> sessionChat) {
+            this.player1 = player1;
+            this.player2 = player2;
+            this.result = result;
+            this.log = log;
+            this.sessionChat = sessionChat;
+        }
+        
+        public GameSessionRequest() {
+        }
+        
+        public int getPlayer1() {
+            return player1;
+        }
+        
+        public void setPlayer1(int player1) {
+            this.player1 = player1;
+        }
+        
+        public int getPlayer2() {
+            return player2;
+        }
+        
+        public void setPlayer2(int player2) {
+            this.player2 = player2;
+        }
+        
+        public String getResult() {
+            return result;
+        }
+        
+        public void setResult(String result) {
+            this.result = result;
+        }
+        
+        public List<String> getLog() {
+            return log;
+        }
+        
+        public void setLog(List<String> log) {
+            this.log = log;
+        }
+        
+        public List<String> getSessionChat() {
+            return sessionChat;
+        }
+        
+        public void setSessionChat(List<String> sessionChat) {
+            this.sessionChat = sessionChat;
+        }
+    }
+
+    private static class GameSessionUpdateRequest {
+        private GameSession gameSession;
+        private String log;
+
+        public GameSessionUpdateRequest(GameSession gameSession, String log) {
+            this.gameSession = gameSession;
+            this.log = log;
+        }
     }
 }

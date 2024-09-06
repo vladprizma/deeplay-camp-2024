@@ -30,6 +30,9 @@ public class ChatMessage {
         this.timestamp = timestamp;
     }
 
+    public ChatMessage() {
+    }
+    
     /**
      * Gets the ID of the chat message.
      *

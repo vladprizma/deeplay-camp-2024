@@ -14,6 +14,7 @@ public class BoardService {
     private long whiteChips;
     private long blackValidMoves;
     private long whiteValidMoves;
+    private int nextPlayerId;
 
     public BoardService(Board board) {
         this.board = board;
@@ -21,6 +22,14 @@ public class BoardService {
         this.whiteChips = board.getWhiteChips();
     }
 
+    public BoardService(BoardService other) {
+        this.board = new Board(other.board); // Assuming Board has a copy constructor
+        this.blackChips = other.blackChips;
+        this.whiteChips = other.whiteChips;
+        this.blackValidMoves = other.blackValidMoves;
+        this.whiteValidMoves = other.whiteValidMoves;
+    }
+    
     //!! Установка фишки на доску
     public void setPiece(int x, int y, int player) {
         long piece = 1L << (x + 8 * y);
@@ -165,6 +174,16 @@ public class BoardService {
     public boolean hasPiece(int x, int y) {
         long mask = 1L << (x + 8 * y);
         return ((blackChips & mask) != 0) || ((whiteChips & mask) != 0);
+    }
+
+    public boolean hasPieceBlack(int x, int y) {
+        long mask = 1L << (x + 8 * y);
+        return ((blackChips & mask) != 0);
+    }
+
+    public boolean hasPieceWhite(int x, int y) {
+        long mask = 1L << (x + 8 * y);
+        return ((whiteChips & mask) != 0);
     }
 
     public Board getBoard() {
@@ -312,7 +331,7 @@ public class BoardService {
         blackValidMoves &= ~allChips;
         whiteValidMoves &= ~allChips;
     }
-
+    
 
     // Вызов доски
     public StringBuilder getBoardState(int player) {
@@ -383,6 +402,19 @@ public class BoardService {
         return whiteValidMoves;
     }
 
+    public int getPiece(int x, int y) {
+        long mask = 1L << (x + 8 * y);
+
+        if ((blackChips & mask) != 0) {
+            return 1; // Черная фишка
+        } else if ((whiteChips & mask) != 0) {
+            return 2; // Белая фишка
+        } else {
+            return 0; // Пустая клетка
+        }
+    }
+
+
     public List<Tile> getAllValidTiles(int playerId) {
         List<Tile> validTiles = new ArrayList<>();
         long validMoves = getValidMoves(playerId);
@@ -391,7 +423,9 @@ public class BoardService {
             if ((validMoves & mask) != 0) {
                 int x = i % 8;
                 int y = i / 8;
-                validTiles.add(new Tile(x, y));
+                var buf = new Tile(x, y);
+                buf.setPlayerId(playerId);
+                validTiles.add(buf);
             }
         }
         return validTiles;
@@ -442,6 +476,43 @@ public class BoardService {
             }
         }
         return new GameFinished(false, -1);
+    }
+
+    public int getScore(int player) {
+        int score = 0;
+
+        long chips;
+        if (player == 1) {
+            chips = blackChips;
+        } else if (player == 2) {
+            chips = whiteChips;
+        } else {
+            throw new IllegalArgumentException("Некорректный ID игрока");
+        }
+
+        // Подсчет количества фишек на доске у заданного игрока
+        for (int i = 0; i < 64; i++) {
+            long mask = 1L << i;
+            if ((chips & mask) != 0) {
+                score++;
+            }
+        }
+        return score;
+    }
+    
+    public boolean isGameOver() {
+        long blackValidMoves = getBlackValidMoves();
+        long whiteValidMoves = getWhiteValidMoves();
+
+        // Если на доске нет пустых мест или нет допустимых ходов у обоих игроков
+        if ((blackValidMoves == 0 && whiteValidMoves == 0) || (getChips(1).size() + getChips(2).size() == 64)) {
+            return true;
+        }
+        return false;
+    }
+
+    public BoardService getBoardServiceCopy() {
+        return new BoardService(this);
     }
 
     public void setBlackValidMoves(long blackValidMoves) {

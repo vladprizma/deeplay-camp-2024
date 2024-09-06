@@ -14,7 +14,6 @@ public class User {
     private int rating;
     private int matches;
     private String userPhoto;
-    private int elo;
     private boolean isBot;
 
     /**
@@ -34,6 +33,10 @@ public class User {
         this.rating = rating;
         this.matches = matches;
         this.userPhoto = userPhoto;
+        isBot = false;
+    }
+    
+    public User() {
         isBot = false;
     }
 
@@ -143,24 +146,6 @@ public class User {
      */
     public void setUserPhoto(String userPhoto) {
         this.userPhoto = userPhoto;
-    }
-
-    /**
-     * Gets the ELO rating of the user.
-     *
-     * @return The ELO rating of the user.
-     */
-    public int getElo() {
-        return elo;
-    }
-
-    /**
-     * Sets the ELO rating of the user.
-     *
-     * @param elo The new ELO rating of the user.
-     */
-    public void setElo(int elo) {
-        this.elo = elo;
     }
 
     /**

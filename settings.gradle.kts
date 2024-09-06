@@ -9,7 +9,7 @@ plugins {
 rootProject.name = "deeplay-camp-2024"
 include("client", "utilities", "reversi-server")
 
-val serverModules = listOf("controller", "data-base", "services", "model")
+val serverModules = listOf("controller", "services", "model")
 
 for (module in serverModules)
     include(":reversi-server:$module")
