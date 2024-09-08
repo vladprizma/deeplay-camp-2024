@@ -20,6 +20,16 @@ public class GameStateNode {
     private final AtomicInteger visits;
     private final AtomicInteger wins;
 
+    /**
+     * Constructs a new {@code GameStateNode} with the specified board, move, current player,
+     * and parent node. Initializes the children map to be empty and sets visit and win counts
+     * to zero.
+     *
+     * @param board the current board state
+     * @param move the move leading to this board state
+     * @param currentPlayer the player whose move led to this state
+     * @param parent the parent node preceding this state in the game tree
+     */
     public GameStateNode(BoardService board, Tile move, int currentPlayer, GameStateNode parent) {
         this.board = board;
         this.move = move;
